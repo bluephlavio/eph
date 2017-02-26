@@ -10,7 +10,7 @@ with open(path.join(here, 'README.rst')) as f:
 setup(
 	name='eph',
 	version='0.0.1',
-	description='Retrieve and manipulate Jpl Horizons Ephemeris.',
+	description='Retrieve and manipulate Jpl Horizons Ephemerides.',
 	long_description=long_description,
 	author='Flavio Grandin',
 	author_email='flavio.grandin@gmail.com',

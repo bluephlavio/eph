@@ -1,7 +1,7 @@
 Metadata-Version: 1.1
 Name: eph
 Version: 0.0.1
-Summary: Retrieve and manipulate Jpl Horizons Ephemeris.
+Summary: Retrieve and manipulate Jpl Horizons Ephemerides.
 Home-page: https://github.com/bluePhlavio/eph
 Author: Flavio Grandin
 Author-email: flavio.grandin@gmail.com
@@ -16,8 +16,8 @@ Description: Readme
         	import eph
         
         	req = eph.JPLReq() # create the request
-        		.read('defaults.cfg', 'jplparams') # read parameters from file
-        		.set({'COMMAND': '399', 'START_TIME': '2017-01-01', 'STOP_TIME': '2017-31-12'}) # set parameters from dictionary
+        	req.read('defaults.cfg', 'jplparams') # read parameters from file
+        	req.set({'COMMAND': '399', 'START_TIME': '2017-01-01', 'STOP_TIME': '2017-12-31'}) # set parameters from dictionary
         	res = req.request() # perform the request obtaining a response from jpl
         	eph = res.ephemeris # extract the ephemeris from the response
         
