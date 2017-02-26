@@ -8,8 +8,8 @@ The ``eph`` package provides some useful classes to retrieve and manipulate ephe
 	import eph
 
 	req = eph.JPLReq() # create the request
-		.read('defaults.cfg', 'jplparams') # read parameters from file
-		.set({'COMMAND': '399', 'START_TIME': '2017-01-01', 'STOP_TIME': '2017-31-12'}) # set parameters from dictionary
+	req.read('defaults.cfg', 'jplparams') # read parameters from file
+	req.set({'COMMAND': '399', 'START_TIME': '2017-01-01', 'STOP_TIME': '2017-12-31'}) # set parameters from dictionary
 	res = req.request() # perform the request obtaining a response from jpl
 	eph = res.ephemeris # extract the ephemeris from the response
 

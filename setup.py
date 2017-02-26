@@ -19,6 +19,7 @@ setup(
     ],
     include_package_data=True,
 	license='MIT',
+	url='https://github.com/bluePhlavio/eph',
 	classifiers=[
 		'Development Status :: 3 - Alpha',
 		'Intended Audience :: Developers',
