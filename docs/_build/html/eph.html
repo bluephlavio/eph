@@ -1,0 +1,432 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>eph package &#8212; eph 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="License" href="license.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="license.html" title="License"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">eph 0.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="eph-package">
+<h1><code class="docutils literal"><span class="pre">eph</span></code> package<a class="headerlink" href="#eph-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-eph.eph">
+<span id="eph-eph-module"></span><h2><code class="docutils literal"><span class="pre">eph.eph</span></code> module<a class="headerlink" href="#module-eph.eph" title="Permalink to this headline">¶</a></h2>
+<p>Define base class <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a>. <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> class is fundamental to this package because it represents an ephemeris, allowing manipulation of this kind of data structures.</p>
+<dl class="class">
+<dt id="eph.eph.Eph">
+<em class="property">class </em><code class="descclassname">eph.eph.</code><code class="descname">Eph</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">list</span></code></p>
+<p>Base class for manipulating and combining ephemerides.</p>
+<ul class="simple">
+<li>An <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object is a <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of rows containing data.</li>
+<li>Rows are expected to be <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of data cells.</li>
+<li>Data cells can be either strings or any type.</li>
+</ul>
+<p><a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> objects can be created with some <em>class methods</em>:</p>
+<ul class="simple">
+<li>from a <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of strings interpreted as rows containing strings of data.</li>
+<li>from a raw string containing all rows of data.</li>
+<li>from a csv-like data file.</li>
+</ul>
+<p>An <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object is considered <em>valid</em> if all rows have the same length or, said otherwise, if all rows of data have the same number of columns.
+An <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> is considered <em>clean</em> if does not contain useless spaces in data cells, empty rows or empty columns.</p>
+<p>A new <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object can be obtained selecting columns from one <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object or combining specific columns of many <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> objects.</p>
+<dl class="method">
+<dt id="eph.eph.Eph.clean">
+<code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleans the ephemeris.</p>
+<p>An <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> is considered <em>clean</em> if does not contain useless spaces in data cells, empty rows or empty columns.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the object itself.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="eph.eph.Eph.from_file">
+<em class="property">classmethod </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>filename</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object from a ephemeris text file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<code class="xref py py-class docutils literal"><span class="pre">str</span></code>) &#8211; the file containing the ephemeris data.</li>
+<li><strong>kwargs</strong> &#8211; use <code class="docutils literal"><span class="pre">delimiter</span></code> key to set delimiter character between columns.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="eph.eph.Eph.from_raw">
+<em class="property">classmethod </em><code class="descname">from_raw</code><span class="sig-paren">(</span><em>raw</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.from_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object from a raw text ephemeris.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>raw</strong> (<code class="xref py py-class docutils literal"><span class="pre">str</span></code>) &#8211; the string to be interpreted as an ephemeris.</li>
+<li><strong>kwargs</strong> &#8211; use <code class="docutils literal"><span class="pre">delimiter</span></code> key to set delimiter character between columns.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="eph.eph.Eph.from_rows">
+<em class="property">classmethod </em><code class="descname">from_rows</code><span class="sig-paren">(</span><em>rows</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.from_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object from a <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of string type rows.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rows</strong> (<code class="xref py py-class docutils literal"><span class="pre">list</span></code>) &#8211; the <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of rows.</li>
+<li><strong>kwargs</strong> &#8211; use <code class="docutils literal"><span class="pre">delimiter</span></code> key to set delimiter character between columns.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eph.eph.Eph.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells if the ephemeris has zero rows or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eph.eph.Eph.is_valid">
+<code class="descname">is_valid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object can be considered a <em>valid</em> representation of an ephemeris.</p>
+<p>An <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object is considered <em>valid</em> if all rows have the same length or, said otherwise, if all rows of data have the same number of columns.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="eph.eph.Eph.join">
+<em class="property">static </em><code class="descname">join</code><span class="sig-paren">(</span><em>*ephs</em>, <em>cols=None</em>, <em>ids=()</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines many <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ephs</strong> (<a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a>) &#8211; <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> objects to join.</li>
+<li><strong>cols</strong> (<code class="xref py py-class docutils literal"><span class="pre">list</span></code>) &#8211; a <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of columns to select for each <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object.</li>
+<li><strong>ids</strong> (<code class="xref py py-class docutils literal"><span class="pre">tuple</span></code>) &#8211; a <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code> of indices that identify columns that will be treated as <em>ids</em>. A column is considered an <em>id</em> if values are equal for all ephemerides to join and it will present only once in the resulting ephemeris.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object obtained combining multiple <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> objects.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eph.eph.Eph.n_cols">
+<code class="descname">n_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.n_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the number of columns for each row.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of integers representing the number of columns for all rows.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">list</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eph.eph.Eph.rows">
+<code class="descname">rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives a <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of string type formatted rows.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the <code class="xref py py-class docutils literal"><span class="pre">list</span></code> of rows.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">list</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eph.eph.Eph.select_cols">
+<code class="descname">select_cols</code><span class="sig-paren">(</span><em>*cols</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.eph.Eph.select_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object from the columns specified with their indices.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cols</strong> (<code class="xref py py-class docutils literal"><span class="pre">list</span></code>) &#8211; indices of columns to be selected.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the <a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a> object built from the columns specified.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#eph.eph.Eph" title="eph.eph.Eph"><code class="xref py py-class docutils literal"><span class="pre">Eph</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eph.jpl">
+<span id="eph-jpl-module"></span><h2><code class="docutils literal"><span class="pre">eph.jpl</span></code> module<a class="headerlink" href="#module-eph.jpl" title="Permalink to this headline">¶</a></h2>
+<p>Define classes used to retrive a desired ephemris from JPL Horizon&#8217;s service.</p>
+<ul class="simple">
+<li><a class="reference internal" href="#eph.jpl.JPLReq" title="eph.jpl.JPLReq"><code class="xref py py-class docutils literal"><span class="pre">JPLReq</span></code></a> represents a request to JPL Horizon&#8217;s service. <a class="reference internal" href="#eph.jpl.JPLReq" title="eph.jpl.JPLReq"><code class="xref py py-class docutils literal"><span class="pre">JPLReq</span></code></a> is a <code class="docutils literal"><span class="pre">dict</span></code> where key-values pairs are parameters accepted by JPL Horizon&#8217;s interface (a complete description of the interface can be found at <a class="reference external" href="ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long">ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long</a>).</li>
+<li><a class="reference internal" href="#eph.jpl.JPLRes" title="eph.jpl.JPLRes"><code class="xref py py-class docutils literal"><span class="pre">JPLRes</span></code></a> represents a response by JPL Horizon&#8217;s service. It gives a structure to <code class="docutils literal"><span class="pre">http</span></code> response by separating raw data in <em>header</em>, <em>ephemeris</em> and <em>footer</em>. <a class="reference internal" href="#eph.jpl.JPLRes" title="eph.jpl.JPLRes"><code class="xref py py-class docutils literal"><span class="pre">JPLRes</span></code></a>.eph is parsed from <code class="docutils literal"><span class="pre">http</span></code> response as an <code class="xref py py-class docutils literal"><span class="pre">Eph</span></code> object. <a class="reference internal" href="#eph.jpl.JPLRes" title="eph.jpl.JPLRes"><code class="xref py py-class docutils literal"><span class="pre">JPLRes</span></code></a>.header and <a class="reference internal" href="#eph.jpl.JPLRes" title="eph.jpl.JPLRes"><code class="xref py py-class docutils literal"><span class="pre">JPLRes</span></code></a>.footer are raw strings.</li>
+<li><a class="reference internal" href="#eph.jpl.BadRequestError" title="eph.jpl.BadRequestError"><code class="xref py py-class docutils literal"><span class="pre">BadRequestError</span></code></a> is a exception raised if the JPL Horizon&#8217;s response is not formatted as expected, indicating that something went wrong (for example if <a class="reference internal" href="#eph.jpl.JPLReq" title="eph.jpl.JPLReq"><code class="xref py py-class docutils literal"><span class="pre">JPLReq</span></code></a> parameters are not accepted by JPL Horizon&#8217;s interface).</li>
+</ul>
+<dl class="exception">
+<dt id="eph.jpl.BadRequestError">
+<em class="property">exception </em><code class="descclassname">eph.jpl.</code><code class="descname">BadRequestError</code><span class="sig-paren">(</span><em>jpl_msg</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.BadRequestError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<p>Exception raised when JPL output is not formatted as expected, indicating that something went wrong (probably because of an invalid param passed to the request).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="eph.jpl.JPLReq">
+<em class="property">class </em><code class="descclassname">eph.jpl.</code><code class="descname">JPLReq</code><span class="sig-paren">(</span><em>filename=None</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JPLReq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">dict</span></code></p>
+<p><a class="reference internal" href="#eph.jpl.JPLReq" title="eph.jpl.JPLReq"><code class="xref py py-class docutils literal"><span class="pre">JPLReq</span></code></a> represents a request to JPL Horizons service. <a class="reference internal" href="#eph.jpl.JPLReq" title="eph.jpl.JPLReq"><code class="xref py py-class docutils literal"><span class="pre">JPLReq</span></code></a> is a <code class="docutils literal"><span class="pre">dict</span></code> where key-values pairs are parameters accepted by JPL Horizons interface (a complete description of the interface can be found at <a class="reference external" href="ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long">ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long</a>).</p>
+<dl class="attribute">
+<dt id="eph.jpl.JPLReq.BASE_URL">
+<code class="descname">BASE_URL</code><em class="property"> = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'</em><a class="headerlink" href="#eph.jpl.JPLReq.BASE_URL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="eph.jpl.JPLReq.read">
+<code class="descname">read</code><span class="sig-paren">(</span><em>filename</em>, <em>section</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JPLReq.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads key-value pairs from file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<code class="docutils literal"><span class="pre">str</span></code>) &#8211; the filename to be parsed.</li>
+<li><strong>section</strong> (<code class="docutils literal"><span class="pre">str</span></code>) &#8211; section of the ini file to be read.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the object itself.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#eph.jpl.JPLReq" title="eph.jpl.JPLReq"><code class="xref py py-class docutils literal"><span class="pre">JPLReq</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eph.jpl.JPLReq.request">
+<code class="descname">request</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JPLReq.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a request to JPL Horizons service server from the parameters assigned to it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <a class="reference internal" href="#eph.jpl.JPLRes" title="eph.jpl.JPLRes"><code class="xref py py-class docutils literal"><span class="pre">JPLRes</span></code></a> object representing a structured version of raw <code class="docutils literal"><span class="pre">http</span></code> JPL response.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#eph.jpl.JPLRes" title="eph.jpl.JPLRes"><code class="xref py py-class docutils literal"><span class="pre">JPLRes</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eph.jpl.JPLReq.set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JPLReq.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for <code class="docutils literal"><span class="pre">dict</span></code>.update() allowing chaining.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>params</strong> (<code class="docutils literal"><span class="pre">dict</span></code>) &#8211; key-value pairs of JPL parameters.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the object itself.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#eph.jpl.JPLReq" title="eph.jpl.JPLReq"><code class="xref py py-class docutils literal"><span class="pre">JPLReq</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eph.jpl.JPLReq.url">
+<code class="descname">url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JPLReq.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a url addressing JPL Horizons service with query string specifying JPL params.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the url.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="eph.jpl.JPLRes">
+<em class="property">class </em><code class="descclassname">eph.jpl.</code><code class="descname">JPLRes</code><span class="sig-paren">(</span><em>res=None</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JPLRes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p><a class="reference internal" href="#eph.jpl.JPLRes" title="eph.jpl.JPLRes"><code class="xref py py-class docutils literal"><span class="pre">JPLRes</span></code></a> represents a response by JPL Horizon&#8217;s service. It structures the raw <code class="docutils literal"><span class="pre">http</span></code> JPL response by separating data in <em>header</em>, <em>ephemeris</em> and <em>footer</em>. <code class="docutils literal"><span class="pre">JPLRes.ephemeris</span></code> is parsed from <code class="docutils literal"><span class="pre">http</span></code> response as an <code class="xref py py-class docutils literal"><span class="pre">Eph</span></code> object. <code class="docutils literal"><span class="pre">JPLRes.header</span></code> and <code class="docutils literal"><span class="pre">JPLRes.footer</span></code> are raw strings instead.</p>
+<dl class="method">
+<dt id="eph.jpl.JPLRes.parsejpl">
+<code class="descname">parsejpl</code><span class="sig-paren">(</span><em>res</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JPLRes.parsejpl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a JPL response and extracts three sections:</p>
+<ul class="simple">
+<li><em>header</em>: the header containing info about the requested celestial objects and the formatting of the ephemeris,</li>
+<li><em>ephemeris</em>: the actual data parsed as an <code class="xref py py-class docutils literal"><span class="pre">Eph</span></code> object,</li>
+<li><em>footer</em>: the footer containing info about how things are to be intended, JPL Horizons service and the request&#8217;s parameters used.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>res</strong> (<code class="docutils literal"><span class="pre">requests.models.Response</span></code>) &#8211; the JPL Horizons response.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the object itself.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#eph.jpl.JPLRes" title="eph.jpl.JPLRes"><code class="xref py py-class docutils literal"><span class="pre">JPLRes</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">eph</span></code> package</a><ul>
+<li><a class="reference internal" href="#module-eph.eph"><code class="docutils literal"><span class="pre">eph.eph</span></code> module</a></li>
+<li><a class="reference internal" href="#module-eph.jpl"><code class="docutils literal"><span class="pre">eph.jpl</span></code> module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="license.html"
+                        title="previous chapter">License</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/eph.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="license.html" title="License"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">eph 0.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Flavio Grandin.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
+    </div>
+  </body>
+</html>
