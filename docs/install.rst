@@ -3,6 +3,12 @@ Install
 
 The ``eph`` package is tested using python3.4.
 
+Run
+
+.. code-block:: bash
+
+	python setup.py install
+
 Dependencies
 ------------
 

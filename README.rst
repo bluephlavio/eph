@@ -3,7 +3,9 @@ Readme
 
 The ``eph`` package provides some useful classes to retrieve and manipulate ephemerides. 
 
-**Basic Usage**::
+**Basic Usage**
+
+.. code-block:: python
 
 	import eph
 
@@ -15,7 +17,9 @@ The ``eph`` package provides some useful classes to retrieve and manipulate ephe
 
 	print(eph) # print data
 
-The content of ``defaults.cfg`` can be something like this (see ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)::
+The content of ``defaults.cfg`` can be something like this (see ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
+
+.. code-block:: ini
 
 	[jplparams]
 	CENTER='@0'

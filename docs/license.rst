@@ -3,15 +3,6 @@ License
 
 This project is licensed under the terms of the `MIT`_ license.
 
-``eph`` package make use of the following libraries:
-
-* `requests`_ released under `Apache2`_ license.
-
-.. _MIT: https://opensource.org/licenses/MIT
-.. _Apache2: https://opensource.org/licenses/Apache-2.0
-.. _requests: http://docs.python-requests.org/en/master/
-
-
 MIT license
 -----------
 
@@ -22,3 +13,16 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Dependencies
+------------
+
+``eph`` package make use of the following libraries:
+
+* `requests`_ released under `Apache2`_ license.
+
+.. _MIT: https://opensource.org/licenses/MIT
+.. _Apache2: https://opensource.org/licenses/Apache-2.0
+.. _requests: http://docs.python-requests.org/en/master/
+
+
