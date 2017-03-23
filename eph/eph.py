@@ -4,6 +4,7 @@ Define base class :class:`Eph`. :class:`Eph` class is fundamental to this packag
 
 import os, re, statistics
 
+
 class Eph(list):
 	"""
 	Base class for manipulating and combining ephemerides.
@@ -32,7 +33,7 @@ class Eph(list):
 		"""
 		list.__init__(self, *args)
 		self.delimiter = kwargs.get('delimiter', ',')
-		#self.clean()
+		
 		
 	@classmethod
 	def from_rows(cls, rows, **kwargs):
@@ -45,6 +46,7 @@ class Eph(list):
 		delimiter = kwargs.get('delimiter', ',')
 		return cls(map(lambda row: row.split(delimiter), rows), **kwargs)
 		
+		
 	@classmethod
 	def from_raw(cls, raw, **kwargs):
 		"""Creates an :class:`Eph` object from a raw text ephemeris.
@@ -54,6 +56,7 @@ class Eph(list):
 		:param kwargs: use ``delimiter`` key to set delimiter character between columns.
 		"""
 		return cls.from_rows(raw.splitlines(), **kwargs)
+		
 		
 	@classmethod
 	def from_file(cls, filename, **kwargs):
@@ -66,9 +69,11 @@ class Eph(list):
 		raw = open(filename, 'r').read()
 		return cls.from_raw(raw, **kwargs)
 		
+		
 	def __str__(self):
 		"""Produces a human readable ephemeris string."""
 		return os.linesep.join(self.rows())
+		
 		
 	def clean(self):
 		"""Cleans the ephemeris.
@@ -92,6 +97,7 @@ class Eph(list):
 			del self[i]
 		return self
 		
+		
 	def rows(self):
 		"""Gives a :class:`list` of string type formatted rows.
 		
@@ -99,7 +105,8 @@ class Eph(list):
 		:rtype: :class:`list`
 		"""
 		return [self.delimiter.join(row) for row in self]
-	
+		
+		
 	def n_cols(self):
 		"""Gives the number of columns for each row.
 		
@@ -107,21 +114,37 @@ class Eph(list):
 		:rtype: :class:`list`
 		"""
 		return [len(row) for row in self]
-		
+
+
 	def is_valid(self):
 		"""Check if :class:`Eph` object can be considered a *valid* representation of an ephemeris.
 		
 		An :class:`Eph` object is considered *valid* if all rows have the same length or, said otherwise, if all rows of data have the same number of columns.
 		"""
 		return statistics.pvariance(self.n_cols()) == 0
-		
+
+
 	def is_empty(self):
 		"""Tells if the ephemeris has zero rows or not."""
 		if len(self):
 			return False
 		else:
 			return True
+
 	
+	def write(self, out=None):
+		"""Write ephemeris to file or to stdout.
+		
+		:param out: file to write (command line if is ``None``).
+		:type out: :class:`str`
+		"""
+		if out:
+			with open(out, 'w') as f:
+				f.write(self.__str__())
+		else:
+			print(self)
+
+
 	def select_cols(self, *cols):
 		"""Creates an :class:`Eph` object from the columns specified with their indices.
 		
@@ -137,7 +160,8 @@ class Eph(list):
 			eph = Eph([])
 		finally:
 			return eph
-	
+
+
 	@staticmethod
 	def join(*ephs, cols=None, ids=()):
 		"""Combines many :class:`Eph` objects.

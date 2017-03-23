@@ -11,6 +11,36 @@ from urllib.parse import urlsplit, urlunsplit, urlencode, parse_qs
 import requests
 from .eph import Eph
 
+
+obj_code = {
+	'sun': 0,
+	'mercury': 199,
+	'venus': 299,
+	'earth': 399,
+	'mars': 499,
+	'jupyter': 599,
+	'saturn': 699,
+	'uranus': 799,
+	'neptune': 899
+	}
+	
+
+def name2code(name):
+	if name in obj_code:
+		return str(obj_code[name])
+	else:
+		return name
+
+
+def refcode(code):
+	return "'@" + code + "'"
+	
+
+def name2refcode(name):
+	return refcode(name2code(name))
+
+
+
 class JPLReq(dict):
 	"""
 	:class:`JPLReq` represents a request to JPL Horizons service. :class:`JPLReq` is a ``dict`` where key-values pairs are parameters accepted by JPL Horizons interface (a complete description of the interface can be found at ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long).

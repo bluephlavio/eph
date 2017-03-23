@@ -34,6 +34,8 @@ setup(
 	keywords='jpl horizons ephemeris astronomy planets',
 	packages=['eph'],
 	entry_points={
-		'console_scripts': ['eph=eph.command_line:main'],
+		'console_scripts': ['eph=eph.__main__:main'],
 	},
-	)
+)
+
+

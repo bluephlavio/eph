@@ -46,7 +46,7 @@ docs/_build/html/_static/up-pressed.png
 docs/_build/html/_static/up.png
 docs/_build/html/_static/websupport.js
 eph/__init__.py
-eph/command_line.py
+eph/__main__.py
 eph/eph.py
 eph/jpl.py
 eph.egg-info/PKG-INFO
