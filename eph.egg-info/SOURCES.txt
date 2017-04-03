@@ -49,6 +49,7 @@ eph/__init__.py
 eph/__main__.py
 eph/eph.py
 eph/jpl.py
+eph/vis.py
 eph.egg-info/PKG-INFO
 eph.egg-info/SOURCES.txt
 eph.egg-info/dependency_links.txt

@@ -8,7 +8,7 @@ Define classes used to retrive a desired ephemris from JPL Horizon's service.
 
 import configparser, re
 from urllib.parse import urlsplit, urlunsplit, urlencode, parse_qs
-import requests
+import requests, re
 from .eph import Eph
 
 
@@ -28,11 +28,12 @@ obj_code = {
 def name2code(name):
 	if name in obj_code:
 		return str(obj_code[name])
-	else:
-		return name
+	return name
 
 
 def refcode(code):
+	if re.match("'@\d*'", code):
+		return code
 	return "'@" + code + "'"
 	
 

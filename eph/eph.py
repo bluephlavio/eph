@@ -143,6 +143,10 @@ class Eph(list):
 				f.write(self.__str__())
 		else:
 			print(self)
+			
+	
+	def col(self, index):
+		return list(map(lambda x: x[index], self))
 
 
 	def select_cols(self, *cols):
