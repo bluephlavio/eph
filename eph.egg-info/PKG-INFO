@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: eph
-Version: 0.0.1
+Version: 0.0.2
 Summary: Retrieve and manipulate Jpl Horizons Ephemerides.
 Home-page: https://github.com/bluePhlavio/eph
 Author: Flavio Grandin

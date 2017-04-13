@@ -1,63 +1,92 @@
-import sys, unittest
+import os, sys, datetime, requests, unittest
 sys.path.append('../eph')
 from eph.jpl import *
 
-MINIMAL = {'COMMAND': "'399'", 'START_TIME': "'2016-01-01'", 'STOP_TIME': "'2017-01-01'"}
-BASE_URL = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi'
-CONFIG_FILE = 'test/res/def.cfg'
-SECTION = 'jplparams'
 
-class TestJPLReq(unittest.TestCase):
 
-	def setUp(self):
-		self.req = JPLReq()
-		
-	def tearDown(self):
-		del self.req
-		
-	def test_set(self):
-		self.req.set({'key':'value'})
-		self.assertEqual(self.req['key'], 'value')
+QUERY = {
+    'COMMAND': '299',
+    'START_TIME': '2007-11-17',
+    'STOP_TIME': datetime.date.today().strftime('%Y-%m-%d')
+}
+CONFIG_FILE = os.path.join(os.path.dirname(__file__), 'res/def.cfg')
+JPL_EPH_EXAMPLE = os.path.join(os.path.dirname(__file__), 'res/jpleph.txt')
+JPL_URL_EXAMPLE = os.path.join(os.path.dirname(__file__), 'res/url.txt')
 
-	def test_read(self):
-		self.req.read(CONFIG_FILE, SECTION)
-		self.assertEqual(self.req['CENTER'], "'@0'")
-		
-	def test_url(self):
-		self.req['key'] = 'value'
-		url1 = BASE_URL + '?batch=1&key=value'
-		url2 = BASE_URL + '?key=value&batch=1'
-		self.assertTrue(self.req.url() in (url1, url2))
-		
-	def test_request(self):
-		self.req.read(CONFIG_FILE, SECTION).set(MINIMAL)
-		res = self.req.request()
-		self.assertEqual(res.status, 200)
-			
-class TestJPLRes(unittest.TestCase):
-	
-	def setUp(self):
-		self.bad_req = JPLReq()
-		self.good_req = JPLReq().read(CONFIG_FILE, SECTION).set(MINIMAL)
-			
-	def tearDown(self):
-		pass
-		
-	def test_init(self):
-		good_res = self.good_req.request()
-		self.assertEqual(good_res.status, 200)
-		try:
-			bad_res = self.bad_req.request()
-			self.assertEqual(bad_res.status, 200)
-		except BadRequestError as e:
-			print(e)
-			
-	def test_parsejpl(self):
-		res = self.good_req.request()
-		self.assertTrue(res.ephemeris is not None)
-			
+
+
+class TestJplReq(unittest.TestCase):
+
+
+    def setUp(self):
+        self.req = JplReq()
+
+
+    def tearDown(self):
+        del self.req
+
+
+    def test_url(self):
+        self.req.set({'key': 'value'})
+        self.assertEqual(self.req.url(), 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&key=value')
+
+
+    def test_query(self):
+        self.req.read(CONFIG_FILE).set(QUERY)
+        res = self.req.query().res
+        self.assertEqual(res.status_code, 200)
+
+
+
+class TestJplRes(unittest.TestCase):
+
+
+    def test_parse(self):
+        with open(JPL_URL_EXAMPLE, 'r') as f:
+            urls = f.readlines()
+            for url in urls:
+                try:
+                    res = JplRes(requests.get(url))
+                    eph = res.parse()
+                    self.assertTrue(True)
+                except JplBadReq:
+                    self.assertTrue(False)
+
+
+
+class TestJplParser(unittest.TestCase):
+
+
+    def test_parse(self):
+        with open(JPL_EPH_EXAMPLE, 'r') as f:
+            source = f.read()
+            try:
+                eph = JplParser().parse(source)
+                self.assertTrue(True)
+            except JplParserError:
+                self.assertTrue(False)
+
+
+
+class TestJplHelper(unittest.TestCase):
+
+
+    def test_translate(self):
+        self.assertEqual(translate('earth'), '399')
+        self.assertEqual(translate('\'earth\''), '399')
+        self.assertEqual(translate('399'), '399')
+        self.assertEqual(translate('\'399\''), '399')
+        self.assertEqual(translate('earth', ref=True), '\'@399\'')
+        self.assertEqual(translate('\'earth\'', ref=True), '\'@399\'')
+        self.assertEqual(translate('\'@earth\'', ref=True), '\'@399\'')
+        self.assertEqual(translate('399', ref=True), '\'@399\'')
+        self.assertEqual(translate('\'399\'', ref=True), '\'@399\'')
+        self.assertEqual(translate('\'@399\'', ref=True), '\'@399\'')
+
+
+
 if __name__ == '__main__':
-	unittest.main()
-	
-	
-	
+    unittest.main()
+
+
+

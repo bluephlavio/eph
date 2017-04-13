@@ -49,7 +49,7 @@ eph/__init__.py
 eph/__main__.py
 eph/eph.py
 eph/jpl.py
-eph/vis.py
+eph/util.py
 eph.egg-info/PKG-INFO
 eph.egg-info/SOURCES.txt
 eph.egg-info/dependency_links.txt
@@ -57,9 +57,8 @@ eph.egg-info/entry_points.txt
 eph.egg-info/requires.txt
 eph.egg-info/top_level.txt
 test/__init__.py
-test/test_eph.py
 test/test_jpl.py
+test/test_util.py
 test/res/def.cfg
-test/res/eph.txt
-test/res/jplres.txt
+test/res/jpleph.txt
 test/res/url.txt
