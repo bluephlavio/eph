@@ -9,23 +9,32 @@ License: MIT
 Description: Readme
         ======
         
-        The ``eph`` package provides some useful classes to retrieve and manipulate ephemerides. 
+        The ``eph`` package provides some useful classes to retrieve, parse and manipulate ephemerides. 
         
-        **Basic Usage**
+        **Basic Usage (using Jpl Horizons service)**
         
         .. code-block:: python
         
         	import eph
         
-        	req = eph.JPLReq() # create the request
-        	req.read('defaults.cfg', 'jplparams') # read parameters from file
+        	req = eph.JplReq() # create the request
+        	req.read('.ephrc', 'jplparams') # read parameters from 'jplparams' section in '.ephrc' file
         	req.set({'COMMAND': '399', 'START_TIME': '2017-01-01', 'STOP_TIME': '2017-12-31'}) # set parameters from dictionary
-        	res = req.request() # perform the request obtaining a response from jpl
-        	eph = res.ephemeris # extract the ephemeris from the response
+        	res = req.query() # perform the request obtaining a response from Jpl Horizons service
+        	ephemeris = res.parse() # extract and parse the ephemeris contained in the http response
         
-        	print(eph) # print data
+        	print(ephemeris) # print data
         
-        The content of ``defaults.cfg`` can be something like this (see ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
+        or, in one line
+        
+        .. code-block:: python
+        
+        	import eph
+        
+        	print(eph.JplReq().read('.ephrc', 'jplparams').set({'COMMAND': '399', 'START_TIME': '2007-11-17', 'STOP_TIME': '2017-04-22'}).query().parse())
+        
+        
+        The content of ``.ephrc`` can be something like this (see ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
         
         .. code-block:: ini
         

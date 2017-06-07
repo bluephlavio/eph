@@ -1,0 +1,28 @@
+test package
+============
+
+.. automodule:: test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+test.test_jpl module
+--------------------
+
+.. automodule:: test.test_jpl
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+test.test_util module
+---------------------
+
+.. automodule:: test.test_util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+

@@ -71,17 +71,24 @@ class TestJplParser(unittest.TestCase):
 class TestJplHelper(unittest.TestCase):
 
 
-    def test_translate(self):
-        self.assertEqual(translate('earth'), '399')
-        self.assertEqual(translate('\'earth\''), '399')
-        self.assertEqual(translate('399'), '399')
-        self.assertEqual(translate('\'399\''), '399')
-        self.assertEqual(translate('earth', ref=True), '\'@399\'')
-        self.assertEqual(translate('\'earth\'', ref=True), '\'@399\'')
-        self.assertEqual(translate('\'@earth\'', ref=True), '\'@399\'')
-        self.assertEqual(translate('399', ref=True), '\'@399\'')
-        self.assertEqual(translate('\'399\'', ref=True), '\'@399\'')
-        self.assertEqual(translate('\'@399\'', ref=True), '\'@399\'')
+    def test_codify(self):
+        self.assertEqual(codify('earth'), '399')
+        self.assertEqual(codify('\'earth\''), '399')
+        self.assertEqual(codify('399'), '399')
+        self.assertEqual(codify('\'399\''), '399')
+        self.assertEqual(codify('earth', ref=True), '\'@399\'')
+        self.assertEqual(codify('\'earth\'', ref=True), '\'@399\'')
+        self.assertEqual(codify('\'@earth\'', ref=True), '\'@399\'')
+        self.assertEqual(codify('399', ref=True), '\'@399\'')
+        self.assertEqual(codify('\'399\'', ref=True), '\'@399\'')
+        self.assertEqual(codify('\'@399\'', ref=True), '\'@399\'')
+
+
+    def test_humanify(self):
+        self.assertEqual(humanify("'399'"), 'earth')
+        self.assertEqual(humanify('299'), 'venus')
+        self.assertEqual(humanify("'@499'"), 'mars')
+        self.assertEqual(humanify('@0'), 'sun')
 
 
 

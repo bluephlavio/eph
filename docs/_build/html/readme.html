@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Readme &#8212; eph 0.0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Install" href="install.html" />
+    <link rel="prev" title="Welcome to eph’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="readme">
+<h1>Readme<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal"><span class="pre">eph</span></code> package provides some useful classes to retrieve, parse and manipulate ephemerides.</p>
+<p><strong>Basic Usage (using Jpl Horizons service)</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">eph</span>
+
+<span class="n">req</span> <span class="o">=</span> <span class="n">eph</span><span class="o">.</span><span class="n">JplReq</span><span class="p">()</span> <span class="c1"># create the request</span>
+<span class="n">req</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;.ephrc&#39;</span><span class="p">,</span> <span class="s1">&#39;jplparams&#39;</span><span class="p">)</span> <span class="c1"># read parameters from &#39;jplparams&#39; section in &#39;.ephrc&#39; file</span>
+<span class="n">req</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;COMMAND&#39;</span><span class="p">:</span> <span class="s1">&#39;399&#39;</span><span class="p">,</span> <span class="s1">&#39;START_TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;STOP_TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-12-31&#39;</span><span class="p">})</span> <span class="c1"># set parameters from dictionary</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">query</span><span class="p">()</span> <span class="c1"># perform the request obtaining a response from Jpl Horizons service</span>
+<span class="n">ephemeris</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span> <span class="c1"># extract and parse the ephemeris contained in the http response</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">ephemeris</span><span class="p">)</span> <span class="c1"># print data</span>
+</pre></div>
+</div>
+<p>The content of &#8216;.ephrc&#8217; can be something like this (see <a class="reference external" href="ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long">ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long</a> for a complete description of JPL parameters)</p>
+<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="k">[jplparams]</span>
+<span class="na">CENTER</span><span class="o">=</span><span class="s">&#39;@0&#39;</span>
+<span class="na">OBJ_DATA</span><span class="o">=</span><span class="s">NO</span>
+<span class="na">MAKE_EPHEM</span><span class="o">=</span><span class="s">YES</span>
+<span class="na">TABLE_TYPE</span><span class="o">=</span><span class="s">VECTORS</span>
+<span class="na">VEC_TABLE</span><span class="o">=</span><span class="s">1</span>
+<span class="na">REFERENCE_PLANE</span><span class="o">=</span><span class="s">ECLIPTIC</span>
+<span class="na">REF_SYSTEM</span><span class="o">=</span><span class="s">J2000</span>
+<span class="na">OUT_UNITS</span><span class="o">=</span><span class="s">AU-D</span>
+<span class="na">CSV_FORMAT</span><span class="o">=</span><span class="s">YES</span>
+<span class="na">VEC_LABEL</span><span class="o">=</span><span class="s">NO</span>
+<span class="na">STEP_SIZE</span><span class="o">=</span><span class="s">1d</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to eph&#8217;s documentation!</a></li>
+      <li>Next: <a href="install.html" title="next chapter">Install</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/readme.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Flavio Grandin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/readme.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

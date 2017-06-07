@@ -1,6 +1,13 @@
+"""
+`jpl` module contains classes and functions useful to interact with the `Jpl Horizons service`_ from NASA.
+
+.. _`Jpl Horizons service`: https://ssd.jpl.nasa.gov/?horizons
+"""
+
+
 import configparser, requests, re, sys
 from urllib.parse import urlencode
-from eph import Eph
+import eph
 from eph.util import parsetable, numberify, transpose, addparams2url
 
 
@@ -18,7 +25,15 @@ objcode = {
 }
 
 
-def translate(name, ref=False):
+def codify(name, ref=False):
+    """
+    Translates a human readable celestial object's name to *jpl* code.
+    
+    :param str name: the name to be translated.
+    :param boolean ref: whether the code has to be a reference frame code.
+    :return: the *jpl* code.
+    :rtype: str.
+    """
     name = name.strip('\'@')
     code = objcode.get(name, name)
     if ref:
@@ -26,8 +41,23 @@ def translate(name, ref=False):
     return code
 
 
+def humanify(code):
+    """
+    Translates a *jpl* code to a human readable celestial object's name.
+    
+    :param str code: the code to be translated.
+    :return: the name of the celestial object.
+    :rtype: str.
+    """
+    codeobj = dict((v, k) for k, v in objcode.items())
+    return codeobj[code.strip("'@")]
+
+
 
 class JplReq(dict):
+    """
+    Jpl Request.
+    """
 
 
     JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
@@ -90,7 +120,7 @@ class JplParser(object):
     def parse(self, source):
         data = self.data(source)
         cols = self.cols(source)
-        return Eph(data, names=cols)
+        return eph.Eph(data, names=cols)
 
 
     def data(self, source):

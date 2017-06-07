@@ -1,6 +1,6 @@
 import configparser, os, argparse
 import eph
-from eph.jpl import translate
+from eph.jpl import codify
 
 def main():
 
@@ -39,10 +39,10 @@ def parse_args(defaults):
     parser.add_argument('--output', '-o')
     args = parser.parse_args()
 
-    args.object = translate(args.object)
+    args.object = codify(args.object)
 
     if args.center:
-        args.center = translate(args.center, ref=True)
+        args.center = codify(args.center, ref=True)
 
     return args
 

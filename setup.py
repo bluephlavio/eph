@@ -1,5 +1,4 @@
 from setuptools import setup
-
 from os import path
 
 here = path.abspath(path.dirname(__file__))
@@ -16,6 +15,7 @@ setup(
     author_email='flavio.grandin@gmail.com',
     install_requires=[
         'requests',
+        'numpy',
         'astropy',
     ],
     include_package_data=True,
