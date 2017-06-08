@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -34,7 +34,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -85,12 +85,12 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <dl class="attribute">
 <dt id="eph.jpl.JplParser.COL_REGEX">
-<code class="descname">COL_REGEX</code><em class="property"> = '(?&lt;=\\*\\s)[^\\*]*?(?=\\s\\*+\\s\\$\\$SOE)'</em><a class="headerlink" href="#eph.jpl.JplParser.COL_REGEX" title="Permalink to this definition">¶</a></dt>
+<code class="descname">COL_REGEX</code><em class="property"> = ‘(?&lt;=\*\s)[^\*]*?(?=\s\*+\s\$\$SOE)’</em><a class="headerlink" href="#eph.jpl.JplParser.COL_REGEX" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="eph.jpl.JplParser.EPH_REGEX">
-<code class="descname">EPH_REGEX</code><em class="property"> = '(?&lt;=\\$\\$SOE\\s)[\\s\\S]*?(?=\\s\\$\\$EOE)'</em><a class="headerlink" href="#eph.jpl.JplParser.EPH_REGEX" title="Permalink to this definition">¶</a></dt>
+<code class="descname">EPH_REGEX</code><em class="property"> = ‘(?&lt;=\$\$SOE\s)[\s\S]*?(?=\s\$\$EOE)’</em><a class="headerlink" href="#eph.jpl.JplParser.EPH_REGEX" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -123,7 +123,7 @@
 <p>Jpl Request.</p>
 <dl class="attribute">
 <dt id="eph.jpl.JplReq.JPL_ENDPOINT">
-<code class="descname">JPL_ENDPOINT</code><em class="property"> = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'</em><a class="headerlink" href="#eph.jpl.JplReq.JPL_ENDPOINT" title="Permalink to this definition">¶</a></dt>
+<code class="descname">JPL_ENDPOINT</code><em class="property"> = ‘http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1’</em><a class="headerlink" href="#eph.jpl.JplReq.JPL_ENDPOINT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -133,7 +133,7 @@
 
 <dl class="method">
 <dt id="eph.jpl.JplReq.read">
-<code class="descname">read</code><span class="sig-paren">(</span><em>filename</em>, <em>section='jplparams'</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JplReq.read" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read</code><span class="sig-paren">(</span><em>filename</em>, <em>section=’jplparams’</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.JplReq.read" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -162,14 +162,14 @@
 <dl class="function">
 <dt id="eph.jpl.codify">
 <code class="descclassname">eph.jpl.</code><code class="descname">codify</code><span class="sig-paren">(</span><em>name</em>, <em>ref=False</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.codify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translates a human readable celestial object&#8217;s name to <em>jpl</em> code.</p>
+<dd><p>Translates a human readable celestial object’s name to <em>jpl</em> code.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; the name to be translated.</li>
-<li><strong>ref</strong> (<em>boolean</em>) &#8211; whether the code has to be a reference frame code.</li>
+<li><strong>name</strong> (<em>str</em>) – the name to be translated.</li>
+<li><strong>ref</strong> (<em>boolean</em>) – whether the code has to be a reference frame code.</li>
 </ul>
 </td>
 </tr>
@@ -186,12 +186,12 @@
 <dl class="function">
 <dt id="eph.jpl.humanify">
 <code class="descclassname">eph.jpl.</code><code class="descname">humanify</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.jpl.humanify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translates a <em>jpl</em> code to a human readable celestial object&#8217;s name.</p>
+<dd><p>Translates a <em>jpl</em> code to a human readable celestial object’s name.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>code</strong> (<em>str</em>) &#8211; the code to be translated.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>code</strong> (<em>str</em>) – the code to be translated.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the name of the celestial object.</td>
 </tr>
@@ -221,7 +221,7 @@
 
 <dl class="function">
 <dt id="eph.util.parsetable">
-<code class="descclassname">eph.util.</code><code class="descname">parsetable</code><span class="sig-paren">(</span><em>raw</em>, <em>delimiter='</em>, <em>'</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.util.parsetable" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">eph.util.</code><code class="descname">parsetable</code><span class="sig-paren">(</span><em>raw</em>, <em>delimiter=’</em>, <em>’</em><span class="sig-paren">)</span><a class="headerlink" href="#eph.util.parsetable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -283,8 +283,8 @@
       &copy;2017, Flavio Grandin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
       <a href="_sources/eph.rst.txt"

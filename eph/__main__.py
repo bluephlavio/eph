@@ -25,7 +25,7 @@ def main():
 def read_config():
     config = configparser.ConfigParser()
     config.optionxform = str
-    config.read([os.path.expanduser('~/.ephrc'), './.ephrc'])
+    config.read([os.path.expanduser('~/.ephrc'), '.ephrc'])
     return dict(config.items('jplparams'))
 
 

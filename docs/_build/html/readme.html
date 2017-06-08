@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -35,7 +35,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -51,14 +51,24 @@
 
 <span class="n">req</span> <span class="o">=</span> <span class="n">eph</span><span class="o">.</span><span class="n">JplReq</span><span class="p">()</span> <span class="c1"># create the request</span>
 <span class="n">req</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;.ephrc&#39;</span><span class="p">,</span> <span class="s1">&#39;jplparams&#39;</span><span class="p">)</span> <span class="c1"># read parameters from &#39;jplparams&#39; section in &#39;.ephrc&#39; file</span>
-<span class="n">req</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;COMMAND&#39;</span><span class="p">:</span> <span class="s1">&#39;399&#39;</span><span class="p">,</span> <span class="s1">&#39;START_TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;STOP_TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-12-31&#39;</span><span class="p">})</span> <span class="c1"># set parameters from dictionary</span>
+<span class="n">req</span><span class="o">.</span><span class="n">set</span><span class="p">({</span>
+    <span class="s1">&#39;COMMAND&#39;</span><span class="p">:</span> <span class="s1">&#39;earth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;START_TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;2007-11-17&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;STOP_TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-4-22&#39;</span>
+    <span class="p">})</span> <span class="c1"># set parameters from dictionary</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">query</span><span class="p">()</span> <span class="c1"># perform the request obtaining a response from Jpl Horizons service</span>
 <span class="n">ephemeris</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span> <span class="c1"># extract and parse the ephemeris contained in the http response</span>
 
 <span class="k">print</span><span class="p">(</span><span class="n">ephemeris</span><span class="p">)</span> <span class="c1"># print data</span>
 </pre></div>
 </div>
-<p>The content of &#8216;.ephrc&#8217; can be something like this (see <a class="reference external" href="ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long">ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long</a> for a complete description of JPL parameters)</p>
+<p>or, in one line</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">eph</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">eph</span><span class="o">.</span><span class="n">JplReq</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;.ephrc&#39;</span><span class="p">,</span> <span class="s1">&#39;jplparams&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;COMMAND&#39;</span><span class="p">:</span> <span class="s1">&#39;399&#39;</span><span class="p">,</span> <span class="s1">&#39;START_TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;2007-11-17&#39;</span><span class="p">,</span> <span class="s1">&#39;STOP_TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-04-22&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The content of <code class="docutils literal"><span class="pre">.ephrc</span></code> can be something like this (see <a class="reference external" href="ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long">ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long</a> for a complete description of JPL parameters)</p>
 <div class="highlight-ini"><div class="highlight"><pre><span></span><span class="k">[jplparams]</span>
 <span class="na">CENTER</span><span class="o">=</span><span class="s">&#39;@0&#39;</span>
 <span class="na">OBJ_DATA</span><span class="o">=</span><span class="s">NO</span>
@@ -73,6 +83,17 @@
 <span class="na">STEP_SIZE</span><span class="o">=</span><span class="s">1d</span>
 </pre></div>
 </div>
+<div class="section" id="eph-script">
+<h2>eph script<a class="headerlink" href="#eph-script" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">eph</span></code> package also provides a command line tool to retrive ephemerides from services like JPL Horizons. To use it, type</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>eph <span class="m">2007</span>-11-17 <span class="m">2017</span>-4-22 venus
+</pre></div>
+</div>
+<p>and you get ephemeris table of Venus starting from 2007-11-17 to 2017-4-22. You can also change the reference frame, the time-step size, the output etc. through the options provided. Check available options with</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>eph --help
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -80,11 +101,19 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Readme</a><ul>
+<li><a class="reference internal" href="#eph-script">eph script</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to eph&#8217;s documentation!</a></li>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to eph’s documentation!</a></li>
       <li>Next: <a href="install.html" title="next chapter">Install</a></li>
   </ul></li>
 </ul>
@@ -114,8 +143,8 @@
       &copy;2017, Flavio Grandin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
       <a href="_sources/readme.rst.txt"
