@@ -61,6 +61,9 @@ eph.egg-info/top_level.txt
 test/__init__.py
 test/test_jpl.py
 test/test_util.py
+test/__pycache__/__init__.cpython-34.pyc
+test/__pycache__/test_jpl.cpython-34.pyc
+test/__pycache__/test_util.cpython-34.pyc
 test/res/def.cfg
 test/res/jpleph.txt
 test/res/url.txt

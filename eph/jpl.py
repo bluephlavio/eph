@@ -5,9 +5,13 @@
 """
 
 
-import configparser, requests, re, sys
+import configparser, re
+import os.path
 from urllib.parse import urlencode
-import eph
+
+from astropy.table import Table
+import requests
+
 from eph.util import parsetable, numberify, transpose, addparams2url
 
 
@@ -61,7 +65,11 @@ class JplReq(dict):
 
 
     JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
-
+    REQUIRED_FIELDS = [
+        'COMMAND',
+        'START_TIME',
+        'STOP_TIME',
+        ]
 
     def __init__(self):
         dict.__init__(self)
@@ -73,6 +81,7 @@ class JplReq(dict):
 
 
     def read(self, filename, section='jplparams'):
+        filename = os.path.abspath(os.path.expanduser(filename))
         config = configparser.ConfigParser()
         config.optionxform = str
         config.read(filename)
@@ -81,13 +90,31 @@ class JplReq(dict):
         return self
 
 
+    def clean(self):
+        if self.get('OBJECT'):
+            self['COMMAND'] = self['OBJECT']
+            del self['OBJECT']
+        if self.get('COMMAND'):
+            self['COMMAND'] = codify(self['COMMAND'])
+        if self.get('CENTER'):
+            self['CENTER'] = codify(self['CENTER'], ref=True)
+
+
+    def is_valid(self):
+        self.clean()
+        return all(map(lambda x: True if self.get(x) else False, JplReq.REQUIRED_FIELDS))
+
+
     def url(self):
+        self.clean()
         return addparams2url(JplReq.JPL_ENDPOINT, self)
 
 
     def query(self):
+        self.clean()
         res = requests.get(JplReq.JPL_ENDPOINT, params=self)
         return JplRes(res)
+
 
 
 class JplRes(object):
@@ -96,6 +123,16 @@ class JplRes(object):
     def __init__(self, res):
         self.res = res
         self.parser = JplParser()
+
+
+    @property
+    def res(self):
+        return self._res
+
+
+    @res.setter
+    def res(self, value):
+        self._res = value
 
 
     def parse(self):
@@ -120,7 +157,7 @@ class JplParser(object):
     def parse(self, source):
         data = self.data(source)
         cols = self.cols(source)
-        return eph.Eph(data, names=cols)
+        return Table(data, names=cols)
 
 
     def data(self, source):
