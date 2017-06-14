@@ -7,6 +7,7 @@
 
 import configparser, re
 import os.path
+from collections import UserDict
 from urllib.parse import urlencode
 
 from astropy.table import Table
@@ -58,7 +59,7 @@ def humanify(code):
 
 
 
-class JplReq(dict):
+class JplReq(UserDict):
     """
     Jpl Request.
     """
@@ -71,13 +72,33 @@ class JplReq(dict):
         'STOP_TIME',
         ]
 
-    def __init__(self):
-        dict.__init__(self)
+
+    def __setitem__(self, key, value):
+        if key == 'OBJECT':
+            key = 'COMMAND'
+            value = codify(value)
+        if key == 'CENTER':
+            value = codify(value, ref=True)
+        super().__setitem__(key, value)
+
+
+    def __getitem__(self, key):
+        if key == 'OBJECT':
+            key = 'COMMAND'
+        return super().__getitem__(key)
 
 
     def set(self, params):
         self.update(params)
         return self
+
+
+    def set_required(self, obj, start, stop):
+        return self.set({
+            'COMMAND': obj,
+            'START_TIME': start,
+            'STOP_TIME': stop,
+            })
 
 
     def read(self, filename, section='jplparams'):
@@ -86,58 +107,41 @@ class JplReq(dict):
         config.optionxform = str
         config.read(filename)
         params = dict(config.items(section))
-        self.update(params)
-        return self
-
-
-    def clean(self):
-        if self.get('OBJECT'):
-            self['COMMAND'] = self['OBJECT']
-            del self['OBJECT']
-        if self.get('COMMAND'):
-            self['COMMAND'] = codify(self['COMMAND'])
-        if self.get('CENTER'):
-            self['CENTER'] = codify(self['CENTER'], ref=True)
+        return self.set(params)
 
 
     def is_valid(self):
-        self.clean()
         return all(map(lambda x: True if self.get(x) else False, JplReq.REQUIRED_FIELDS))
 
 
     def url(self):
-        self.clean()
         return addparams2url(JplReq.JPL_ENDPOINT, self)
 
 
     def query(self):
-        self.clean()
-        res = requests.get(JplReq.JPL_ENDPOINT, params=self)
-        return JplRes(res)
+        if self.is_valid():
+            res = requests.get(JplReq.JPL_ENDPOINT, params=self)
+            return JplRes(res)
+        else:
+            raise JplBadReq
 
 
 
 class JplRes(object):
 
 
-    def __init__(self, res):
-        self.res = res
+    def __init__(self, http_response):
+        self.http_response = http_response
         self.parser = JplParser()
 
 
-    @property
-    def res(self):
-        return self._res
+    def get_raw(self):
+        return self.http_response.text
 
 
-    @res.setter
-    def res(self, value):
-        self._res = value
-
-
-    def parse(self):
+    def get_table(self):
         try:
-            return self.parser.parse(self.res.text)
+            return self.parser.parse(self.http_response.text)
         except JplParserError:
             raise JplBadReq
 
@@ -147,7 +151,7 @@ class JplParser(object):
 
 
     EPH_REGEX = r'(?<=\$\$SOE\s)[\s\S]*?(?=\s\$\$EOE)'
-    COL_REGEX = r'(?<=\*\s)[^\*]*?(?=\s\*+\s\$\$SOE)'
+    COL_NAMES_REGEX = r'(?<=\*[\r\n])[^\r\n]*(?=[\r\n]\*+\s\$\$SOE)'
 
 
     def __init__(self):
@@ -156,8 +160,8 @@ class JplParser(object):
 
     def parse(self, source):
         data = self.data(source)
-        cols = self.cols(source)
-        return Table(data, names=cols)
+        #cols = self.cols(source)
+        return Table(data)
 
 
     def data(self, source):
@@ -169,7 +173,7 @@ class JplParser(object):
 
 
     def cols(self, source):
-        match = re.search(JplParser.COL_REGEX, source)
+        match = re.search(JplParser.COL_NAMES_REGEX, source)
         if match:
             return tuple(parsetable(match.group(), delimiter=','))
         else:

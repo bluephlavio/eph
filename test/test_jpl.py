@@ -33,7 +33,7 @@ class TestJplReq(unittest.TestCase):
 
     def test_query(self):
         self.req.read(CONFIG_FILE).set(QUERY)
-        res = self.req.query().res
+        res = self.req.query().http_response
         self.assertEqual(res.status_code, 200)
 
 
@@ -47,7 +47,7 @@ class TestJplRes(unittest.TestCase):
             for url in urls:
                 try:
                     res = JplRes(requests.get(url))
-                    eph = res.parse()
+                    eph = res.get_table()
                     self.assertTrue(True)
                 except JplBadReq:
                     self.assertTrue(False)
