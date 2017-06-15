@@ -7,7 +7,7 @@
 
 import configparser, re
 import os.path
-from collections import UserDict
+from collections.abc import MutableMapping
 from urllib.parse import urlencode
 
 from astropy.table import Table
@@ -30,7 +30,7 @@ objcode = {
 }
 
 
-def codify(name, ref=False):
+def codify_obj(name):
     """
     Translates a human readable celestial object's name to *jpl* code.
     
@@ -40,10 +40,12 @@ def codify(name, ref=False):
     :rtype: str.
     """
     name = name.strip('\'@')
-    code = objcode.get(name, name)
-    if ref:
-        code = '\'@' + code + '\''
-    return code
+    return objcode.get(name, name)
+
+
+def codify_site(name):
+    code = codify_obj(name)
+    return '\'@' + code + '\''
 
 
 def humanify(code):
@@ -55,11 +57,11 @@ def humanify(code):
     :rtype: str.
     """
     codeobj = dict((v, k) for k, v in objcode.items())
-    return codeobj[code.strip("'@")]
+    return codeobj.get(code.strip("'@"), code)
 
 
 
-class JplReq(UserDict):
+class JplReq(MutableMapping):
     """
     Jpl Request.
     """
@@ -71,34 +73,70 @@ class JplReq(UserDict):
         'START_TIME',
         'STOP_TIME',
         ]
+    ALIASES = {
+        'COMMAND': ['OBJECT', 'BODY'],
+        }
+    PARSERS = {
+        'COMMAND': lambda obj: codify_obj(obj),
+        'CENTER': lambda site: codify_site(site),
+        }
 
 
-    def __setitem__(self, key, value):
-        if key == 'OBJECT':
-            key = 'COMMAND'
-            value = codify(value)
-        if key == 'CENTER':
-            value = codify(value, ref=True)
-        super().__setitem__(key, value)
+    @staticmethod
+    def aliasof(key):
+        for k, v in JplReq.ALIASES.items():
+            if key in v:
+                return k
+        return key
+
+
+    @staticmethod
+    def transformkey(key):
+        return JplReq.aliasof(key.upper())
+
+
+    @staticmethod
+    def transformvalue(key, value):
+        if key in JplReq.PARSERS.keys():
+            parser = JplReq.PARSERS[key]
+            value = parser(value)
+        return value
+
+
+    def __init__(self, *args, **kwargs):
+        pass #self.__dict__ = dict(*args, **kwargs)
+
+
+    def __getattr__(self, key):
+        key = JplReq.transformkey(key)
+        return self.__dict__[key]
+
+
+    def __setattr__(self, key, value):
+        key = JplReq.transformkey(key)
+        value = JplReq.transformvalue(key, value)
+        self.__dict__[key] = value
 
 
     def __getitem__(self, key):
-        if key == 'OBJECT':
-            key = 'COMMAND'
-        return super().__getitem__(key)
+        return self.__getattr__(key)
 
 
-    def set(self, params):
-        self.update(params)
-        return self
+    def __setitem__(self, key, value):
+        self.__setattr__(key, value)
 
 
-    def set_required(self, obj, start, stop):
-        return self.set({
-            'COMMAND': obj,
-            'START_TIME': start,
-            'STOP_TIME': stop,
-            })
+    def __delitem__(self, key):
+        del self.__dict__[key]
+
+
+    def __iter__(self):
+        for k, v in self.__dict__.items():
+            yield k, v
+
+
+    def __len__(self):
+        return len(self.__dict__)
 
 
     def read(self, filename, section='jplparams'):
