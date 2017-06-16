@@ -51,6 +51,8 @@ eph/__init__.py
 eph/__main__.py
 eph/eph.py
 eph/jpl.py
+eph/models.py
+eph/shortcuts.py
 eph/util.py
 eph.egg-info/PKG-INFO
 eph.egg-info/SOURCES.txt
@@ -61,9 +63,13 @@ eph.egg-info/top_level.txt
 test/__init__.py
 test/test_jpl.py
 test/test_jpl.py~
+test/test_models.py
+test/test_models.py~
 test/test_util.py
+test/test_util.py~
 test/__pycache__/__init__.cpython-34.pyc
 test/__pycache__/test_jpl.cpython-34.pyc
+test/__pycache__/test_models.cpython-34.pyc
 test/__pycache__/test_util.cpython-34.pyc
 test/res/def.cfg
 test/res/jpleph.txt

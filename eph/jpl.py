@@ -7,13 +7,13 @@
 
 import configparser, re
 import os.path
-from collections.abc import MutableMapping
 from urllib.parse import urlencode
 
 from astropy.table import Table
 import requests
 
-from eph.util import parsetable, numberify, transpose, addparams2url
+from eph.models import BaseMap
+from eph.util import parsetable, numberify, transpose, addparams2url, path
 
 
 
@@ -61,86 +61,77 @@ def humanify(code):
 
 
 
-class JplReq(MutableMapping):
+class JplReq(BaseMap):
     """
     Jpl Request.
     """
 
 
     JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
+
     REQUIRED_FIELDS = [
         'COMMAND',
         'START_TIME',
         'STOP_TIME',
         ]
+
     ALIASES = {
         'COMMAND': ['OBJECT', 'BODY'],
+        'START_TIME': ['START'],
+        'STOP_TIME': ['STOP'],
+        'STEP_SIZE': ['STEP'],
+        'CSV_FORMAT': ['CSV'],
+        'TABLE_TYPE': ['TYPE'],
+        'VEC_TABLE': ['TABLE'],
         }
+
     PARSERS = {
         'COMMAND': lambda obj: codify_obj(obj),
         'CENTER': lambda site: codify_site(site),
+        'CSV_FORMAT': lambda csv: 'YES' if csv in (True, 'y', 'Y', 'yes', 'YES') else 'NO',
         }
 
 
     @staticmethod
     def aliasof(key):
-        for k, v in JplReq.ALIASES.items():
-            if key in v:
+        for k, aliases in JplReq.ALIASES.items():
+            if key in aliases:
                 return k
         return key
 
 
     @staticmethod
     def transformkey(key):
-        return JplReq.aliasof(key.upper())
+        key = key.upper()
+        return JplReq.aliasof(key)
 
 
     @staticmethod
     def transformvalue(key, value):
-        if key in JplReq.PARSERS.keys():
+        if key in JplReq.PARSERS:
             parser = JplReq.PARSERS[key]
             value = parser(value)
         return value
 
 
-    def __init__(self, *args, **kwargs):
-        pass #self.__dict__ = dict(*args, **kwargs)
-
-
     def __getattr__(self, key):
         key = JplReq.transformkey(key)
-        return self.__dict__[key]
+        return super().__getattr__(key)
 
 
     def __setattr__(self, key, value):
         key = JplReq.transformkey(key)
         value = JplReq.transformvalue(key, value)
-        self.__dict__[key] = value
+        super().__setattr__(key, value)
 
 
-    def __getitem__(self, key):
-        return self.__getattr__(key)
+    def __delattr__(self, key):
+        key = JplReq.transformkey(key)
+        super().__delattr__(key)
 
 
-    def __setitem__(self, key, value):
-        self.__setattr__(key, value)
-
-
-    def __delitem__(self, key):
-        del self.__dict__[key]
-
-
-    def __iter__(self):
-        for k, v in self.__dict__.items():
-            yield k, v
-
-
-    def __len__(self):
-        return len(self.__dict__)
-
-
-    def read(self, filename, section='jplparams'):
-        filename = os.path.abspath(os.path.expanduser(filename))
+    def read(self, filename, section):
+        filename = path(filename)
         config = configparser.ConfigParser()
         config.optionxform = str
         config.read(filename)
@@ -149,7 +140,7 @@ class JplReq(MutableMapping):
 
 
     def is_valid(self):
-        return all(map(lambda x: True if self.get(x) else False, JplReq.REQUIRED_FIELDS))
+        return all(map(lambda field: self.get(field), JplReq.REQUIRED_FIELDS))
 
 
     def url(self):
@@ -158,8 +149,8 @@ class JplReq(MutableMapping):
 
     def query(self):
         if self.is_valid():
-            res = requests.get(JplReq.JPL_ENDPOINT, params=self)
-            return JplRes(res)
+            http_response = requests.get(JplReq.JPL_ENDPOINT, params=self)
+            return JplRes(http_response)
         else:
             raise JplBadReq
 
@@ -178,10 +169,7 @@ class JplRes(object):
 
 
     def get_table(self):
-        try:
-            return self.parser.parse(self.http_response.text)
-        except JplParserError:
-            raise JplBadReq
+        return self.parser.parse(self.http_response.text)
 
 
 
@@ -193,19 +181,22 @@ class JplParser(object):
 
 
     def __init__(self):
-        pass
+        self._delimiter = r'\s+'
 
 
     def parse(self, source):
+        match = re.search(r'CSV_FORMAT\s=\s(\w+)', source)
+        if match and match.group(1) == 'YES':
+            self._delimiter = ','
         data = self.data(source)
-        #cols = self.cols(source)
-        return Table(data)
+        cols = self.cols(source)
+        return Table(data, names=cols)
 
 
     def data(self, source):
         match = re.search(JplParser.EPH_REGEX, source)
         if match:
-            return transpose(numberify(parsetable(match.group(), delimiter=',')))
+            return transpose(numberify(parsetable(match.group(), delimiter=self._delimiter)))
         else:
             raise JplParserError
 
@@ -213,7 +204,7 @@ class JplParser(object):
     def cols(self, source):
         match = re.search(JplParser.COL_NAMES_REGEX, source)
         if match:
-            return tuple(parsetable(match.group(), delimiter=','))
+            return tuple(parsetable(match.group(), delimiter=self._delimiter))
         else:
             raise JplParserError
 
@@ -231,8 +222,6 @@ class JplBadReq(JplError):
 
 class JplParserError(JplError):
     pass
-
-
 
 
 

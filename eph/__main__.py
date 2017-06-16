@@ -1,6 +1,7 @@
 import configparser, os, argparse
 import eph
-from eph.jpl import codify
+from eph.jpl import codify_obj, codify_site
+from eph.util import path
 
 def main():
 
@@ -8,24 +9,24 @@ def main():
 
     args = parse_args(defaults)
 
-    req = eph.JplReq().set(defaults).set({
+    req = eph.JplReq(defaults).set({
         'COMMAND': args.object,
         'START_TIME': args.start,
         'STOP_TIME': args.stop,
         'CENTER': args.center,
-        'STEP_SIZE': args.step
+        'STEP_SIZE': args.step,
         }
     )
 
     res = req.query()
-    ephemeris = res.parse()
-    write(ephemeris, filename=args.output)
+    table = res.get_table()
+    write(table, filename=args.output)
 
 
 def read_config():
     config = configparser.ConfigParser()
     config.optionxform = str
-    config.read([os.path.expanduser('~/.ephrc'), '.ephrc'])
+    config.read([path('~/.ephrc'), '.ephrc'])
     return dict(config.items('jplparams'))
 
 
@@ -39,10 +40,10 @@ def parse_args(defaults):
     parser.add_argument('--output', '-o')
     args = parser.parse_args()
 
-    args.object = codify(args.object)
+    args.object = codify_obj(args.object)
 
     if args.center:
-        args.center = codify(args.center, ref=True)
+        args.center = codify_site(args.center)
 
     return args
 
@@ -57,6 +58,4 @@ def write(ephemeris, filename=None):
 
 if __name__ == '__main__':
     main()
-
-
 

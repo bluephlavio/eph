@@ -6,6 +6,7 @@ from eph.util import *
 
 class TestUtil(unittest.TestCase):
 
+
     def test_isvector(self):
         self.assertTrue(isvector([1,2,3]))
         self.assertFalse(isvector('abc'))
@@ -29,3 +30,11 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(addparams2url('http://xyz.com', {'key': 'value'}), 'http://xyz.com?key=value')
         self.assertEqual(addparams2url('http://xyz.com?', {'key': 'value'}), 'http://xyz.com?key=value')
         self.assertEqual(addparams2url('http://xyz.com?a=b', {'key': 'value'}), 'http://xyz.com?a=b&key=value')
+
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+

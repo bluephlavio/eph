@@ -1,5 +1,6 @@
 import copy
 from urllib.parse import urlparse, urlunparse, urlencode
+from os.path import abspath, expanduser
 
 
 
@@ -33,6 +34,10 @@ def numberify(data):
 
 def transpose(data):
     return [list(row) for row in zip(*data)]
+
+
+def path(filename):
+    return abspath(expanduser(filename))
 
 
 def addparams2url(url, params):

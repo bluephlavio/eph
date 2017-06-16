@@ -1,5 +1,8 @@
-import os, sys, datetime, requests, unittest
-sys.path.append('../eph')
+import sys
+sys.path.append('..')
+
+import os, datetime, requests, unittest
+
 from eph.jpl import *
 
 
@@ -9,9 +12,12 @@ QUERY = {
     'START_TIME': '2007-11-17',
     'STOP_TIME': datetime.date.today().strftime('%Y-%m-%d')
 }
+
 CONFIG_FILE = os.path.join(os.path.dirname(__file__), 'res/def.cfg')
-JPL_EPH_EXAMPLE = os.path.join(os.path.dirname(__file__), 'res/jpleph.txt')
+SECTION = 'jplparams'
+
 JPL_URL_EXAMPLE = os.path.join(os.path.dirname(__file__), 'res/url.txt')
+JPL_EPH_EXAMPLE = os.path.join(os.path.dirname(__file__), 'res/jpleph.txt')
 
 
 
@@ -28,11 +34,11 @@ class TestJplReq(unittest.TestCase):
 
     def test_url(self):
         self.req.set({'key': 'value'})
-        self.assertEqual(self.req.url(), 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&key=value')
+        self.assertEqual(self.req.url(), 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&KEY=value')
 
 
     def test_query(self):
-        self.req.read(CONFIG_FILE).set(QUERY)
+        self.req.read(CONFIG_FILE, SECTION).set(QUERY)
         res = self.req.query().http_response
         self.assertEqual(res.status_code, 200)
 
@@ -72,16 +78,16 @@ class TestJplHelper(unittest.TestCase):
 
 
     def test_codify(self):
-        self.assertEqual(codify('earth'), '399')
-        self.assertEqual(codify('\'earth\''), '399')
-        self.assertEqual(codify('399'), '399')
-        self.assertEqual(codify('\'399\''), '399')
-        self.assertEqual(codify('earth', ref=True), '\'@399\'')
-        self.assertEqual(codify('\'earth\'', ref=True), '\'@399\'')
-        self.assertEqual(codify('\'@earth\'', ref=True), '\'@399\'')
-        self.assertEqual(codify('399', ref=True), '\'@399\'')
-        self.assertEqual(codify('\'399\'', ref=True), '\'@399\'')
-        self.assertEqual(codify('\'@399\'', ref=True), '\'@399\'')
+        self.assertEqual(codify_obj('earth'), '399')
+        self.assertEqual(codify_obj('\'earth\''), '399')
+        self.assertEqual(codify_obj('399'), '399')
+        self.assertEqual(codify_obj('\'399\''), '399')
+        self.assertEqual(codify_site('earth'), '\'@399\'')
+        self.assertEqual(codify_site('\'earth\''), '\'@399\'')
+        self.assertEqual(codify_site('\'@earth\''), '\'@399\'')
+        self.assertEqual(codify_site('399'), '\'@399\'')
+        self.assertEqual(codify_site('\'399\''), '\'@399\'')
+        self.assertEqual(codify_site('\'@399\''), '\'@399\'')
 
 
     def test_humanify(self):

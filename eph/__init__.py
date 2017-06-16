@@ -15,5 +15,8 @@
 
 from .eph import Eph
 from .jpl import JplReq, JplRes
+from .shortcuts import *
 
 
+# testing
+# req = JplReq(start='2000-1-1', stop='2000-1-2', body='venus', center='earth').read('~/.ephrc', 'jplparams')
