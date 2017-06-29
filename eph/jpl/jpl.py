@@ -9,12 +9,15 @@ import configparser, re
 import os.path
 from urllib.parse import urlencode
 
-from astropy.table import Table
 import requests
 
-from eph.models import BaseMap
-from eph.util import parsetable, numberify, transpose, addparams2url, path
+from .models import BaseMap
+from .parsers import JplParser
+from .exceptions import JplError
+from ..util import addparams2url, path
 
+
+__all__ = ['objcode', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
 
 
 objcode = {
@@ -171,57 +174,6 @@ class JplRes(object):
     def get_table(self):
         return self.parser.parse(self.http_response.text)
 
-
-
-class JplParser(object):
-
-
-    EPH_REGEX = r'(?<=\$\$SOE\s)[\s\S]*?(?=\s\$\$EOE)'
-    COL_NAMES_REGEX = r'(?<=\*[\r\n])[^\r\n]*(?=[\r\n]\*+\s\$\$SOE)'
-
-
-    def __init__(self):
-        self._delimiter = r'\s+'
-
-
-    def parse(self, source):
-        match = re.search(r'CSV_FORMAT\s=\s(\w+)', source)
-        if match and match.group(1) == 'YES':
-            self._delimiter = ','
-        data = self.data(source)
-        cols = self.cols(source)
-        return Table(data, names=cols)
-
-
-    def data(self, source):
-        match = re.search(JplParser.EPH_REGEX, source)
-        if match:
-            return transpose(numberify(parsetable(match.group(), delimiter=self._delimiter)))
-        else:
-            raise JplParserError
-
-
-    def cols(self, source):
-        match = re.search(JplParser.COL_NAMES_REGEX, source)
-        if match:
-            return tuple(parsetable(match.group(), delimiter=self._delimiter))
-        else:
-            raise JplParserError
-
-
-
-class JplError(Exception):
-    pass
-
-
-
-class JplBadReq(JplError):
-    pass
-
-
-
-class JplParserError(JplError):
-    pass
 
 
 

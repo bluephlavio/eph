@@ -15,7 +15,7 @@
 
 from .eph import Eph
 from .jpl import JplReq, JplRes
-from .shortcuts import *
+from .jpl.shortcuts import *
 
 
 # testing
