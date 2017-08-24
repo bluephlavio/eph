@@ -3,21 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to eph's documentation!
-===============================
+Welcome to eph
+==============
+
+:mod:`eph` package aims to provide functions, classes and tools to `represent`, `retrieve` and `manipulate` ephemerides.
+
+Documention
+===========
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   readme
-   install
-   license
-   modules
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   source/install
+   source/getting_started
+   source/license
+   source/modules

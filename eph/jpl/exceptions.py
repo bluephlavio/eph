@@ -1,4 +1,8 @@
+""" exceptions.py
 
+Defines Jpl Horizons related exceptions.
+
+"""
 
 class JplError(Exception):
     pass
