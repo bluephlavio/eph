@@ -1,7 +1,7 @@
 Readme
 ======
 
-The :mod:`eph` package provides some useful functions, classes and tools to `retrieve`, `parse` and `manipulate` ephemerides. 
+The ``eph`` package provides some useful functions, classes and tools to `retrieve`, `parse` and `manipulate` ephemerides.
 
 Basic Usage (using Jpl Horizons service)
 ----------------------------------------
@@ -52,7 +52,7 @@ The content of :file:`.ephrc` can be something like this (see ftp://ssd.jpl.nasa
 Command line tool
 -----------------
 
-:mod:`eph` package also provides a command line tool to retrive ephemerides from services like JPL Horizons. To use it, type
+``eph`` package also provides a command line tool to retrive ephemerides from services like JPL Horizons. To use it, type
 
 .. code-block:: bash
 

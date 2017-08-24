@@ -1,3 +1,0 @@
-[console_scripts]
-eph = eph.__main__:main
-
