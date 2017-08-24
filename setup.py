@@ -1,21 +1,22 @@
 from setuptools import setup
 from os import path
 
+import eph
+
 here = path.abspath(path.dirname(__file__))
 
 with open(path.join(here, 'README.rst')) as f:
     long_description = f.read()
 
 setup(
-    name='eph',
-    version='0.0.2',
+    name=eph.__project__,
+    version=eph.__release__,
     description='Retrieve and manipulate Jpl Horizons Ephemerides.',
     long_description=long_description,
-    author='Flavio Grandin',
+    author=eph.__author__,
     author_email='flavio.grandin@gmail.com',
     install_requires=[
         'requests',
-        'numpy',
         'astropy',
     ],
     include_package_data=True,
@@ -38,5 +39,3 @@ setup(
         'console_scripts': ['eph=eph.__main__:main'],
     },
 )
-
-

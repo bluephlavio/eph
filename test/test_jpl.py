@@ -4,6 +4,8 @@ sys.path.append('..')
 import os, datetime, requests, unittest
 
 from eph.jpl import *
+from eph.jpl.parsers import JplParser
+from eph.jpl.exceptions import JplParserError, JplBadReq
 
 
 

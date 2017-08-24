@@ -1,5 +1,5 @@
 import sys, unittest
-sys.path.append('../eph')
+sys.path.append('..')
 from eph.util import *
 
 

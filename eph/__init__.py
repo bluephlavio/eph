@@ -15,8 +15,13 @@
 
 from .eph import Eph
 from .jpl import JplReq, JplRes
-from .shortcuts import *
+from .jpl.shortcuts import *
 
+import datetime
 
-# testing
-# req = JplReq(start='2000-1-1', stop='2000-1-2', body='venus', center='earth').read('~/.ephrc', 'jplparams')
+__project__ = 'eph'
+__author__ = 'Flavio Grandin'
+__year__ = datetime.datetime.now().year
+__release__ = '0.1.0'
+__version__ = '.'.join(__release__.split('.')[:2])
+

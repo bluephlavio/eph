@@ -1,7 +1,19 @@
 dist
 build
+develop-eggs/
+wheels/
+eggs/
+.eggs/
+*.egg-info
+*.egg
 
 __pycache__
 *.pyo
 
 *~
+
+# pycharm
+idea/
+
+# docs build
+docs/_build/*

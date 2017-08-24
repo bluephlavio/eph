@@ -4,7 +4,7 @@ sys.path.append('..')
 
 import unittest
 
-from eph.models import BaseMap
+from eph.jpl.models import BaseMap
 
 
 class ConcreteMap(BaseMap):
