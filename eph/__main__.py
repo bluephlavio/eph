@@ -1,4 +1,9 @@
-import configparser, argparse
+import argparse
+try:
+    import configparser
+except:
+    import ConfigParser as configparser
+
 import eph
 from eph.jpl import codify_obj, codify_site
 from eph.util import path

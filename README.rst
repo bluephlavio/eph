@@ -1,7 +1,8 @@
 Readme
 ======
 
-The ``eph`` package provides some useful functions, classes and tools to `retrieve`, `parse` and `manipulate` ephemerides.
+The ``eph`` package provides some useful functions, classes and tools
+to`retrieve`, `parse` and `manipulate` ephemerides.
 
 Basic Usage (using Jpl Horizons service)
 ----------------------------------------
@@ -22,7 +23,7 @@ Basic Usage (using Jpl Horizons service)
 
     print(ephemeris) # print data
 
-or, in one line
+or, the one-liner
 
 .. code-block:: python
 
@@ -31,7 +32,8 @@ or, in one line
     print(eph.JplReq().read('.ephrc', 'jplparams').set({'COMMAND': '399', 'START_TIME': '2007-11-17', 'STOP_TIME': '2017-04-22'}).query().parse())
 
 
-The content of :file:`.ephrc` can be something like this (see ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
+The content of :file:`.ephrc` can be something like this
+(see ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
 
 .. code-block:: ini
 
@@ -52,16 +54,19 @@ The content of :file:`.ephrc` can be something like this (see ftp://ssd.jpl.nasa
 Command line tool
 -----------------
 
-``eph`` package also provides a command line tool to retrive ephemerides from services like JPL Horizons. To use it, type
+``eph`` package also provides a command line tool to retrive ephemerides from services like JPL Horizons.
+To use it, open the terminal and type
 
 .. code-block:: bash
 
     $ eph 2007-11-17 2017-4-22 venus
 
-and you get ephemeris table of Venus starting from 2007-11-17 to 2017-4-22. You can also change the reference frame, the time-step size, the output etc. through the options provided. Check available options with
+and you get ephemeris table of Venus starting from 2007-11-17 to 2017-4-22. You can also change the reference frame,
+the time-step size, the output etc. through the options provided. Check available options with
 
 .. code-block:: bash
 
     $ eph --help
 
-
+.. image:: https://travis-ci.org/bluephlavio/eph.svg?branch=master
+   :target: https://travis-ci.org/bluephlavio/eph

@@ -5,15 +5,15 @@
 """
 
 
-import configparser, re
-import os.path
-from urllib.parse import urlencode
+try:
+    import configparser
+except:
+    import ConfigParser as configparser
 
 import requests
 
 from .models import BaseMap
 from .parsers import JplParser
-from .exceptions import JplError
 from ..util import addparams2url, path
 
 
