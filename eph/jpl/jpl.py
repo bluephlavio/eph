@@ -14,6 +14,7 @@ import requests
 
 from .models import BaseMap
 from .parsers import JplParser
+from .exceptions import *
 from ..util import addparams2url, path
 
 

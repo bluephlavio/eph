@@ -5,13 +5,14 @@ except:
     import ConfigParser as configparser
 
 import eph
+from eph.config import read_config
 from eph.jpl import codify_obj, codify_site
-from eph.util import path
 
 
 def main():
 
-    defaults = read_config()
+    config = read_config()
+    defaults = dict(config['jplparams'])
 
     args = parse_args(defaults)
 
@@ -27,13 +28,6 @@ def main():
     res = req.query()
     table = res.get_table()
     write(table, filename=args.output)
-
-
-def read_config():
-    config = configparser.ConfigParser()
-    config.optionxform = str
-    config.read([path('~/.ephrc'), '.ephrc'])
-    return dict(config.items('jplparams'))
 
 
 def parse_args(defaults):
