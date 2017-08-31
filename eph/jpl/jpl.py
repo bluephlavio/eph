@@ -66,10 +66,9 @@ def humanify(code):
 
 
 class JplReq(BaseMap):
-    """
-    Jpl Request.
-    """
+    """ Jpl Request.
 
+    """
 
     JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
 
@@ -89,7 +88,7 @@ class JplReq(BaseMap):
         'VEC_TABLE': ['TABLE'],
         }
 
-    PARSERS = {
+    FILTERS = {
         'COMMAND': lambda obj: codify_obj(obj),
         'CENTER': lambda site: codify_site(site),
         'CSV_FORMAT': lambda csv: 'YES' if csv in (True, 'y', 'Y', 'yes', 'YES') else 'NO',
@@ -112,8 +111,8 @@ class JplReq(BaseMap):
 
     @staticmethod
     def transformvalue(key, value):
-        if key in JplReq.PARSERS:
-            parser = JplReq.PARSERS[key]
+        if key in JplReq.FILTERS:
+            parser = JplReq.FILTERS[key]
             value = parser(value)
         return value
 
@@ -134,7 +133,7 @@ class JplReq(BaseMap):
         super().__delattr__(key)
 
 
-    def read(self, filename, section):
+    def read(self, filename, section='jplparams'):
         filename = path(filename)
         config = configparser.ConfigParser()
         config.optionxform = str
@@ -174,7 +173,3 @@ class JplRes(object):
 
     def get_table(self):
         return self.parser.parse(self.http_response.text)
-
-
-
-

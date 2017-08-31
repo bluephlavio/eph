@@ -1,7 +1,6 @@
 import copy
 from urllib.parse import urlparse, urlunparse, urlencode
 from os.path import abspath, expanduser
-from os import linesep
 import string
 
 
@@ -20,7 +19,7 @@ def parse_row(raw, cols_del=','):
     return clean_row(row)
 
 
-def parse_table(raw, cols_del=',', rows_del=linesep):
+def parse_table(raw, cols_del=',', rows_del='\n'):
     to_strip = string.whitespace + rows_del + cols_del
     rows = raw.strip(to_strip).split(rows_del)
     return list(map(lambda row: parse_row(row, cols_del=cols_del), rows))
@@ -50,7 +49,3 @@ def addparams2url(url, params):
         return url + '&' + urlencode(params)
     else:
         return urlunparse(urlparse(url)) + '?' + urlencode(params)
-
-
-
-

@@ -1,107 +1,120 @@
-import sys
-sys.path.append('..')
+import pytest
 
-import os, datetime, requests, unittest
+import os
+import datetime
+import requests
+import unittest
 
 from eph.jpl import *
 from eph.jpl.parsers import JplParser
 from eph.jpl.exceptions import JplParserError, JplBadReq
 
 
-
-QUERY = {
-    'COMMAND': '299',
-    'START_TIME': '2007-11-17',
-    'STOP_TIME': datetime.date.today().strftime('%Y-%m-%d')
-}
-
-CONFIG_FILE = os.path.join(os.path.dirname(__file__), 'res/def.cfg')
-SECTION = 'jplparams'
-
-JPL_URL_EXAMPLE = os.path.join(os.path.dirname(__file__), 'res/url.txt')
-JPL_EPH_EXAMPLE = os.path.join(os.path.dirname(__file__), 'res/jpleph.txt')
+@pytest.fixture
+def urls_file(res_dir):
+    return os.path.join(res_dir, 'urls.txt')
 
 
-
-class TestJplReq(unittest.TestCase):
-
-
-    def setUp(self):
-        self.req = JplReq()
+@pytest.fixture
+def urls(urls_file):
+    with open(urls_file, 'r') as f:
+        return f.readlines()
 
 
-    def tearDown(self):
-        del self.req
+@pytest.fixture
+def jpleph_file(res_dir):
+    return os.path.join(res_dir, 'jpleph.txt')
 
 
-    def test_url(self):
-        self.req.set({'key': 'value'})
-        self.assertEqual(self.req.url(), 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&KEY=value')
+@pytest.fixture
+def jpleph(jpleph_file):
+    with open(jpleph_file, 'r') as f:
+        return f.read()
 
 
-    def test_query(self):
-        self.req.read(CONFIG_FILE, SECTION).set(QUERY)
-        res = self.req.query().http_response
-        self.assertEqual(res.status_code, 200)
+@pytest.fixture
+def query():
+    return {
+        'COMMAND': '299',
+        'START_TIME': '2017-1-1',
+        'STOP_TIME': datetime.date.today().strftime('%Y-%m-%d'),
+    }
 
 
-
-class TestJplRes(unittest.TestCase):
-
-
-    def test_parse(self):
-        with open(JPL_URL_EXAMPLE, 'r') as f:
-            urls = f.readlines()
-            for url in urls:
-                try:
-                    res = JplRes(requests.get(url))
-                    eph = res.get_table()
-                    self.assertTrue(True)
-                except JplBadReq:
-                    self.assertTrue(False)
+@pytest.fixture
+def jplreq(query):
+    return JplReq(query)
 
 
-
-class TestJplParser(unittest.TestCase):
-
-
-    def test_parse(self):
-        with open(JPL_EPH_EXAMPLE, 'r') as f:
-            source = f.read()
-            try:
-                eph = JplParser().parse(source)
-                self.assertTrue(True)
-            except JplParserError:
-                self.assertTrue(False)
+def test_url():
+    req = JplReq({'key': 'value'})
+    assert req.url() == 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&KEY=value'
 
 
-
-class TestJplHelper(unittest.TestCase):
-
-
-    def test_codify(self):
-        self.assertEqual(codify_obj('earth'), '399')
-        self.assertEqual(codify_obj('\'earth\''), '399')
-        self.assertEqual(codify_obj('399'), '399')
-        self.assertEqual(codify_obj('\'399\''), '399')
-        self.assertEqual(codify_site('earth'), '\'@399\'')
-        self.assertEqual(codify_site('\'earth\''), '\'@399\'')
-        self.assertEqual(codify_site('\'@earth\''), '\'@399\'')
-        self.assertEqual(codify_site('399'), '\'@399\'')
-        self.assertEqual(codify_site('\'399\''), '\'@399\'')
-        self.assertEqual(codify_site('\'@399\''), '\'@399\'')
+def test_query(config_file, jplreq):
+    jplreq.read(config_file)
+    res = jplreq.query().http_response
+    assert res.status_code == 200
 
 
-    def test_humanify(self):
-        self.assertEqual(humanify("'399'"), 'earth')
-        self.assertEqual(humanify('299'), 'venus')
-        self.assertEqual(humanify("'@499'"), 'mars')
-        self.assertEqual(humanify('@0'), 'sun')
+def test_get(urls):
+    for url in urls:
+        try:
+            res = JplRes(requests.get(url))
+            eph = res.get_raw()
+            assert bool(eph)
+        except JplBadReq:
+            assert False
 
 
+def test_parse(jpleph):
+    try:
+        eph = JplParser().parse(jpleph)
+        assert bool(eph)
+    except JplParserError:
+        assert False
 
-if __name__ == '__main__':
-    unittest.main()
+
+@pytest.fixture(params=[
+    ('earth', '399'),
+    ('\'earth\'', '399'),
+    ('399', '399'),
+    ('\'399\'', '399'),
+])
+def codify_obj_data(request):
+    return request.param
 
 
+def test_codify_obj(codify_obj_data):
+    data, result = codify_obj_data
+    assert codify_obj(data) == result
 
+
+@pytest.fixture(params=[
+    ('earth', '\'@399\''),
+    ('\'earth\'', '\'@399\''),
+    ('\'@earth\'', '\'@399\''),
+    ('399', '\'@399\''),
+    ('\'399\'', '\'@399\''),
+    ('\'@399\'', '\'@399\''),
+])
+def codify_site_data(request):
+    return request.param
+
+def test_codify_site(codify_site_data):
+    data, result = codify_site_data
+    assert codify_site(data) == result
+
+
+@pytest.fixture(params=[
+    ("'399'", 'earth'),
+    ('299', 'venus'),
+    ("'@499'", 'mars'),
+    ('@0', 'sun'),
+])
+def humanify_data(request):
+    return request.param
+
+def test_humanify(humanify_data):
+    data, result = humanify_data
+    assert humanify(data) == result

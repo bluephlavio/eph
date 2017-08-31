@@ -3,7 +3,7 @@ import re
 
 from astropy.table import Table
 
-from ..util import parse_table, numberify, transpose
+from ..util import parse_table, parse_row, numberify, transpose
 from .exceptions import JplParserError
 
 
@@ -25,14 +25,7 @@ class JplParser(BaseParser):
     COL_NAMES_REGEX = r'(?<=\*[\r\n])[^\r\n]*(?=[\r\n]\*+\s\$\$SOE)'
 
 
-    def __init__(self):
-        self._delimiter = r'\s+'
-
-
     def parse(self, source):
-        match = re.search(r'CSV_FORMAT\s=\s(\w+)', source)
-        if match and match.group(1) == 'YES':
-            self._delimiter = ','
         data = self.data(source)
         cols = self.cols(source)
         return Table(data, names=cols)
@@ -41,7 +34,7 @@ class JplParser(BaseParser):
     def data(self, source):
         match = re.search(JplParser.EPH_REGEX, source)
         if match:
-            return transpose(numberify(parsetable(match.group(), delimiter=self._delimiter)))
+            return transpose(numberify(parse_table(match.group())))
         else:
             raise JplParserError
 
@@ -49,10 +42,6 @@ class JplParser(BaseParser):
     def cols(self, source):
         match = re.search(JplParser.COL_NAMES_REGEX, source)
         if match:
-            return tuple(parsetable(match.group(), delimiter=self._delimiter))
+            return tuple(parse_row(match.group()))
         else:
             raise JplParserError
-
-
-
-
