@@ -1,40 +1,96 @@
-import sys, unittest
-sys.path.append('..')
+import pytest
 from eph.util import *
 
 
-
-class TestUtil(unittest.TestCase):
-
-
-    def test_isvector(self):
-        self.assertTrue(isvector([1,2,3]))
-        self.assertFalse(isvector('abc'))
-        self.assertFalse(isvector(0))
-
-
-    def test_parsetable(self):
-        self.assertEqual(parsetable('a, 1,\n b , 2,'), [['a', '1'], ['b', '2']])
-        self.assertEqual(parsetable('a, 1,'), ['a', '1'])
+@pytest.fixture(params=[
+    ([1,2,3], True),
+    ([], True),
+    ('abc', False),
+    (0, False),
+])
+def is_vector_data(request):
+    return request.param
 
 
-    def test_numberify(self):
-        self.assertEqual(numberify([['a', '1'], ['b', '2']]), [['a', 1.], ['b', 2.]])
+def test_is_vector(is_vector_data):
+    data, result = is_vector_data
+    assert is_vector(data) == result
 
 
-    def test_transpose(self):
-        self.assertEqual(transpose([['a', 'b'], ['1', '2']]), [['a', '1'], ['b', '2']])
+@pytest.fixture(params=[
+    (['a ', ' 1'], ['a', '1'])
+])
+def clean_row_data(request):
+    return request.param
 
 
-    def test_addparams2url(self):
-        self.assertEqual(addparams2url('http://xyz.com', {'key': 'value'}), 'http://xyz.com?key=value')
-        self.assertEqual(addparams2url('http://xyz.com?', {'key': 'value'}), 'http://xyz.com?key=value')
-        self.assertEqual(addparams2url('http://xyz.com?a=b', {'key': 'value'}), 'http://xyz.com?a=b&key=value')
+def test_clean_row(clean_row_data):
+    data, result = clean_row_data
+    assert clean_row(data) == result
 
 
+@pytest.fixture(params=[
+    ('a, 1,', ['a', '1']),
+])
+def parse_row_data(request):
+    return request.param
 
-if __name__ == '__main__':
-    unittest.main()
+
+def test_parse_row(parse_row_data):
+    data, result = parse_row_data
+    assert parse_row(data) == result
 
 
+@pytest.fixture(params=[
+    ('a, 1,\n b , 2,', [['a', '1'], ['b', '2']]),
+    ('a, 1,', [['a', '1']]),
+])
+def parse_table_data(request):
+    return request.param
 
+
+def test_parse_table(parse_table_data):
+    data, result = parse_table_data
+    assert parse_table(data, rows_del='\n') == result
+
+
+@pytest.fixture(params=[
+    ('1', 1),
+    ([], []),
+    ([0, 1], [0., 1.]),
+    (['a', 'b'], ['a', 'b']),
+    ([['a', '1'], ['b', '2']], [['a', 1.], ['b', 2.]]),
+])
+def numberify_data(request):
+    return request.param
+
+
+def test_numberify(numberify_data):
+    data, result = numberify_data
+    assert numberify(data) == result
+
+
+@pytest.fixture(params=[
+    ([['a', 'b'], ['1', '2']], [['a', '1'], ['b', '2']]),
+])
+def transpose_data(request):
+    return request.param
+
+
+def test_transpose(transpose_data):
+    data, result = transpose_data
+    assert transpose(data) == result
+
+
+@pytest.fixture(params=[
+    ('http://xyz.com', {'key': 'value'}, 'http://xyz.com?key=value'),
+    ('http://xyz.com?', {'key': 'value'},'http://xyz.com?key=value'),
+    ('http://xyz.com?a=b', {'key': 'value'}, 'http://xyz.com?a=b&key=value'),
+])
+def addparams2url_data(request):
+    return request.param
+
+
+def test_addparams2url(addparams2url_data):
+    url, data, result = addparams2url_data
+    assert addparams2url(url, data) == result

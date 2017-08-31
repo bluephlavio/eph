@@ -3,7 +3,7 @@ import re
 
 from astropy.table import Table
 
-from ..util import parsetable, numberify, transpose
+from ..util import parse_table, numberify, transpose
 from .exceptions import JplParserError
 
 

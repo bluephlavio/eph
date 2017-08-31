@@ -1,35 +1,40 @@
 import copy
 from urllib.parse import urlparse, urlunparse, urlencode
 from os.path import abspath, expanduser
+from os import linesep
+import string
 
 
-
-def isvector(obj):
+def is_vector(obj):
     return hasattr(obj, '__iter__') and not isinstance(obj, str)
 
 
-def parsetable(raw, delimiter=','):
-    tostrip = ' ' + delimiter
-    data = raw.strip(tostrip).split('\n')
-    for i, row in enumerate(data):
-        data[i] = list(map(lambda x: x.strip(' '), row.strip(tostrip).split(delimiter)))
-    if len(data) > 1:
-        return data
-    else:
-        return data[0]
+def clean_row(row):
+    to_strip = string.whitespace
+    return list(map(lambda cell: cell.strip(to_strip), row))
+
+
+def parse_row(raw, cols_del=','):
+    to_strip = string.whitespace + cols_del
+    row = raw.strip(to_strip).split(cols_del)
+    return clean_row(row)
+
+
+def parse_table(raw, cols_del=',', rows_del=linesep):
+    to_strip = string.whitespace + rows_del + cols_del
+    rows = raw.strip(to_strip).split(rows_del)
+    return list(map(lambda row: parse_row(row, cols_del=cols_del), rows))
 
 
 def numberify(data):
     numberified = copy.deepcopy(data)
-    for i, obj in enumerate(numberified):
-        if isvector(obj):
-            numberified[i] = numberify(obj)
-        else:
-            try:
-                numberified[i] = float(obj)
-            except:
-                pass
-    return numberified
+    if is_vector(numberified):
+        return list(map(lambda obj: numberify(obj), numberified))
+    else:
+        try:
+            return float(numberified)
+        except (TypeError, ValueError):
+            return numberified
 
 
 def transpose(data):
