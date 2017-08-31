@@ -1,5 +1,5 @@
 import pkg_resources
-import os
+import os.path
 from shutil import copy2
 
 try:
