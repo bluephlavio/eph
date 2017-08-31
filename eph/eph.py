@@ -13,4 +13,3 @@ class Eph(Table):
     .. _`astropy.table`: http://docs.astropy.org/en/stable/table/
     """
     pass
-
