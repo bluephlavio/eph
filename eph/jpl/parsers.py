@@ -13,7 +13,7 @@ def get_sections(source):
         to_strip = string.whitespace + '*'
         return (m.group(i).strip(to_strip) for i in range(1,4))
     else:
-        raise JplParserError
+        raise JplParserError('Error trying to match structure...')
 
 
 def get_subsections(source):
@@ -25,7 +25,7 @@ def parse_data(data):
     try:
         return numberify(parse_table(data))
     except:
-        raise JplParserError
+        raise JplParserError('Error parsing ephemeris...')
 
 
 def parse_cols(header):

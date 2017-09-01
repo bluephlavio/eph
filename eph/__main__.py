@@ -55,8 +55,5 @@ def write(ephemeris, filename=None):
         print(ephemeris)
 
 
-
 if __name__ == '__main__':
     main()
-
-
