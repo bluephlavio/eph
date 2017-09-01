@@ -13,7 +13,7 @@ except:
 import requests
 
 from .models import BaseMap
-from .parsers import JplParser
+from .parsers import parse
 from .exceptions import *
 from ..util import addparams2url, path
 
@@ -164,7 +164,6 @@ class JplRes(object):
 
     def __init__(self, http_response):
         self.http_response = http_response
-        self.parser = JplParser()
 
 
     def get_raw(self):
@@ -172,4 +171,4 @@ class JplRes(object):
 
 
     def get_table(self):
-        return self.parser.parse(self.http_response.text)
+        return parse(self.get_raw())

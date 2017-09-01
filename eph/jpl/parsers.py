@@ -1,5 +1,5 @@
-import abc
 import re
+import string
 
 from astropy.table import Table
 
@@ -7,41 +7,35 @@ from ..util import parse_table, parse_row, numberify, transpose
 from .exceptions import JplParserError
 
 
-
-class BaseParser(object):
-
-    __metaclass__ = abc.ABCMeta
-
-    @abc.abstractmethod
-    def parse(self, source):
-        pass
-
+def get_sections(source):
+    m = re.match(r'(.*?)\$\$SOE(.*?)\$\$EOE(.*?)', source, flags=re.DOTALL)
+    if m:
+        to_strip = string.whitespace + '*'
+        return (m.group(i).strip(to_strip) for i in range(1,4))
+    else:
+        raise JplParserError
 
 
-class JplParser(BaseParser):
+def get_subsections(source):
+    to_strip = string.whitespace
+    return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*{1,}', source)))
 
 
-    EPH_REGEX = r'(?<=\$\$SOE\s)[\s\S]*?(?=\s\$\$EOE)'
-    COL_NAMES_REGEX = r'(?<=\*[\r\n])[^\r\n]*(?=[\r\n]\*+\s\$\$SOE)'
+def parse_data(data):
+    try:
+        return numberify(parse_table(data))
+    except:
+        raise JplParserError
 
 
-    def parse(self, source):
-        data = self.data(source)
-        cols = self.cols(source)
-        return Table(data, names=cols)
+def parse_cols(header):
+    cols_subsection = get_subsections(header)[-1]
+    cols = parse_row(cols_subsection)
+    return tuple(cols)
 
 
-    def data(self, source):
-        match = re.search(JplParser.EPH_REGEX, source)
-        if match:
-            return transpose(numberify(parse_table(match.group())))
-        else:
-            raise JplParserError
-
-
-    def cols(self, source):
-        match = re.search(JplParser.COL_NAMES_REGEX, source)
-        if match:
-            return tuple(parse_row(match.group()))
-        else:
-            raise JplParserError
+def parse(source):
+    header, ephemeris, footer = get_sections(source)
+    data = transpose(parse_data(ephemeris))
+    cols = parse_cols(header)
+    return Table(data, names=cols)

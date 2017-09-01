@@ -3,10 +3,9 @@ import pytest
 import os
 import datetime
 import requests
-import unittest
 
 from eph.jpl import *
-from eph.jpl.parsers import JplParser
+from eph.jpl.parsers import parse
 from eph.jpl.exceptions import JplParserError, JplBadReq
 
 
@@ -69,7 +68,7 @@ def test_get(urls):
 
 def test_parse(jpleph):
     try:
-        eph = JplParser().parse(jpleph)
+        eph = parse(jpleph)
         assert bool(eph)
     except JplParserError:
         assert False
