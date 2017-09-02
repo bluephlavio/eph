@@ -33,7 +33,7 @@ or, the one-liner
 
 
 The content of :file:`.ephrc` can be something like this
-(see ftp://ssd.jpl.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
+(see ftp://ssd.jpl_process.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
 
 .. code-block:: ini
 

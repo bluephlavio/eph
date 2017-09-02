@@ -4,55 +4,23 @@ try:
 except:
     import ConfigParser as configparser
 
-import eph
-from eph.config import read_config
-from eph.jpl import codify_obj, codify_site
+from eph.jpl.__main__ import jpl_parser, jpl_process
+
+
+def get_parser():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest='command')
+    subparsers.add_parser('jpl', parents=[jpl_parser], add_help=False)
+    return parser
+
+
+eph_parser = get_parser()
 
 
 def main():
-
-    config = read_config()
-    defaults = dict(config['jplparams'])
-
-    args = parse_args(defaults)
-
-    req = eph.JplReq(defaults).set({
-        'COMMAND': args.object,
-        'START_TIME': args.start,
-        'STOP_TIME': args.stop,
-        'CENTER': args.center,
-        'STEP_SIZE': args.step,
-        }
-    )
-
-    res = req.query()
-    table = res.get_table()
-    write(table, filename=args.output)
-
-
-def parse_args(defaults):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('start')
-    parser.add_argument('stop')
-    parser.add_argument('object')
-    parser.add_argument('--center', '-c', default=defaults.get('CENTER', 'sun'))
-    parser.add_argument('--step', '-s', default=defaults.get('STEP_SIZE', '1d'))
-    parser.add_argument('--output', '-o')
-    args = parser.parse_args()
-
-    args.object = codify_obj(args.object)
-
-    if args.center:
-        args.center = codify_site(args.center)
-
-    return args
-
-
-def write(ephemeris, filename=None):
-    if filename:
-        ephemeris.write(filename, format='ascii')
-    else:
-        print(ephemeris)
+    args = eph_parser.parse_args()
+    if args.command == 'jpl':
+       jpl_process(args)
 
 
 if __name__ == '__main__':

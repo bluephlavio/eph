@@ -415,11 +415,11 @@ Geometric states/elements have no aberrations applied.
      Solar System Dynamics Group, Horizons On-Line Ephemeris System
      4800 Oak Grove Drive, Jet Propulsion Laboratory
      Pasadena, CA  91109   USA
-     Information: http://ssd.jpl.nasa.gov/
-     Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
-                  http://ssd.jpl.nasa.gov/?horizons
-                  telnet ssd.jpl.nasa.gov 6775    (via command-line)
-     Author     : Jon.D.Giorgini@jpl.nasa.gov
+     Information: http://ssd.jpl_process.nasa.gov/
+     Connect    : telnet://ssd.jpl_process.nasa.gov:6775  (via browser)
+                  http://ssd.jpl_process.nasa.gov/?horizons
+                  telnet ssd.jpl_process.nasa.gov 6775    (via command-line)
+     Author     : Jon.D.Giorgini@jpl_process.nasa.gov
 *******************************************************************************
 
 !$$SOF

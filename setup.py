@@ -61,7 +61,10 @@ setup(
     ],
     include_package_data=True,
     entry_points={
-        'console_scripts': ['eph=eph.__main__:main'],
+        'console_scripts': [
+            'eph=eph.__main__:main',
+            'jpl=eph.jpl.__main__:main',
+        ],
     },
     cmdclass={
         'develop': CustomDevelop,

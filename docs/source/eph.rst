@@ -17,10 +17,10 @@ eph.eph module
     :undoc-members:
     :show-inheritance:
 
-eph.jpl module
+eph.jpl_process module
 --------------
 
-.. automodule:: eph.jpl
+.. automodule:: eph.jpl_process
     :members:
     :undoc-members:
     :show-inheritance:

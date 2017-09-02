@@ -36,11 +36,11 @@ objcode = {
 
 def codify_obj(name):
     """
-    Translates a human readable celestial object's name to *jpl* code.
+    Translates a human readable celestial object's name to *jpl_process* code.
     
     :param str name: the name to be translated.
     :param boolean ref: whether the code has to be a reference frame code.
-    :return: the *jpl* code.
+    :return: the *jpl_process* code.
     :rtype: str.
     """
     name = name.strip('\'@')
@@ -54,7 +54,7 @@ def codify_site(name):
 
 def humanify(code):
     """
-    Translates a *jpl* code to a human readable celestial object's name.
+    Translates a *jpl_process* code to a human readable celestial object's name.
     
     :param str code: the code to be translated.
     :return: the name of the celestial object.
@@ -153,7 +153,11 @@ class JplReq(BaseMap):
     def query(self):
         if self.is_valid():
             http_response = requests.get(JplReq.JPL_ENDPOINT, params=self)
-            return JplRes(http_response)
+            if http_response.status_code == 200:
+                print(self.url(), http_response.status_code)
+                return JplRes(http_response)
+            else:
+                raise ConnectionError
         else:
             raise JplBadReq
 

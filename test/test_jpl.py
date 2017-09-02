@@ -47,7 +47,7 @@ def jplreq(query):
 
 def test_url():
     req = JplReq({'key': 'value'})
-    assert req.url() == 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&KEY=value'
+    assert req.url() == 'http://ssd.jpl_process.nasa.gov/horizons_batch.cgi?batch=1&KEY=value'
 
 
 def test_query(config_file, jplreq):
