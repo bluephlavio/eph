@@ -72,6 +72,3 @@ class BaseMap(MutableMapping):
         for k, v in kwargs.items():
             self.__setattr__(k, v)
         return self
-
-
-

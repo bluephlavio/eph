@@ -35,8 +35,9 @@ def jpleph(jpleph_file):
 def query():
     return {
         'COMMAND': '299',
-        'START_TIME': '2017-1-1',
+        'START_TIME': '2000-1-1',
         'STOP_TIME': datetime.date.today().strftime('%Y-%m-%d'),
+        'STEP': '2',
     }
 
 
@@ -47,7 +48,7 @@ def jplreq(query):
 
 def test_url():
     req = JplReq({'key': 'value'})
-    assert req.url() == 'http://ssd.jpl_process.nasa.gov/horizons_batch.cgi?batch=1&KEY=value'
+    assert req.url() == 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&KEY=value'
 
 
 def test_query(config_file, jplreq):
