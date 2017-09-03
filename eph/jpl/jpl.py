@@ -1,5 +1,6 @@
-"""
-`jpl` module contains classes and functions useful to interact with the `Jpl Horizons service`_ from NASA.
+""" :mod:`jpl` module
+
+:mod:`jpl` module contains classes and functions useful to interact with the `Jpl Horizons service`_ from NASA.
 
 .. _`Jpl Horizons service`: https://ssd.jpl.nasa.gov/?horizons
 """
@@ -37,7 +38,7 @@ objcode = {
 def codify_obj(name):
     """
     Translates a human readable celestial object's name to *jpl_process* code.
-    
+
     :param str name: the name to be translated.
     :param boolean ref: whether the code has to be a reference frame code.
     :return: the *jpl_process* code.
