@@ -1,11 +1,21 @@
-"""
-`eph` package aims to provide useful classes, functions and tools to *represent*, *retrieve* and *manipulate* ephemerides.
+""" :mod:`eph` package
 
-* `eph.eph` module contains the definition of :class:`Eph` class, the base class for representing an ephemeris. :class:`Eph` class inherits from the astropy_ :class:`Table` class (see `astropy.table`_ for documentation).
+:mod:`eph` package aims to provide useful classes, functions and tools to
+*represent*, *retrieve* and *manipulate* ephemerides.
 
-* `eph.jpl` module contains utility classes needed to retrieve and parse `Jpl Horizons`_ ephemerides.
+:mod:`eph` modules:
 
-* `eph.util` module contains project wide utility functions.
+* :mod:`eph.eph` module contains the definition of :class:`Eph` class,
+the base class for representing an ephemeris.
+:class:`Eph` class inherits from the astropy_ :class:`Table` class (see `astropy.table`_ for documentation).
+
+* :mod:`eph.util` module contains project wide utility functions.
+
+:mod:`eph` subpackages:
+
+* :mod:`eph.config` subpackage contains modules and files related to project wide configurations.
+
+* :mod:`eph.jpl` module contains utility classes needed to retrieve and parse `Jpl Horizons`_ ephemerides.
 
 .. _astropy: http://astropy.org
 .. _`astropy.table`: http://docs.astropy.org/en/stable/table/
@@ -13,11 +23,12 @@
 """
 
 
+import datetime
+
 from .eph import Eph
 from .jpl import JplReq, JplRes
 from .jpl.shortcuts import *
 
-import datetime
 
 __project__ = 'eph'
 __release__ = '0.1.0'
@@ -30,4 +41,3 @@ __year__ = datetime.datetime.now().year
 __copyright__ = ', '.join([__author__, str(__year__)])
 __license__ = 'MIT'
 __url__ = 'https://github.com/bluephlavio/eph'
-
