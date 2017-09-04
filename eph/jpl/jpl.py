@@ -1,6 +1,4 @@
-""" :mod:`jpl` module
-
-:mod:`jpl` module contains classes and functions useful to interact with the `Jpl Horizons service`_ from NASA.
+"""Contains classes and functions useful to interact with the `Jpl Horizons service`_ from NASA.
 
 .. _`Jpl Horizons service`: https://ssd.jpl.nasa.gov/?horizons
 """
@@ -8,7 +6,7 @@
 
 try:
     import configparser
-except:
+except ImportError:
     import ConfigParser as configparser
 
 import requests
@@ -17,7 +15,7 @@ from .models import BaseMap
 from .parsers import parse
 from .exceptions import *
 from ..config import read_config
-from ..util import addparams2url, path
+from ..util import addparams2url
 
 
 __all__ = ['name2id', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
@@ -72,7 +70,6 @@ def codify_site(name):
         return '@' + cleaned
 
 
-
 def humanify(code):
     """Tries to interpret a Jpl object or site code as a human readable celestial object name.
 
@@ -92,7 +89,6 @@ def humanify(code):
     return id2name.get(id, code)
 
 
-
 class JplReq(BaseMap):
     """A requests to Jpl Horizons service.
 
@@ -103,67 +99,84 @@ class JplReq(BaseMap):
 
     """
 
-    JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
+    _JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
 
-    ALIASES = {
-        'COMMAND': ['OBJECT', 'BODY'],
-        'START_TIME': ['START'],
-        'STOP_TIME': ['STOP'],
-        'STEP_SIZE': ['STEP'],
-        'CSV_FORMAT': ['CSV'],
-        'TABLE_TYPE': ['TYPE'],
-        'VEC_TABLE': ['TABLE'],
-        }
+    _ALIASES = {
+        'COMMAND': [
+            'OBJECT',
+            'BODY',
+            'OBJ',
+        ],
+        'START_TIME': [
+            'START',
+            'BEGIN',
+        ],
+        'STOP_TIME': [
+            'STOP',
+            'END',
+        ],
+        'STEP_SIZE': [
+            'STEP',
+        ],
+        'CSV_FORMAT': [
+            'CSV',
+        ],
+        'TABLE_TYPE': [
+            'TYPE',
+        ],
+        'VEC_TABLE': [
+            'TABLE',
+        ],
+    }
 
-    FILTERS = {
-        'COMMAND': lambda obj: codify_obj(obj),
-        'CENTER': lambda site: codify_site(site),
-        'CSV_FORMAT': lambda csv: 'YES' if csv in (True, 'y', 'Y', 'yes', 'YES') else 'NO',
-        }
-
+    _FILTERS = {
+        lambda obj: codify_obj(obj): [
+            'COMMAND',
+        ],
+        lambda site: codify_site(site): [
+            'CENTER',
+        ],
+        lambda csv: 'YES' if csv in (True, 'y', 'Y', 'yes', 'YES') else 'NO': [
+            'CSV_FORMAT',
+        ]
+    }
 
     @staticmethod
     def aliasof(key):
-        for k, aliases in JplReq.ALIASES.items():
+        for k, aliases in JplReq._ALIASES.items():
             if key in aliases:
                 return k
         return key
-
 
     @staticmethod
     def transformkey(key):
         key = key.upper()
         return JplReq.aliasof(key)
 
-
     @staticmethod
     def transformvalue(key, value):
-        if key in JplReq.FILTERS:
-            parser = JplReq.FILTERS[key]
-            value = parser(value)
+        for filter, params in JplReq._FILTERS.items():
+            if key in params:
+                return filter(value)
         return value
-
 
     def __getattr__(self, key):
         key = JplReq.transformkey(key)
         return super().__getattr__(key)
-
 
     def __setattr__(self, key, value):
         key = JplReq.transformkey(key)
         value = JplReq.transformvalue(key, value)
         super().__setattr__(key, value)
 
-
     def __delattr__(self, key):
         key = JplReq.transformkey(key)
         super().__delattr__(key)
 
-
     def read(self, filename, section='jplparams'):
         """Reads configurations parameters from an ini file.
 
-        Reads the :param:`section` section of the ini config file :param:`filename` and set all parameters
+        Reads the `section` section of the ini config file `filename` and set all parameters
         for the Jpl request.
 
         Args:
@@ -178,7 +191,6 @@ class JplReq(BaseMap):
         params = dict(cp.items(section))
         return self.set(params)
 
-
     def url(self):
         """Calculate the Jpl Horizons url corresponding to the :class:`JplReq` object.
 
@@ -186,8 +198,7 @@ class JplReq(BaseMap):
             str: the url with the Jpl parameters encoded in the query string.
 
         """
-        return addparams2url(JplReq.JPL_ENDPOINT, self)
-
+        return addparams2url(JplReq._JPL_ENDPOINT, self)
 
     def query(self):
         """Performs the query to the Jpl Horizons service.
@@ -200,7 +211,7 @@ class JplReq(BaseMap):
 
         """
         try:
-            http_response = requests.get(JplReq.JPL_ENDPOINT, params=self)
+            http_response = requests.get(JplReq._JPL_ENDPOINT, params=self)
         except:
             raise ConnectionError
         if http_response.status_code == 200:
@@ -210,11 +221,10 @@ class JplReq(BaseMap):
             raise JplBadReq
 
 
-
 class JplRes(object):
     """A response from the Jpl Horizons service.
-    """
 
+    """
 
     def __init__(self, http_response):
         """Initialize a :class:`JplRes` object from a `requests`_ http response object.
@@ -223,19 +233,20 @@ class JplRes(object):
             http_response: the http response from Jpl Horizons service.
 
         .. _`requests`: http://docs.python-requests.org/en/master/
+
         """
         self.http_response = http_response
 
-
     def get_raw(self):
         """Returns the content of the Jpl Horizons http response as is.
+
         """
         return self.http_response.text
-
 
     def get_table(self):
         """Parse the http response from Jpl Horizons and return an `astropy.table`_ object.
 
         .. _`astropy.table`: http://docs.astropy.org/en/stable/table/
+
         """
         return parse(self.get_raw())

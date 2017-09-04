@@ -1,3 +1,7 @@
+"""Defines parsing functions to read Jpl Horizons ephemeris.
+
+"""
+
 import re
 import string
 
@@ -17,19 +21,19 @@ def get_sections(source):
         :class:`tuple`: a tuple of strings containing header, data and footer sections respectively.
 
     .. note:
-       Note that whitespaces and * are stripped out from section contents.
+       Note that whitespaces and \* are stripped out from section contents.
 
     """
     m = re.match(r'(.*?)\$\$SOE(.*?)\$\$EOE(.*?)', source, flags=re.DOTALL)
     if m:
         to_strip = string.whitespace + '*'
-        return (m.group(i).strip(to_strip) for i in range(1,4))
+        return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
         raise JplParserError('Error trying to match structure...')
 
 
 def get_subsections(source):
-    """Split a source string in a list of sections separated by one or more *.
+    """Split a source string in a list of sections separated by one or more \*.
 
     Args:
         source (str): the source string to be splitted.
@@ -39,7 +43,7 @@ def get_subsections(source):
 
     """
     to_strip = string.whitespace
-    return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*{1,}', source)))
+    return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*+', source)))
 
 
 def parse_data(data):
@@ -74,14 +78,15 @@ def parse_cols(header):
 
 
 def parse(source):
-    """Parses an entire Jpl Horizons ephemeris and build an `astropy.table.Table`_ out of it.
+    """Parses an entire Jpl Horizons ephemeris and build an `astropy`_ table out of it.
 
     Args:
         source (str): the content of the Jpl Horizons data file.
 
     Returns:
-        :class:`astropy.table.Table`: the table containing data from Jpl Horizons source ephemeris.
+        table: the table containing data from Jpl Horizons source ephemeris.
 
+    .. _`astropy`:  http://docs.astropy.org/en/stable/table/
     """
     header, ephemeris, footer = get_sections(source)
     data = transpose(parse_data(ephemeris))

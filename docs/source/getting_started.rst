@@ -52,11 +52,12 @@ The content of :file:`.ephrc` can be something like this (see ftp://ssd.jpl_proc
 Command line tool
 -----------------
 
-:mod:`eph` package also provides a command line tool to retrive ephemerides from services like JPL Horizons. To use it, type
+:mod:`eph` package also provides a command line tool with some sub-commands.
+For example, to retrive ephemerides from services like JPL Horizons use the `jpl` sub-command
 
 .. code-block:: bash
 
-    $ eph 2007-11-17 2017-4-22 venus
+    $ eph jpl 2007-11-17 2017-4-22 venus
 
 and you get ephemeris table of Venus starting from 2007-11-17 to 2017-4-22. You can also change the reference frame, the time-step size, the output etc. through the options provided. Check available options with
 
