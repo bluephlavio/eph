@@ -17,14 +17,6 @@ eph.eph module
     :undoc-members:
     :show-inheritance:
 
-eph.jpl_process module
---------------
-
-.. automodule:: eph.jpl_process
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 eph.util module
 ---------------
 
