@@ -15,7 +15,7 @@ def get_config_dirs():
 
 
 def get_config_files(config_file=None):
-    return [config_file] if config_file else list(map(lambda dir: os.path.join(dir, '.ephrc'), get_config_dirs()))
+    return [path(config_file)] if config_file else list(map(lambda dir: os.path.join(dir, '.ephrc'), get_config_dirs()))
 
 
 def get_default_config_file():
