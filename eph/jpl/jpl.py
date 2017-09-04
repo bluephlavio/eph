@@ -214,7 +214,6 @@ class JplReq(BaseMap):
         except:
             raise ConnectionError
         if http_response.status_code == 200:
-            print(self.url(), http_response.status_code)
             return JplRes(http_response)
         else:
             raise JplBadReq
