@@ -46,6 +46,23 @@ def jplreq(query):
     return JplReq(query)
 
 
+@pytest.fixture(params=[
+    ('command', 'COMMAND', 'earth', '399'),
+    ('Command', 'COMMAND', 'Earth', '399'),
+    ('object', 'COMMAND', '399', '399'),
+    ('center', 'CENTER', 'earth', '@399'),
+])
+def transform_data(request):
+    return request.param
+
+
+def test_transform(transform_data):
+    key, transformed_key, value, transformed_value = transform_data
+    req = JplReq({key: value})
+    assert transformed_key in req.keys()
+    assert transformed_value in req.values()
+
+
 def test_url():
     req = JplReq({'key': 'value'})
     assert req.url() == 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&KEY=value'

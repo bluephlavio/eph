@@ -18,7 +18,7 @@ from ..config import read_config
 from ..util import addparams2url
 
 
-__all__ = ['name2id', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
+__all__ = ['name2id', 'id2name', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
 
 
 name2id = dict(sun=10, mercury=199, venus=299, earth=399, mars=499, jupiter=599, saturn=699, uranus=799, neptune=899)
@@ -150,8 +150,7 @@ class JplReq(BaseMap):
 
     @staticmethod
     def transformkey(key):
-        key = key.upper()
-        return JplReq.aliasof(key)
+        return JplReq.aliasof(key.upper())
 
     @staticmethod
     def transformvalue(key, value):
