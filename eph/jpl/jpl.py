@@ -19,50 +19,45 @@ from .exceptions import *
 from ..util import addparams2url, path
 
 
-__all__ = ['objcode', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
+__all__ = ['name2id', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
 
 
-objcode = {
-    'sun': '0',
-    'mercury': '199',
-    'venus': '299',
-    'earth': '399',
-    'mars': '499',
-    'jupyter': '599',
-    'saturn': '699',
-    'uranus': '799',
-    'neptune': '899',
-}
+name2id = dict(sun=10, mercury=199, venus=299, earth=399, mars=499, jupiter=599, saturn=699, uranus=799, neptune=899)
+
+id2name = {v: k for k, v in name2id.items()}
 
 
 def codify_obj(name):
-    """
-    Translates a human readable celestial object's name to *jpl_process* code.
-
-    :param str name: the name to be translated.
-    :param boolean ref: whether the code has to be a reference frame code.
-    :return: the *jpl_process* code.
-    :rtype: str.
-    """
-    name = name.strip('\'@')
-    return objcode.get(name, name)
+    cleaned = name.strip('\'"')
+    lowered = cleaned.lower()
+    if lowered in name2id.keys():
+        id = name2id[lowered]
+        return str(id)
+    else:
+        return cleaned
 
 
 def codify_site(name):
-    code = codify_obj(name)
-    return '\'@' + code + '\''
+    cleaned = name.strip('\'"')
+    lowered = cleaned.lower()
+    if lowered in name2id.keys():
+        id = name2id[lowered]
+        return '@' + str(id)
+    elif '@' in cleaned:
+        return cleaned
+    else:
+        return '@' + cleaned
+
 
 
 def humanify(code):
-    """
-    Translates a *jpl_process* code to a human readable celestial object's name.
-    
-    :param str code: the code to be translated.
-    :return: the name of the celestial object.
-    :rtype: str.
-    """
-    codeobj = dict((v, k) for k, v in objcode.items())
-    return codeobj.get(code.strip("'@"), code)
+    if code.isdigit():
+        id = int(code)
+    elif code.startswith('@') and code[1:].isdigit():
+        id = int(code[1:])
+    else:
+        return code
+    return id2name.get(id, code)
 
 
 
@@ -72,12 +67,6 @@ class JplReq(BaseMap):
     """
 
     JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
-
-    REQUIRED_FIELDS = [
-        'COMMAND',
-        'START_TIME',
-        'STOP_TIME',
-        ]
 
     ALIASES = {
         'COMMAND': ['OBJECT', 'BODY'],
@@ -143,22 +132,18 @@ class JplReq(BaseMap):
         return self.set(params)
 
 
-    def is_valid(self):
-        return all(map(lambda field: self.get(field), JplReq.REQUIRED_FIELDS))
-
-
     def url(self):
         return addparams2url(JplReq.JPL_ENDPOINT, self)
 
 
     def query(self):
-        if self.is_valid():
+        try:
             http_response = requests.get(JplReq.JPL_ENDPOINT, params=self)
-            if http_response.status_code == 200:
-                print(self.url(), http_response.status_code)
-                return JplRes(http_response)
-            else:
-                raise ConnectionError
+        except:
+            raise ConnectionError
+        if http_response.status_code == 200:
+            print(self.url(), http_response.status_code)
+            return JplRes(http_response)
         else:
             raise JplBadReq
 

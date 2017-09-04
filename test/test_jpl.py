@@ -78,8 +78,10 @@ def test_parse(jpleph):
 @pytest.fixture(params=[
     ('earth', '399'),
     ('\'earth\'', '399'),
+    ('Earth', '399'),
     ('399', '399'),
     ('\'399\'', '399'),
+    ('pluto', 'pluto'),
 ])
 def codify_obj_data(request):
     return request.param
@@ -91,12 +93,12 @@ def test_codify_obj(codify_obj_data):
 
 
 @pytest.fixture(params=[
-    ('earth', '\'@399\''),
-    ('\'earth\'', '\'@399\''),
-    ('\'@earth\'', '\'@399\''),
-    ('399', '\'@399\''),
-    ('\'399\'', '\'@399\''),
-    ('\'@399\'', '\'@399\''),
+    ('earth', '@399'),
+    ('\'earth\'', '@399'),
+    ('\'@earth\'', '@earth'),
+    ('399', '@399'),
+    ('\'399\'', '@399'),
+    ('\'@399\'', '@399'),
 ])
 def codify_site_data(request):
     return request.param
@@ -107,10 +109,11 @@ def test_codify_site(codify_site_data):
 
 
 @pytest.fixture(params=[
-    ("'399'", 'earth'),
+    ('399', 'earth'),
     ('299', 'venus'),
-    ("'@499'", 'mars'),
-    ('@0', 'sun'),
+    ('@499', 'mars'),
+    ('1@399', '1@399'),
+    ('@earth', '@earth'),
 ])
 def humanify_data(request):
     return request.param
