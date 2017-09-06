@@ -145,7 +145,7 @@ def transform_key(key):
 def transform_value(key, value):
     for filter, jplparams in FILTERS.items():
         if key in jplparams:
-            return filter(value)
+            return '\'' + filter(value) + '\''
     return value
 
 

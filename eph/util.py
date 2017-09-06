@@ -49,3 +49,7 @@ def addparams2url(url, params):
         return url + '&' + urlencode(params)
     else:
         return urlunparse(urlparse(url)) + '?' + urlencode(params)
+
+
+def quote(s, char='\''):
+    return char + s + char

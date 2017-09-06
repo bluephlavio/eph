@@ -95,3 +95,16 @@ def addparams2url_data(request):
 def test_addparams2url(addparams2url_data):
     url, data, result = addparams2url_data
     assert addparams2url(url, data) == result
+
+
+@pytest.fixture(params=[
+    ('abc', None, '\'abc\''),
+    ('abc', '|', '|abc|'),
+])
+def quote_data(request):
+    return request.param
+
+
+def test_quote(quote_data):
+    s, char, result = quote_data
+    assert quote(s, char=char) if char else quote(s) == result
