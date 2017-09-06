@@ -10,7 +10,11 @@ import eph.jpl.command_line
 def get_parser():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('jpl', parents=[eph.jpl.command_line.get_parser()], add_help=False)
+    subparsers.add_parser(
+        eph.jpl.command_line.COMMAND,
+        parents=[eph.jpl.command_line.get_parser()],
+        add_help=False
+    )
     return parser
 
 
