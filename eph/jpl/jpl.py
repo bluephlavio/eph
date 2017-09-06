@@ -16,7 +16,7 @@ from .models import BaseMap
 from .parsers import parse
 from .exceptions import *
 from ..config import read_config
-from ..util import addparams2url
+from ..util import addparams2url, quote, yes_or_no
 
 
 JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
@@ -131,6 +131,7 @@ ALIASES = dict(
 FILTERS = {
     codify_obj: ['COMMAND'],
     codify_site: ['CENTER'],
+    yes_or_no: ['CSV_FORMAT'],
 }
 
 
@@ -145,7 +146,7 @@ def transform_key(key):
 def transform_value(key, value):
     for filter, jplparams in FILTERS.items():
         if key in jplparams:
-            return '\'' + filter(value) + '\''
+            return filter(value)
     return value
 
 

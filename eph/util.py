@@ -53,3 +53,9 @@ def addparams2url(url, params):
 
 def quote(s, char='\''):
     return char + s + char
+
+
+def yes_or_no(value, y='YES', n='NO'):
+    if isinstance(value, str):
+        return y if value.lower() in ('y', 'yes') else n
+    return y if value else n

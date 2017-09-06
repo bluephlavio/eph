@@ -108,3 +108,21 @@ def quote_data(request):
 def test_quote(quote_data):
     s, char, result = quote_data
     assert quote(s, char=char) if char else quote(s) == result
+
+
+@pytest.fixture(params=[
+    ('y', 'YES'),
+    ('n', 'NO'),
+    (True, 'YES'),
+    (1, 'YES'),
+    (100, 'YES'),
+    (0, 'NO'),
+    ('bla', 'NO'),
+])
+def yes_or_no_data(request):
+    return request.param
+
+
+def test_yes_or_no(yes_or_no_data):
+    value, result = yes_or_no_data
+    assert yes_or_no(value) == result
