@@ -17,8 +17,8 @@ def get_parser():
 def main():
     parser = get_parser()
     args = parser.parse_args()
-    if args.command == 'jpl':
-       eph.jpl.command_line.jpl_process(args)
+    if args.command == eph.jpl.command_line.COMMAND:
+       eph.jpl.command_line.process(args)
 
 
 if __name__ == '__main__':

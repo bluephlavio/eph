@@ -1,17 +1,17 @@
 import argparse
+import logging
 try:
     import configparser
-except:
+except ImportError:
     import ConfigParser as configparser
 
 from ..config import read_config
 from .jpl import JplReq, codify_obj, codify_site
+from .shortcuts import get_table
 
 
-def init_req():
-    config = read_config()
-    jplparams = dict(config['jplparams'])
-    return JplReq(jplparams)
+COMMAND = 'jpl'
+LOGGER = logging.getLogger()
 
 
 def get_parser():
@@ -38,7 +38,7 @@ def get_parser():
                         action='store_true',
                         help='toggles generation of ephemeris, if possible')
     parser.add_argument('--table-type', '-t',
-                        choices=['O', 'VECTORS', 'E', 'A'],
+                        choices=['O', 'V', 'E', 'A'],
                         help='selects type of table to generate, if possible')
     parser.add_argument('--vec-table', '-v',
                         choices=[str(i) for i in range(1, 7)],
@@ -52,44 +52,47 @@ def get_parser():
     parser.add_argument('--vec-label', '-l',
                         action='store_true',
                         help='toggles labelling of each vector component')
+    parser.add_argument('--config',
+                        help='the configuration file to be used')
     parser.add_argument('--output', '-o', help='the output filename')
     return parser
 
 
-def get_request(args):
+def read_defaults(config_file):
+    config = read_config(config_file)
+    return dict(config['jplparams'])
 
-    req = init_req()
 
-    req.set({
+def load_request(args, defaults):
+
+    req = JplReq(defaults).set({
         'start': args.start,
         'stop': args.stop,
         'object': args.object,
-        'center': args.center or (req.center if 'center' in req.keys() else '@0'),
-        'step': args.step or (req.step if 'step' in req.keys() else '2'),
-        'ref_plane': args.ref_plane or (req.ref_plane if 'ref_plane' in req.keys() else 'BODY EQUATOR'),
-
     })
 
     return req
 
 
-def jpl_process(args):
-
-    req = get_request(args)
-    res = req.query()
-    data = res.get_table()
-
-    if args.output:
-        data.write(args.output, format='ascii')
+def out(data, filename=None, **kwargs):
+    if filename:
+        data.write(filename, **kwargs)
     else:
         print(data)
+
+
+def process(args):
+    defaults = read_defaults(args.config)
+    req = load_request(args, defaults)
+    data = get_table(req)
+    out(data, filename=args.output, format='ascii')
 
 
 def main():
     try:
         parser = get_parser()
         args = parser.parse_args()
-        jpl_process(args)
+        process(args)
     except Exception as e:
         print(e)
 
