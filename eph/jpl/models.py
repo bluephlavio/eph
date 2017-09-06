@@ -47,14 +47,11 @@ class BaseMap(MutableMapping):
     def set(self, *args, **kwargs):
         if args:
             if len(args) > 1:
-                raise TypeError
+                raise TypeError('You can pass only one positional argument to set method.')
             else:
                 arg = args[0]
-                try:
-                    for k, v in arg.items():
-                        self.__setattr__(k, v)
-                except:
-                    raise TypeError
+                for k, v in arg.items():
+                    self.__setattr__(k, v)
         for k, v in kwargs.items():
             self.__setattr__(k, v)
         return self
