@@ -47,10 +47,58 @@ def jplreq(query):
 
 
 @pytest.fixture(params=[
-    ('command', 'COMMAND', 'earth', '399'),
+    ('COMMAND', 'COMMAND'),
+    ('Command', 'COMMAND'),
+    ('target', 'COMMAND'),
+    ('OBJECT', 'COMMAND'),
+    ('alias', None)
+])
+def aliasof_data(request):
+    return request.param
+
+
+def test_aliasof(aliasof_data):
+    alias, jplparam = aliasof_data
+    assert alias_of(alias) == jplparam
+
+
+@pytest.fixture(params=[
+    ('start', 'START_TIME'),
+    ('STOP', 'STOP_TIME'),
+    ('origin', 'CENTER'),
+    ('param', InvalidParameter),
+])
+def transformkey_data(request):
+    return request.param
+
+
+def test_transformkey(transformkey_data):
+    key, jplparam = transformkey_data
+    try:
+        assert transform_key(key) == jplparam
+    except Exception as e:
+        assert e.__class__ == InvalidParameter
+
+
+@pytest.fixture(params=[
+    ('COMMAND', 'earth', '399'),
+    ('CENTER', '@399', '@399'),
+    ('CENTER', '399', '@399'),
+])
+def transformvalue_data(request):
+    return request.param
+
+
+def test_transformvalue(transformvalue_data):
+    key, value, result = transformvalue_data
+    assert transform_value(key, value) == result
+
+
+@pytest.fixture(params=[
+    ('target', 'COMMAND', 'earth', '399'),
     ('Command', 'COMMAND', 'Earth', '399'),
-    ('object', 'COMMAND', '399', '399'),
-    ('center', 'CENTER', 'earth', '@399'),
+    ('OBJECT', 'COMMAND', '399', '399'),
+    ('Origin', 'CENTER', 'earth', '@399'),
 ])
 def transform_data(request):
     return request.param
@@ -64,8 +112,8 @@ def test_transform(transform_data):
 
 
 def test_url():
-    req = JplReq({'key': 'value'})
-    assert req.url() == 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&KEY=value'
+    req = JplReq({'COMMAND': '399'})
+    assert req.url() == 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&COMMAND=399'
 
 
 def test_query(config_file, jplreq):

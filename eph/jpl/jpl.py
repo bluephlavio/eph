@@ -18,8 +18,6 @@ from ..config import read_config
 from ..util import addparams2url
 
 
-__all__ = ['NAME2ID', 'ID2NAME', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
-
 JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
 
 NAME2ID = dict(sun=10,
@@ -112,7 +110,7 @@ JPL_PARAMS = {
     'VEC_TABLE',
     'OUT_UNITS',
     'CSV_FORMAT',
-    'VEC:LABELS',
+    'VEC_LABELS',
     'OBJ_DATA',
 }
 
@@ -121,6 +119,7 @@ ALIASES = dict(
     START_TIME={'START', 'BEGIN', 'FROM'},
     STOP_TIME={'STOP', 'END', 'TO'},
     STEP_SIZE={'STEP', 'STEPS'},
+    CENTER={'ORIGIN'},
     CSV_FORMAT={'CSV'},
     TABLE_TYPE={'TYPE'},
     VEC_TABLE={'TABLE'},
@@ -148,9 +147,8 @@ def transform_key(key):
 
 
 def transform_value(key, value):
-    jplparam = transform_key(key)
     for filter, jplparams in FILTERS.items():
-        if jplparam in jplparams:
+        if key in jplparams:
             return filter(value)
     return value
 
@@ -170,6 +168,7 @@ class JplReq(BaseMap):
         return super().__getattr__(key)
 
     def __setattr__(self, key, value):
+        key = transform_key(key)
         value = transform_value(key, value)
         super().__setattr__(key, value)
 
@@ -202,7 +201,7 @@ class JplReq(BaseMap):
             str: the url with the Jpl parameters encoded in the query string.
 
         """
-        return addparams2url(JplReq._JPL_ENDPOINT, self)
+        return addparams2url(JPL_ENDPOINT, self)
 
     def query(self):
         """Performs the query to the Jpl Horizons service.
@@ -215,7 +214,7 @@ class JplReq(BaseMap):
 
         """
         try:
-            http_response = requests.get(JplReq._JPL_ENDPOINT, params=self)
+            http_response = requests.get(JPL_ENDPOINT, params=self)
         except:
             raise ConnectionError
         if http_response.status_code == 200:
