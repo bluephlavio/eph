@@ -56,9 +56,6 @@ def get_parser():
     return parser
 
 
-jpl_parser = get_parser()
-
-
 def get_request(args):
 
     req = init_req()
@@ -90,7 +87,8 @@ def jpl_process(args):
 
 def main():
     try:
-        args = jpl_parser.parse_args()
+        parser = get_parser()
+        args = parser.parse_args()
         jpl_process(args)
     except Exception as e:
         print(e)
