@@ -51,22 +51,7 @@ def jplreq(query):
     ('Command', 'COMMAND'),
     ('target', 'COMMAND'),
     ('OBJECT', 'COMMAND'),
-    ('alias', None)
-])
-def aliasof_data(request):
-    return request.param
-
-
-def test_aliasof(aliasof_data):
-    alias, jplparam = aliasof_data
-    assert alias_of(alias) == jplparam
-
-
-@pytest.fixture(params=[
-    ('start', 'START_TIME'),
-    ('STOP', 'STOP_TIME'),
-    ('origin', 'CENTER'),
-    ('param', JplBadParam),
+    ('alias', None),
 ])
 def transformkey_data(request):
     return request.param
@@ -74,10 +59,7 @@ def transformkey_data(request):
 
 def test_transformkey(transformkey_data):
     key, jplparam = transformkey_data
-    try:
-        assert transform_key(key) == jplparam
-    except Exception as e:
-        assert e.__class__ == JplBadParam
+    assert transform_key(key) == jplparam
 
 
 @pytest.fixture(params=[
@@ -95,20 +77,44 @@ def test_transformvalue(transformvalue_data):
 
 
 @pytest.fixture(params=[
-    ('target', 'COMMAND', 'earth', '399'),
-    ('Command', 'COMMAND', 'Earth', '399'),
-    ('OBJECT', 'COMMAND', '399', '399'),
-    ('Origin', 'CENTER', 'earth', '@399'),
+    (('target', 'earth'), ('COMMAND', '399')),
+    (('Command', 'Earth'), ('COMMAND', '399')),
+    (('OBJECT', '399'), ('COMMAND', '399')),
+    (('Origin', 'earth'), ('CENTER', '@399')),
 ])
 def transform_data(request):
     return request.param
 
 
 def test_transform(transform_data):
-    key, transformed_key, value, transformed_value = transform_data
-    req = JplReq({key: value})
-    assert transformed_key in req.keys()
-    assert transformed_value in req.values()
+    data, result = transform_data
+    key, value = data
+    assert transform(key, value) == result
+
+
+@pytest.fixture(params=[
+    (('target', 'earth'), ('COMMAND', '399')),
+    (('Command', 'Earth'), ('COMMAND', '399')),
+    (('OBJECT', '399'), ('COMMAND', '399')),
+    (('Origin', 'earth'), ('CENTER', '@399')),
+    (('bla', 'bla'), (None, None)),
+])
+def req_data(request):
+    return request.param
+
+
+def test_req(req_data):
+    data, result = req_data
+    key, value = data
+    expected_key, expected_value = result
+    try:
+        req = JplReq({key: value})
+        assert req[key] == expected_value
+        assert getattr(req, key) == expected_value
+        assert req[expected_key] == expected_value
+        assert getattr(req, expected_key) == expected_value
+    except Exception as e:
+        assert e.__class__ == JplBadParam
 
 
 def test_url():

@@ -133,19 +133,13 @@ FILTERS = {
     codify_site: ['CENTER'],
 }
 
-def alias_of(alias):
-    if alias.upper() in JPL_PARAMS:
-        return alias.upper()
-    for jplparam, aliases in ALIASES.items():
-        if alias.upper() in aliases:
-            return jplparam
-
 
 def transform_key(key):
-    jplparam = alias_of(key)
-    if jplparam:
-        return jplparam
-    raise JplBadParam
+    if key.upper() in JPL_PARAMS:
+        return key.upper()
+    for jplparam, aliases in ALIASES.items():
+        if key.upper() in aliases:
+            return jplparam
 
 
 def transform_value(key, value):
@@ -153,6 +147,12 @@ def transform_value(key, value):
         if key in jplparams:
             return filter(value)
     return value
+
+
+def transform(key, value):
+    k = transform_key(key)
+    v = transform_value(k, value)
+    return k, v
 
 
 class JplReq(BaseMap):
@@ -170,9 +170,10 @@ class JplReq(BaseMap):
         return super().__getattr__(key)
 
     def __setattr__(self, key, value):
-        key = transform_key(key)
-        value = transform_value(key, value)
-        super().__setattr__(key, value)
+        k, v = transform(key, value)
+        if not k:
+            raise JplBadParam('\'{}\' cannot be interpreted as a Jpl Horizons parameter.'.format(key))
+        super().__setattr__(k, v)
 
     def __delattr__(self, key):
         key = transform_key(key)

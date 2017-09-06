@@ -54,8 +54,11 @@ def jpl_process(args):
 
 
 def main():
-    args = jpl_parser.parse_args()
-    jpl_process(args)
+    try:
+        args = jpl_parser.parse_args()
+        jpl_process(args)
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':
