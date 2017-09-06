@@ -1,6 +1,7 @@
 """Contains classes and functions useful to interact with the `Jpl Horizons service`_ from NASA.
 
 .. _`Jpl Horizons service`: https://ssd.jpl.nasa.gov/?horizons
+
 """
 
 
@@ -20,16 +21,17 @@ from ..util import addparams2url
 
 JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
 
-NAME2ID = dict(sun=10,
-               mercury=199,
-               venus=299,
-               earth=399,
-               mars=499,
-               jupiter=599,
-               saturn=699,
-               uranus=799,
-               neptune=899,
-               )
+NAME2ID = dict(
+    sun=10,
+    mercury=199,
+    venus=299,
+    earth=399,
+    mars=499,
+    jupiter=599,
+    saturn=699,
+    uranus=799,
+    neptune=899,
+)
 
 ID2NAME = {v: k for k, v in NAME2ID.items()}
 
@@ -143,7 +145,7 @@ def transform_key(key):
     jplparam = alias_of(key)
     if jplparam:
         return jplparam
-    raise InvalidParameter
+    raise JplBadParam
 
 
 def transform_value(key, value):
@@ -191,8 +193,8 @@ class JplReq(BaseMap):
 
         """
         cp = read_config(filename)
-        params = dict(cp.items(section))
-        return self.set(params)
+        jplparams = dict(cp.items(section))
+        return self.set(jplparams)
 
     def url(self):
         """Calculate the Jpl Horizons url corresponding to the :class:`JplReq` object.

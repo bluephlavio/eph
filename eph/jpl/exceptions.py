@@ -26,7 +26,7 @@ class JplBadReq(JplError):
     pass
 
 
-class InvalidParameter(JplError):
+class JplBadParam(JplError):
     """A :class:`InvalidParameter` is raised when a :class:`JplReq` tries to set a parameter that do not match
     with Jpl Horizons specifications.
 

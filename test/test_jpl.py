@@ -66,7 +66,7 @@ def test_aliasof(aliasof_data):
     ('start', 'START_TIME'),
     ('STOP', 'STOP_TIME'),
     ('origin', 'CENTER'),
-    ('param', InvalidParameter),
+    ('param', JplBadParam),
 ])
 def transformkey_data(request):
     return request.param
@@ -77,7 +77,7 @@ def test_transformkey(transformkey_data):
     try:
         assert transform_key(key) == jplparam
     except Exception as e:
-        assert e.__class__ == InvalidParameter
+        assert e.__class__ == JplBadParam
 
 
 @pytest.fixture(params=[
