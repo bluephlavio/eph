@@ -18,12 +18,22 @@ from ..config import read_config
 from ..util import addparams2url
 
 
-__all__ = ['name2id', 'id2name', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
+__all__ = ['NAME2ID', 'ID2NAME', 'codify_obj', 'codify_site', 'humanify', 'JplReq', 'JplRes']
 
+JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
 
-name2id = dict(sun=10, mercury=199, venus=299, earth=399, mars=499, jupiter=599, saturn=699, uranus=799, neptune=899)
+NAME2ID = dict(sun=10,
+               mercury=199,
+               venus=299,
+               earth=399,
+               mars=499,
+               jupiter=599,
+               saturn=699,
+               uranus=799,
+               neptune=899,
+               )
 
-id2name = {v: k for k, v in name2id.items()}
+ID2NAME = {v: k for k, v in NAME2ID.items()}
 
 
 def codify_obj(name):
@@ -40,8 +50,8 @@ def codify_obj(name):
     """
     cleaned = name.strip('\'"')
     lowered = cleaned.lower()
-    if lowered in name2id.keys():
-        id = name2id[lowered]
+    if lowered in NAME2ID.keys():
+        id = NAME2ID[lowered]
         return str(id)
     else:
         return cleaned
@@ -61,8 +71,8 @@ def codify_site(name):
     """
     cleaned = name.strip('\'"')
     lowered = cleaned.lower()
-    if lowered in name2id.keys():
-        id = name2id[lowered]
+    if lowered in NAME2ID.keys():
+        id = NAME2ID[lowered]
         return '@' + str(id)
     elif '@' in cleaned:
         return cleaned
@@ -86,7 +96,63 @@ def humanify(code):
         id = int(code[1:])
     else:
         return code
-    return id2name.get(id, code)
+    return ID2NAME.get(id, code)
+
+
+JPL_PARAMS = {
+    'COMMAND',
+    'START_TIME',
+    'STOP_TIME',
+    'STEP_SIZE',
+    'REF_PLANE',
+    'REF_SYSTEM',
+    'CENTER',
+    'MAKE_EPHEM',
+    'TABLE_TYPE',
+    'VEC_TABLE',
+    'OUT_UNITS',
+    'CSV_FORMAT',
+    'VEC:LABELS',
+    'OBJ_DATA',
+}
+
+ALIASES = dict(
+    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET'},
+    START_TIME={'START', 'BEGIN', 'FROM'},
+    STOP_TIME={'STOP', 'END', 'TO'},
+    STEP_SIZE={'STEP', 'STEPS'},
+    CSV_FORMAT={'CSV'},
+    TABLE_TYPE={'TYPE'},
+    VEC_TABLE={'TABLE'},
+)
+
+
+FILTERS = {
+    codify_obj: ['COMMAND'],
+    codify_site: ['CENTER'],
+}
+
+def alias_of(alias):
+    if alias.upper() in JPL_PARAMS:
+        return alias.upper()
+    for jplparam, aliases in ALIASES.items():
+        if alias.upper() in aliases:
+            return jplparam
+
+
+def transform_key(key):
+    jplparam = alias_of(key)
+    if jplparam:
+        return jplparam
+    raise InvalidParameter
+
+
+def transform_value(key, value):
+    jplparam = transform_key(key)
+    for filter, jplparams in FILTERS.items():
+        if jplparam in jplparams:
+            return filter(value)
+    return value
 
 
 class JplReq(BaseMap):
@@ -99,77 +165,16 @@ class JplReq(BaseMap):
 
     """
 
-    _JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
-
-    _ALIASES = {
-        'COMMAND': [
-            'OBJECT',
-            'BODY',
-            'OBJ',
-        ],
-        'START_TIME': [
-            'START',
-            'BEGIN',
-        ],
-        'STOP_TIME': [
-            'STOP',
-            'END',
-        ],
-        'STEP_SIZE': [
-            'STEP',
-        ],
-        'CSV_FORMAT': [
-            'CSV',
-        ],
-        'TABLE_TYPE': [
-            'TYPE',
-        ],
-        'VEC_TABLE': [
-            'TABLE',
-        ],
-    }
-
-    _FILTERS = {
-        lambda obj: codify_obj(obj): [
-            'COMMAND',
-        ],
-        lambda site: codify_site(site): [
-            'CENTER',
-        ],
-        lambda csv: 'YES' if csv in (True, 'y', 'Y', 'yes', 'YES') else 'NO': [
-            'CSV_FORMAT',
-        ]
-    }
-
-    @staticmethod
-    def aliasof(key):
-        for k, aliases in JplReq._ALIASES.items():
-            if key in aliases:
-                return k
-        return key
-
-    @staticmethod
-    def transformkey(key):
-        return JplReq.aliasof(key.upper())
-
-    @staticmethod
-    def transformvalue(key, value):
-        for filter, params in JplReq._FILTERS.items():
-            if key in params:
-                return filter(value)
-        return value
-
     def __getattr__(self, key):
-        key = JplReq.transformkey(key)
+        key = transform_key(key)
         return super().__getattr__(key)
 
     def __setattr__(self, key, value):
-        key = JplReq.transformkey(key)
-        value = JplReq.transformvalue(key, value)
+        value = transform_value(key, value)
         super().__setattr__(key, value)
 
     def __delattr__(self, key):
-        key = JplReq.transformkey(key)
+        key = transform_key(key)
         super().__delattr__(key)
 
     def read(self, filename, section='jplparams'):
