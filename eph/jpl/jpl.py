@@ -118,6 +118,9 @@ class JplReq(BaseMap):
         'STEP_SIZE': [
             'STEP',
         ],
+        'CENTER': [
+            'ORIGIN',
+        ],
         'CSV_FORMAT': [
             'CSV',
         ],
