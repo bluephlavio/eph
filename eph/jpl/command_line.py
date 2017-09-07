@@ -6,12 +6,16 @@ except ImportError:
     import ConfigParser as configparser
 
 from ..config import read_config
-from .jpl import JplReq, codify_obj, codify_site
+from .jpl import *
 from .shortcuts import get_table
 
 
 COMMAND = 'jpl'
 LOGGER = logging.getLogger()
+POSITIONAL_ARGS = {'start', 'stop', 'object'}
+OPTS = {
+    'CENTER'
+}
 
 
 def get_parser():
@@ -153,13 +157,8 @@ def read_defaults(config_file):
 
 
 def load_request(args, defaults):
-
-    req = JplReq(defaults).set({
-        'start': args.start,
-        'stop': args.stop,
-        'object': args.object,
-    })
-
+    jpl_args = {k: v for k, v in vars(args).items() if transform_key(k) in JPL_PARAMS and v}
+    req = JplReq(defaults).set(jpl_args)
     return req
 
 

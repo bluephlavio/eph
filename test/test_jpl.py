@@ -51,6 +51,7 @@ def jplreq(query):
     ('Command', 'COMMAND'),
     ('target', 'COMMAND'),
     ('OBJECT', 'COMMAND'),
+    ('table-type', 'TABLE_TYPE'),
     ('alias', None),
 ])
 def transformkey_data(request):

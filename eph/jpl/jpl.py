@@ -131,15 +131,16 @@ ALIASES = dict(
 FILTERS = {
     codify_obj: ['COMMAND'],
     codify_site: ['CENTER'],
-    yes_or_no: ['CSV_FORMAT'],
+    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA'],
 }
 
 
 def transform_key(key):
-    if key.upper() in JPL_PARAMS:
-        return key.upper()
+    key = key.upper().replace('-', '_')
+    if key in JPL_PARAMS:
+        return key
     for jplparam, aliases in ALIASES.items():
-        if key.upper() in aliases:
+        if key in aliases:
             return jplparam
 
 
