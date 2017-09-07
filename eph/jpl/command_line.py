@@ -23,15 +23,18 @@ def get_parser():
         description='Retrive, parse and format Jpl Horizons ephemerides.',
     )
     parser.add_argument('start',
+                        metavar='TIME_START',
                         help='''specifies ephemeris start time 
                         (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}" 
                         denote optional inputs'''
                         )
     parser.add_argument('stop',
+                        metavar='STOP_TIME',
                         help='''specifies ephemeris stop time 
                         (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}" 
                         denote optional inputs''')
     parser.add_argument('object',
+                        metavar='COMMAND',
                         type=codify_obj,
                         help='program to execute OR target object to select for data & ephemeris output')
     parser.add_argument('--center', '-c',
@@ -50,7 +53,8 @@ def get_parser():
     parser.add_argument('--site-coord',
                         help='sets coordinates of type COORD_TYPE')
     parser.add_argument('--step', '-s',
-                        help='''
+                        metavar='STEP_SIZE',
+                        helgip='''
                         gives ephemeris output print step in form:
                         integer# {units} {mode}
                         ''')
@@ -156,9 +160,9 @@ def read_defaults(config_file):
     return dict(config['jplparams'])
 
 
-def load_request(args, defaults):
+def load_request(args, jpl_defaults):
     jpl_args = {k: v for k, v in vars(args).items() if transform_key(k) in JPL_PARAMS and v}
-    req = JplReq(defaults).set(jpl_args)
+    req = JplReq(jpl_defaults).set(jpl_args)
     return req
 
 
