@@ -6,11 +6,10 @@ try:
 except ImportError:
     import ConfigParser as configparser
 
-from .jpl import *
-from .parsers import *
+from eph.jpl.jpl import *
+from eph.jpl.parsers import *
 
 
-COMMAND = 'jpl'
 LOGGER = logging.getLogger()
 
 
