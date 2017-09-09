@@ -98,26 +98,29 @@ def test_addparams2url(addparams2url_data):
 
 
 @pytest.fixture(params=[
-    ('abc', None, '\'abc\''),
-    ('abc', '|', '|abc|'),
+    ('abc', '\'abc\''),
+    ('\'abc\'', '\'abc\''),
+    ('"abc"', '\'abc\''),
 ])
 def quote_data(request):
     return request.param
 
 
 def test_quote(quote_data):
-    s, char, result = quote_data
-    assert quote(s, char=char) if char else quote(s) == result
+    s, result = quote_data
+    assert quote(s) == result
 
 
 @pytest.fixture(params=[
     ('y', 'YES'),
-    ('n', 'NO'),
+    ('Y', 'YES'),
+    ('Yes', 'YES'),
     (True, 'YES'),
     (1, 'YES'),
-    (100, 'YES'),
-    (0, 'NO'),
-    ('bla', 'NO'),
+    ('n', 'NO'),
+    (False, 'NO'),
+    ('false', 'NO'),
+    ('bla', None),
 ])
 def yes_or_no_data(request):
     return request.param

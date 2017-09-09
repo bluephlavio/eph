@@ -1,21 +1,17 @@
 import argparse
 import logging
+import sys
 try:
     import configparser
 except ImportError:
     import ConfigParser as configparser
 
-from ..config import read_config
 from .jpl import *
-from .shortcuts import get_table
+from .parsers import *
 
 
 COMMAND = 'jpl'
 LOGGER = logging.getLogger()
-POSITIONAL_ARGS = {'start', 'stop', 'object'}
-OPTS = {
-    'CENTER'
-}
 
 
 def get_parser():
@@ -54,7 +50,7 @@ def get_parser():
                         help='sets coordinates of type COORD_TYPE')
     parser.add_argument('--step', '-s',
                         metavar='STEP_SIZE',
-                        helgip='''
+                        help='''
                         gives ephemeris output print step in form:
                         integer# {units} {mode}
                         ''')
@@ -149,35 +145,55 @@ def get_parser():
                         coordinates if users set TABLE_TYPE=OBSERVER
                         ''')
     parser.add_argument('--config',
-                        help='specify a configuration file to be used')
+                        help='specifies a configuration file to be used')
     parser.add_argument('--output', '-o',
+                        default=sys.stdout,
                         help='specify the output filename')
+    parser.add_argument('--format',
+                        default='ascii',
+                        help='specify how the data table must be formatted')
+    parser.add_argument('--raw',
+                        action='store_true',
+                        help='disables parsing of horizons output')
+    parser.add_argument('--ephem-only',
+                        action='store_true',
+                        help='strip header and footer of a raw Jpl Horizons response')
     return parser
 
 
-def read_defaults(config_file):
-    config = read_config(config_file)
-    return dict(config['jplparams'])
+def build_request(args):
+    return JplReq().read(args.config).set({
+        k: v for k, v in vars(args).items() if transform_key(k) in JPL_PARAMS and v
+    })
 
 
-def load_request(args, jpl_defaults):
-    jpl_args = {k: v for k, v in vars(args).items() if transform_key(k) in JPL_PARAMS and v}
-    req = JplReq(jpl_defaults).set(jpl_args)
-    return req
-
-
-def out(data, filename=None, **kwargs):
-    if filename:
-        data.write(filename, **kwargs)
+def get_data(req, args):
+    res = req.query()
+    if args.raw:
+        raw = res.get_raw()
+        if args.ephem_only:
+            header, ephem, footer = get_sections(raw)
+            return ephem
+        return raw
     else:
-        print(data)
+        return res.get_table()
+
+
+def write(data, args):
+    if isinstance(data, Table) and args.format:
+        data.write(args.output, format=args.format)
+    else:
+        if args.output is sys.stdout:
+            sys.stdout.write(data)
+        else:
+            with open(args.output, 'w') as f:
+                f.write(data)
 
 
 def process(args):
-    defaults = read_defaults(args.config)
-    req = load_request(args, defaults)
-    data = get_table(req)
-    out(data, filename=args.output, format='ascii')
+    req = build_request(args)
+    data = get_data(req, args)
+    write(data, args)
 
 
 def main():

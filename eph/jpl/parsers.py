@@ -43,7 +43,7 @@ def get_subsections(source):
 
     """
     to_strip = string.whitespace
-    return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*+', source)))
+    return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*{3,}', source)))
 
 
 def parse_data(data):
@@ -88,7 +88,7 @@ def parse(source):
 
     .. _`astropy`:  http://docs.astropy.org/en/stable/table/
     """
-    header, ephemeris, footer = get_sections(source)
-    data = transpose(parse_data(ephemeris))
+    header, ephem, footer = get_sections(source)
+    data = transpose(parse_data(ephem))
     cols = parse_cols(header)
     return Table(data, names=cols)

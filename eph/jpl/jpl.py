@@ -100,19 +100,51 @@ def humanify(code):
 
 
 JPL_PARAMS = {
+    # target
     'COMMAND',
+    # time
     'START_TIME',
     'STOP_TIME',
     'STEP_SIZE',
+    'TLIST',
+    'TIME_ZONE',
+    # reference
     'REF_PLANE',
     'REF_SYSTEM',
     'CENTER',
+    'COORD_TYPE',
+    'SITE_COORD',
+    # switches
     'MAKE_EPHEM',
+    # output
     'TABLE_TYPE',
+    'QUANTITIES',
     'VEC_TABLE',
+    'VEC_CORR',
+    'APPARTENT',
+    'TIME_DIGITS',
     'OUT_UNITS',
+    'RANGE_UNITS',
+    'SUPPRESS_RANGE_RATE',
+    'ELEV_CUT',
+    'SKIP_DAYLT',
+    'SOLAR_ELONG',
+    'AIRMASS',
+    'LHA_CUTOFF',
+    'EXTRA_PREC',
+    'VEC_DELTA_T',
+    'TP_TYPE',
+    'R_T_S_ONLY',
+    'CA_TABLE_TYPE',
+    'TCA3SG_LIMIT',
+    'CALIM_SB',
+    'CALIM_PL',
+    # format
     'CSV_FORMAT',
+    'CAL_FORMAT',
+    'ANG_FORMAT',
     'VEC_LABELS',
+    'ELM_LABELS',
     'OBJ_DATA',
 }
 
@@ -131,6 +163,7 @@ ALIASES = dict(
 FILTERS = {
     codify_obj: ['COMMAND'],
     codify_site: ['CENTER'],
+    quote: ['TLIST'],
     yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA'],
 }
 

@@ -8,6 +8,13 @@ except ImportError:
     import ConfigParser as configparser
 
 from eph.util import path
+from .exceptions import *
+
+
+def get_parser():
+    parser = configparser.ConfigParser()
+    parser.optionxform = str
+    return parser
 
 
 def get_config_dirs():
@@ -28,9 +35,9 @@ def create_config_file(out_filename):
 
 
 def read_config(config_file=None):
-    cp = configparser.ConfigParser()
-    cp.optionxform = str
-    config_files = cp.read(get_config_files(config_file))
-    if not config_files:
-        cp.read(get_default_config_file())
-    return cp
+    parser = get_parser()
+    config_files = get_config_files(config_file=config_file)
+    read_files = parser.read(config_files)
+    if not read_files:
+        raise ConfigNotFoundError(config_files)
+    return parser

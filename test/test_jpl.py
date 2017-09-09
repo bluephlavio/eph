@@ -2,7 +2,6 @@ import pytest
 
 import os
 import datetime
-import requests
 
 from eph.jpl import *
 from eph.jpl.parsers import parse

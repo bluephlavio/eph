@@ -51,11 +51,19 @@ def addparams2url(url, params):
         return urlunparse(urlparse(url)) + '?' + urlencode(params)
 
 
-def quote(s, char='\''):
-    return char + s + char
+def quote(s):
+    if s.startswith('\'') and s.endswith('\''):
+        return s
+    if s.startswith('"') and s.endswith('"'):
+        return '\'' + s[1:-1] + '\''
+    return '\'' + s + '\''
 
 
 def yes_or_no(value, y='YES', n='NO'):
-    if isinstance(value, str):
-        return y if value.lower() in ('y', 'yes') else n
-    return y if value else n
+    value = value.lower() if isinstance(value, str) else value
+    if value in ('y', 'yes', 'true', True, 1):
+        return y
+    elif value in ('n', 'no', 'false', False, 0):
+        return n
+    else:
+        return None
