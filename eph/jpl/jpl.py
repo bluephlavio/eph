@@ -13,7 +13,7 @@ except ImportError:
 import requests
 
 from .models import BaseMap
-from .parsers import parse
+from .parsers import parse, get_sections
 from .exceptions import *
 from ..config import read_config
 from ..util import addparams2url, quote, yes_or_no
@@ -251,14 +251,8 @@ class JplReq(BaseMap):
             :class:`JplBadReq`
 
         """
-        try:
-            http_response = requests.get(JPL_ENDPOINT, params=self)
-        except:
-            raise ConnectionError
-        if http_response.status_code == 200:
-            return JplRes(http_response)
-        else:
-            raise JplBadReq
+        http_response = requests.get(JPL_ENDPOINT, params=self)
+        return JplRes(http_response)
 
 
 class JplRes(object):
@@ -282,6 +276,22 @@ class JplRes(object):
 
         """
         return self.http_response.text
+
+
+    def get_header(self):
+        header, ephem, footer = get_sections(self.get_raw())
+        return header
+
+
+    def get_ephem(self):
+        header, ephem, footer = get_sections(self.get_raw())
+        return ephem
+
+
+    def get_footer(self):
+        header, ephem, footer = get_sections(self.get_raw())
+        return footer
+
 
     def get_table(self):
         """Parse the http response from Jpl Horizons and return an `astropy.table`_ object.
