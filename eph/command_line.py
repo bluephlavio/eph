@@ -10,7 +10,14 @@ from eph.jpl.jpl import *
 from eph.jpl.parsers import *
 
 
-LOGGER = logging.getLogger()
+formatter = logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(console_handler)
 
 
 def get_parser():
@@ -161,13 +168,19 @@ def get_parser():
 
 
 def build_request(args):
-    return JplReq().read(args.config).set({
+    req = JplReq()
+    req.read(args.config)
+    logger.info('jplparams defaults read')
+    req.set({
         k: v for k, v in vars(args).items() if transform_key(k) in JPL_PARAMS and v
     })
+    logger.info('command line jplparams read')
+    return req
 
 
 def get_data(req, args):
     res = req.query()
+    logger.info('jpl response obtained')
     if args.raw:
         raw = res.get_raw()
         if args.ephem_only:
@@ -175,6 +188,7 @@ def get_data(req, args):
             return ephem
         return raw
     else:
+        logger.info('ready to parse jpl response')
         return res.get_table()
 
 
@@ -193,6 +207,7 @@ def process(args):
     req = build_request(args)
     data = get_data(req, args)
     write(data, args)
+    logger.info('data written')
 
 
 def main():
@@ -200,8 +215,10 @@ def main():
         parser = get_parser()
         args = parser.parse_args()
         process(args)
+    except configparser.ParsingError as e:
+        logger.error('Error trying to parse configuration file:\n' + str(e))
     except Exception as e:
-        print(e)
+        logger.error(str(e))
 
 
 if __name__ == '__main__':

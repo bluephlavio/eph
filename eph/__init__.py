@@ -22,7 +22,6 @@ import datetime
 
 from .eph import Eph
 from .jpl import JplReq, JplRes
-from .jpl.shortcuts import *
 
 
 __project__ = 'eph'
