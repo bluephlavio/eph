@@ -5,7 +5,8 @@
 import re
 from string import whitespace as ws
 
-from astropy.table import Table
+from astropy.table import QTable
+from astropy import units as u
 
 from ..util import parse_table, parse_row, numberify, transpose
 from .exceptions import *
@@ -60,6 +61,12 @@ def parse_meta(header):
     return {m.group(1).strip(ws): m.group(2).strip(ws) for m in re.finditer(r'(.*?\D):\s(.*)', header)}
 
 
+def get_units(meta):
+    space_u, time_u = map(lambda unit: u.Unit(unit), meta['Output units'].lower().split('-'))
+    vel_u = space_u / time_u
+    return space_u, time_u, vel_u
+
+
 def parse_data(data, **kwargs):
     """Parses the data section of a Jpl Horizons ephemeris in a *list of lists* table.
 
@@ -111,4 +118,18 @@ def parse(source):
     data = transpose(parse_data(ephem, cols_del=cols_del))
     cols = parse_cols(header)
     meta = parse_meta(header)
-    return Table(data, names=cols, meta=meta)
+
+    table = QTable(data, names=cols, meta=meta)
+
+    space_u, time_u, vel_u = get_units(meta)
+    for col in cols:
+        if col.upper() in ('JDTDB',):
+            table[col].unit = time_u
+        elif col.upper() in ('X', 'Y', 'Z',):
+            table[col].unit = space_u
+        elif col.upper() in ('VX', 'VY', 'VZ',):
+            table[col].unit = vel_u
+        else:
+            pass
+
+    return table
