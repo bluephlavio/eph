@@ -3,7 +3,7 @@
 """
 
 import re
-import string
+from string import whitespace as ws
 
 from astropy.table import Table
 
@@ -26,7 +26,7 @@ def get_sections(source):
     """
     m = re.match(r'(.*?)\$\$SOE(.*?)\$\$EOE(.*?)', source, flags=re.DOTALL)
     if m:
-        to_strip = string.whitespace + '*'
+        to_strip = ws + '*'
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
         raise JplBadReq()
@@ -42,18 +42,22 @@ def get_subsections(source):
         :class:`list`: the lists of subsections.
 
     """
-    to_strip = string.whitespace
+    to_strip = ws
     return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*{3,}', source)))
 
 
 def parse_jplparams(source):
-    raw = re.search(r'(?<=!\$\$SOF)[\s\S]*$', source).group().strip(string.whitespace)
+    raw = re.search(r'(?<=!\$\$SOF)[\s\S]*$', source).group().strip(ws)
     return {m.group(1): m.group(2) for m in re.finditer(r'(\S*)\s=\s(\S*)', raw)}
 
 
 def check_csv(source):
     jplparams = parse_jplparams(source)
     return jplparams.get('CSV_FORMAT', 'NO') == 'YES'
+
+
+def parse_meta(header):
+    return {m.group(1).strip(ws): m.group(2).strip(ws) for m in re.finditer(r'(.*?\D):\s(.*)', header)}
 
 
 def parse_data(data, **kwargs):
@@ -106,4 +110,5 @@ def parse(source):
     header, ephem, footer = get_sections(source)
     data = transpose(parse_data(ephem, cols_del=cols_del))
     cols = parse_cols(header)
-    return Table(data, names=cols)
+    meta = parse_meta(header)
+    return Table(data, names=cols, meta=meta)
