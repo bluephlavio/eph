@@ -8,7 +8,7 @@ import string
 from astropy.table import Table
 
 from ..util import parse_table, parse_row, numberify, transpose
-from .exceptions import JplParserError
+from .exceptions import *
 
 
 def get_sections(source):
@@ -29,7 +29,7 @@ def get_sections(source):
         to_strip = string.whitespace + '*'
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
-        raise JplParserError('Error trying to match structure...')
+        raise JplBadReq()
 
 
 def get_subsections(source):
@@ -46,7 +46,7 @@ def get_subsections(source):
     return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*{3,}', source)))
 
 
-def parse_data(data):
+def parse_data(data, **kwargs):
     """Parses the data section of a Jpl Horizons ephemeris in a *list of lists* table.
 
     Args:
@@ -57,7 +57,7 @@ def parse_data(data):
 
     """
     try:
-        return numberify(parse_table(data))
+        return numberify(parse_table(data, **kwargs))
     except:
         raise JplParserError('Error parsing ephemeris...')
 

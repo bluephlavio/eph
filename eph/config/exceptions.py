@@ -16,12 +16,10 @@ class ConfigNotFoundError(ConfigError):
 
     """
 
-    def __init__(self, config_files):
-        self.config_files = config_files
-        super(self.__class__, self).__init__(self.format())
+    def __init__(self, search_list):
+        self.search_list = search_list
+        super(self.__class__, self).__init__()
 
 
-    def format(self):
-        msg = 'None of the following configurations files were found:'
-        list = os.linesep.join(['* ' + file for file in self.config_files])
-        return os.linesep.join([msg, list])
+    def format_search_list(self, delimiter=', ', bullet=str()):
+        return delimiter.join(bullet + file for file in self.search_list)

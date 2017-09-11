@@ -2,6 +2,7 @@ import copy
 from urllib.parse import urlparse, urlunparse, urlencode
 from os.path import abspath, expanduser
 import string
+import re
 
 
 def is_vector(obj):
@@ -13,15 +14,15 @@ def clean_row(row):
     return list(map(lambda cell: cell.strip(to_strip), row))
 
 
-def parse_row(raw, cols_del=','):
+def parse_row(raw, cols_del=r','):
     to_strip = string.whitespace + cols_del
-    row = raw.strip(to_strip).split(cols_del)
+    row = re.split(cols_del, raw.strip(to_strip))
     return clean_row(row)
 
 
-def parse_table(raw, cols_del=',', rows_del='\n'):
+def parse_table(raw, cols_del=r',', rows_del=r'\r?\n'):
     to_strip = string.whitespace + rows_del + cols_del
-    rows = raw.strip(to_strip).split(rows_del)
+    rows = re.split(rows_del, raw.strip(to_strip))
     return list(map(lambda row: parse_row(row, cols_del=cols_del), rows))
 
 
@@ -61,9 +62,9 @@ def quote(s):
 
 def yes_or_no(value, y='YES', n='NO'):
     value = value.lower() if isinstance(value, str) else value
-    if value in ('y', 'yes', 'true', True, 1):
+    if value in ('y', 'yes', 'true', '1', True, 1):
         return y
-    elif value in ('n', 'no', 'false', False, 0):
+    elif value in ('n', 'no', 'false', '0', False, 0):
         return n
     else:
         return None

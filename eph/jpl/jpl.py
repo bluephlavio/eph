@@ -13,7 +13,7 @@ except ImportError:
 import requests
 
 from .models import BaseMap
-from .parsers import parse, get_sections
+from .parsers import *
 from .exceptions import *
 from ..config import read_config
 from ..util import addparams2url, quote, yes_or_no
@@ -164,7 +164,7 @@ FILTERS = {
     codify_obj: ['COMMAND'],
     codify_site: ['CENTER'],
     quote: ['TLIST'],
-    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA'],
+    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS'],
 }
 
 
@@ -248,10 +248,15 @@ class JplReq(BaseMap):
             :class:`JplRes`: the response from Jpl Horizons service.
 
         Raises:
-            :class:`JplBadReq`
+            :class:`ConnectionError`
 
         """
-        http_response = requests.get(JPL_ENDPOINT, params=self)
+
+        try:
+            http_response = requests.get(JPL_ENDPOINT, params=self)
+        except requests.exceptions.ConnectionError as e:
+            raise ConnectionError(str(e))
+
         return JplRes(http_response)
 
 
