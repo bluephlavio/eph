@@ -47,13 +47,8 @@ def get_subsections(source):
 
 
 def parse_jplparams(source):
-    jplparams = {}
     raw = re.search(r'(?<=!\$\$SOF)[\s\S]*$', source).group().strip(string.whitespace)
-    for m in re.finditer(r'(?P<key>\S*)\s*=\s*(?P<value>\S*)', raw):
-        key = m.group('key')
-        value = m.group('value')
-        jplparams[key] = value
-    return jplparams
+    return {m.group(1): m.group(2) for m in re.finditer(r'(\S*)\s=\s(\S*)', raw)}
 
 
 def check_csv(source):
