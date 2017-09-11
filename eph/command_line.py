@@ -244,10 +244,7 @@ def main():
         logger.error('Horizons cannot interpret the request. Horizons says: ' + description)
         sys.exit(-1)
     except JplParserError:
-        logger.error('''
-            eph cannot parse this format.
-            Try passing --csv YES option or --raw to get Horizons response as is.
-            ''')
+        logger.error('''eph cannot parse this format. Try passing --csv YES option or --raw to get Horizons response as is.''')
         sys.exit(-1)
 
     write(data, args)

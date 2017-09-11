@@ -46,6 +46,21 @@ def get_subsections(source):
     return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*{3,}', source)))
 
 
+def parse_jplparams(source):
+    jplparams = {}
+    raw = re.search(r'(?<=!\$\$SOF)[\s\S]*$', source).group().strip(string.whitespace)
+    for m in re.finditer(r'(?P<key>\S*)\s*=\s*(?P<value>\S*)', raw):
+        key = m.group('key')
+        value = m.group('value')
+        jplparams[key] = value
+    return jplparams
+
+
+def check_csv(source):
+    jplparams = parse_jplparams(source)
+    return jplparams.get('CSV_FORMAT', 'NO') == 'YES'
+
+
 def parse_data(data, **kwargs):
     """Parses the data section of a Jpl Horizons ephemeris in a *list of lists* table.
 
@@ -57,6 +72,8 @@ def parse_data(data, **kwargs):
 
     """
     try:
+        if kwargs.get('cols_del') != ',':
+            raise JplParserError()
         return numberify(parse_table(data, **kwargs))
     except:
         raise JplParserError('Error parsing ephemeris...')
@@ -88,7 +105,10 @@ def parse(source):
 
     .. _`astropy`:  http://docs.astropy.org/en/stable/table/
     """
+
+    cols_del = ',' if check_csv(source) else r'\s'
+
     header, ephem, footer = get_sections(source)
-    data = transpose(parse_data(ephem))
+    data = transpose(parse_data(ephem, cols_del=cols_del))
     cols = parse_cols(header)
     return Table(data, names=cols)
