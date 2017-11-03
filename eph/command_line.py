@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import string
 try:
     import configparser
 except ImportError:
@@ -113,7 +114,7 @@ def get_parser():
                         'LT' (astrometric states) or 
                         'LT+S' (astrometric states corrected for stellar aberration)
                         ''')
-    parser.add_argument('--units', '-u',
+    parser.add_argument('--out-units', '-u',
                         choices=['KM-S', 'AU-D', 'KM-D'],
                         help='''
                         selects output units when TABLE_TYPE=VECTOR or ELEMENT. 
