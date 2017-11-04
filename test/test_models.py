@@ -6,15 +6,15 @@ class ConcreteMap(BaseMap):
 
 
     def __getattr__(self, key):
-        return super().__getattr__(key)
+        return super(self.__class__, self).__getattr__(key)
 
 
     def __setattr__(self, key, value):
-        super().__setattr__(key, value)
+        super(self.__class__, self).__setattr__(key, value)
 
 
     def __delattr__(self, key):
-        super().__delattr__(key)
+        super(self.__class__, self).__delattr__(key)
 
 
 def test_map_model():

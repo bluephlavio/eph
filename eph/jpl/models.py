@@ -1,5 +1,8 @@
-from collections.abc import MutableMapping
 import abc
+try:
+    from collections.abc import MutableMapping
+except ImportError:
+    from collections import MutableMapping
 
 from os import linesep
 

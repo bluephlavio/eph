@@ -1,8 +1,12 @@
 import copy
-from urllib.parse import urlparse, urlunparse, urlencode
 from os.path import abspath, expanduser
 import string
 import re
+try:
+    from urllib.parse import urlparse, urlunparse, urlencode
+except ImportError:
+    from urlparse import urlparse, urlunparse
+    from urllib import urlencode
 
 
 def is_vector(obj):

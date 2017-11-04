@@ -202,17 +202,17 @@ class JplReq(BaseMap):
 
     def __getattr__(self, key):
         key = transform_key(key)
-        return super().__getattr__(key)
+        return super(self.__class__, self).__getattr__(key)
 
     def __setattr__(self, key, value):
         k, v = transform(key, value)
         if not k:
             raise JplBadParam('\'{}\' cannot be interpreted as a Jpl Horizons parameter.'.format(key))
-        super().__setattr__(k, v)
+        super(self.__class__, self).__setattr__(k, v)
 
     def __delattr__(self, key):
         key = transform_key(key)
-        super().__delattr__(key)
+        super(self.__class__, self).__delattr__(key)
 
     def read(self, filename, section='jplparams'):
         """Reads configurations parameters from an ini file.
