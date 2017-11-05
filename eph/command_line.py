@@ -12,8 +12,8 @@ from astropy.table import Table
 
 from .jpl.interface import codify_obj, codify_site, JPL_PARAMS
 from .jpl.parsers import get_subsections
-from eph.jpl import *
-from eph.config import *
+from .jpl import *
+from .config import *
 
 
 formatter = logging.Formatter('%(levelname)s: %(message)s')
@@ -205,7 +205,7 @@ def get_data(res, args):
             return res.get_ephem()
         return res.get_raw()
     else:
-        return res.get_table()
+        return res.parse()
 
 
 def write(data, args):

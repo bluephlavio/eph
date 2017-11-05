@@ -5,18 +5,20 @@
 """
 
 
+import requests
 try:
     import configparser
 except ImportError:
     import ConfigParser as configparser
 
-import requests
+from astropy.table import Table, QTable
 
 from .models import BaseMap
-from .parsers import parse, get_sections
 from .interface import JPL_ENDPOINT, transform_key, transform
 from .exceptions import *
+from .parsers import parse, get_sections
 from ..config import read_config
+from ..eph import Eph
 from ..util import addparams2url
 
 
@@ -118,9 +120,9 @@ class JplRes(object):
         return header
 
 
-    def get_ephemeris(self):
-        header, ephemeris, footer = get_sections(self.get_raw())
-        return ephemeris
+    def get_data(self):
+        header, data, footer = get_sections(self.get_raw())
+        return data
 
 
     def get_footer(self):
@@ -128,10 +130,15 @@ class JplRes(object):
         return footer
 
 
-    def get_table(self):
-        """Parse the http response from Jpl Horizons and return an `astropy.table`_ object.
+    def parse(self, target=Eph):
+        """Parse the http response from Jpl Horizons and return, according to target
+
+         * an `astropy.table.Table`_ object.
+         * an `astropy.table.QTable`_ object.
+         * an `eph.Eph` object.
 
         .. _`astropy.table`: http://docs.astropy.org/en/stable/table/
 
         """
-        return parse(self.get_raw())
+        return parse(self.get_raw(), target=target)
+

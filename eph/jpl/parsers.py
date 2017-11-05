@@ -5,12 +5,12 @@
 import re
 from string import whitespace as ws
 
-from astropy.table import QTable
+from astropy.table import Table, QTable
 from astropy import units as u
 
-from .interface import *
-
 from ..util import parse_table, parse_row, numberify, transpose
+from ..eph import Eph
+from .interface import *
 from .exceptions import *
 
 
@@ -113,7 +113,7 @@ def parse_cols(header):
 
 
 
-def parse(source):
+def parse(source, target=Eph):
     """Parses an entire Jpl Horizons ephemeris and build an `astropy`_ table out of it.
 
     Args:
@@ -131,14 +131,22 @@ def parse(source):
     data = transpose(parse_data(ephemeris, cols_del=cols_del))
     cols = parse_cols(header)
     meta = parse_meta(header)
-    units = parse_units(meta)
 
-    table = QTable(data, names=cols, meta=meta)
+    if target is Table:
+        return Table(data, names=cols, meta=meta)
+    else:
+        units = parse_units(meta)
+        if target is QTable:
+            table = QTable(data, names=cols, meta=meta)
+        elif target is Eph:
+            table = Eph(data, names=cols, meta=meta)
+        else:
+            raise
 
-    if units:
-        for col in cols:
-            dim = get_col_dim(col)
-            if dim:
-                table[col].unit = units[dim]
+        if units:
+            for col in cols:
+                dim = get_col_dim(col)
+                if dim:
+                    table[col].unit = units[dim]
 
-    return table
+        return table
