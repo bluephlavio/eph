@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 import string
+import re
 try:
     import configparser
 except ImportError:
@@ -9,6 +10,8 @@ except ImportError:
 
 from astropy.table import Table
 
+from .jpl.interface import codify_obj, codify_site, JPL_PARAMS
+from .jpl.parsers import get_subsections
 from eph.jpl import *
 from eph.config import *
 

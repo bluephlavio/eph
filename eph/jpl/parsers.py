@@ -8,6 +8,8 @@ from string import whitespace as ws
 from astropy.table import QTable
 from astropy import units as u
 
+from .interface import *
+
 from ..util import parse_table, parse_row, numberify, transpose
 from .exceptions import *
 
@@ -61,10 +63,20 @@ def parse_meta(header):
     return {m.group(1).strip(ws): m.group(2).strip(ws) for m in re.finditer(r'(.*?\D):\s(.*)', header)}
 
 
-def get_units(meta):
-    space_u, time_u = map(lambda unit: u.Unit(unit), meta['Output units'].lower().split('-'))
-    vel_u = space_u / time_u
-    return space_u, time_u, vel_u
+def parse_units(meta):
+    if 'Output units' in meta.keys():
+        value = meta['Output units'].split(',')
+        space_u, time_u = map(lambda unit: u.Unit(unit), value[0].lower().split('-'))
+        return dict(
+            JD=u.Unit('d'),
+            TIME=time_u,
+            SPACE=space_u,
+            VELOCITY=space_u / time_u,
+            ANGLE=u.Unit('deg'),
+            ANGULAR_VELOCITY=u.Unit('deg') / time_u
+        )
+    else:
+        return None
 
 
 def parse_data(data, **kwargs):
@@ -100,6 +112,7 @@ def parse_cols(header):
     return tuple(cols)
 
 
+
 def parse(source):
     """Parses an entire Jpl Horizons ephemeris and build an `astropy`_ table out of it.
 
@@ -114,22 +127,18 @@ def parse(source):
 
     cols_del = ',' if check_csv(source) else r'\s'
 
-    header, ephem, footer = get_sections(source)
-    data = transpose(parse_data(ephem, cols_del=cols_del))
+    header, ephemeris, footer = get_sections(source)
+    data = transpose(parse_data(ephemeris, cols_del=cols_del))
     cols = parse_cols(header)
     meta = parse_meta(header)
+    units = parse_units(meta)
 
     table = QTable(data, names=cols, meta=meta)
 
-    space_u, time_u, vel_u = get_units(meta)
-    for col in cols:
-        if col.upper() in ('JDTDB',):
-            table[col].unit = time_u
-        elif col.upper() in ('X', 'Y', 'Z',):
-            table[col].unit = space_u
-        elif col.upper() in ('VX', 'VY', 'VZ',):
-            table[col].unit = vel_u
-        else:
-            pass
+    if units:
+        for col in cols:
+            dim = get_col_dim(col)
+            if dim:
+                table[col].unit = units[dim]
 
     return table

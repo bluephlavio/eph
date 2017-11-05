@@ -4,6 +4,7 @@ import os
 import datetime
 
 from eph.jpl import *
+from eph.jpl.interface import *
 from eph.jpl.parsers import parse
 from eph.jpl.exceptions import JplParserError, JplBadReq
 
