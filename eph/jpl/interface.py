@@ -185,16 +185,16 @@ def transform(key, value):
     return k, v
 
 
-# units
+# dimensions and units
 
 DIM_COL = dict(
     # dimension: columns
-    JD={'JDTDB', 'Tp'},
-    TIME={},
-    SPACE={'X', 'Y', 'Z',},
-    VELOCITY={'VX', 'VY', 'VZ',},
-    ANGLE={},
-    ANGULAR_VELOCITY={},
+    JD={'JDTDB', 'Tp',},
+    TIME={'LT',},
+    SPACE={'X', 'Y', 'Z', 'RG', 'QR', 'A', 'AD',},
+    VELOCITY={'VX', 'VY', 'VZ', 'RR',},
+    ANGLE={'IN', 'OM', 'W', 'MA', 'TA',},
+    ANGULAR_VELOCITY={'N',},
 )
 
 

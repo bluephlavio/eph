@@ -3,6 +3,8 @@ import pytest
 import os
 import datetime
 
+from astropy import units as u
+
 from eph.jpl import *
 from eph.jpl.interface import *
 from eph.jpl.parsers import parse
@@ -193,3 +195,4 @@ def humanify_data(request):
 def test_humanify(humanify_data):
     data, result = humanify_data
     assert humanify(data) == result
+

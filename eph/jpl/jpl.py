@@ -11,15 +11,14 @@ try:
 except ImportError:
     import ConfigParser as configparser
 
-from astropy.table import Table, QTable
-
 from .models import BaseMap
 from .interface import JPL_ENDPOINT, transform_key, transform
-from .exceptions import *
+from .exceptions import JplBadParam
 from .parsers import parse, get_sections
 from ..config import read_config
 from ..eph import Eph
 from ..util import addparams2url
+
 
 
 class JplReq(BaseMap):
@@ -39,7 +38,7 @@ class JplReq(BaseMap):
     def __setattr__(self, key, value):
         k, v = transform(key, value)
         if not k:
-            raise JplBadParam('\'{}\' cannot be interpreted as a Jpl Horizons parameter.'.format(key))
+            raise JplBadParam('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
         super(self.__class__, self).__setattr__(k, v)
 
     def __delattr__(self, key):
@@ -87,7 +86,7 @@ class JplReq(BaseMap):
         try:
             http_response = requests.get(JPL_ENDPOINT, params=self)
         except requests.exceptions.ConnectionError as e:
-            raise ConnectionError(str(e))
+            raise ConnectionError(e.__str__())
 
         return JplRes(http_response)
 
@@ -114,21 +113,17 @@ class JplRes(object):
         """
         return self.http_response.text
 
-
     def get_header(self):
         header, ephem, footer = get_sections(self.get_raw())
         return header
-
 
     def get_data(self):
         header, data, footer = get_sections(self.get_raw())
         return data
 
-
     def get_footer(self):
         header, ephemeris, footer = get_sections(self.get_raw())
         return footer
-
 
     def parse(self, target=Eph):
         """Parse the http response from Jpl Horizons and return, according to target

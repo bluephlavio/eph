@@ -32,7 +32,8 @@ def get_sections(source):
         to_strip = ws + '*'
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
-        raise JplBadReq()
+        problem_report, jplparams = map(lambda x: x.strip(ws), re.split(r'!\$\$SOF', source))
+        raise JplBadReq('Horizons says:\n\t' + problem_report)
 
 
 def get_subsections(source):
@@ -68,15 +69,13 @@ def parse_units(meta):
         value = meta['Output units'].split(',')
         space_u, time_u = map(lambda unit: u.Unit(unit), value[0].lower().split('-'))
         return dict(
-            JD=u.Unit('d'),
+            JD=u.day,
             TIME=time_u,
             SPACE=space_u,
             VELOCITY=space_u / time_u,
-            ANGLE=u.Unit('deg'),
-            ANGULAR_VELOCITY=u.Unit('deg') / time_u
+            ANGLE=u.deg,
+            ANGULAR_VELOCITY=u.deg / time_u,
         )
-    else:
-        return None
 
 
 def parse_data(data, **kwargs):
@@ -131,11 +130,11 @@ def parse(source, target=Eph):
     data = transpose(parse_data(ephemeris, cols_del=cols_del))
     cols = parse_cols(header)
     meta = parse_meta(header)
+    units = parse_units(meta)
 
-    if target is Table:
+    if target is Table or not units:
         return Table(data, names=cols, meta=meta)
     else:
-        units = parse_units(meta)
         if target is QTable:
             table = QTable(data, names=cols, meta=meta)
         elif target is Eph:

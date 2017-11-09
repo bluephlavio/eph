@@ -202,7 +202,7 @@ def build_request(args):
 def get_data(res, args):
     if args.raw:
         if args.ephem_only:
-            return res.get_ephem()
+            return res.get_data()
         return res.get_raw()
     else:
         return res.parse()
@@ -227,25 +227,22 @@ def main():
     try:
         req = build_request(args)
     except ConfigNotFoundError as e:
-        logger.error('Configuration file not found: ' + e.format_search_list())
+        logger.error('Configuration file not found:\n\t' + e.format_search_list())
         sys.exit(-1)
     except configparser.ParsingError as e:
-        logger.error('Problem encountered while parsing configuration files: ' + str(e))
+        logger.error('Problems encountered while parsing configuration files:\n\t' + str(e))
         sys.exit(-1)
 
     try:
         res = req.query()
     except ConnectionError as e:
-        logger.error('No connection: ' + str(e))
+        logger.error('Connection error:\n\t' + str(e))
         sys.exit(-1)
 
     try:
         data = get_data(res, args)
-    except JplBadReq:
-        data = res.get_raw()
-        problem_report = get_subsections(data)[-1]
-        description, jplparams = map(lambda x: x.strip(string.whitespace), re.split(r'!\$\$SOF', problem_report))
-        logger.error('Horizons cannot interpret the request. Horizons says: ' + description)
+    except JplBadReq as e:
+        logger.error('Horizons cannot interpret the request. Horizons says:\n\t' + e.__str__())
         sys.exit(-1)
     except JplParserError:
         logger.error('''eph cannot parse this format. Try passing --csv YES option or --raw to get Horizons response as is.''')
