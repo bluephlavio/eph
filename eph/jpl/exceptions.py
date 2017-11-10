@@ -32,3 +32,7 @@ class JplBadParam(JplError):
 
     """
     pass
+
+
+class InvalidTargetClass(Exception):
+    pass

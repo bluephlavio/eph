@@ -132,20 +132,15 @@ def parse(source, target=Eph):
     meta = parse_meta(header)
     units = parse_units(meta)
 
-    if target is Table or not units:
-        return Table(data, names=cols, meta=meta)
+    if target in (Table, QTable, Eph):
+        table = target(data, names=cols, meta=meta)
     else:
-        if target is QTable:
-            table = QTable(data, names=cols, meta=meta)
-        elif target is Eph:
-            table = Eph(data, names=cols, meta=meta)
-        else:
-            raise
+        raise InvalidTargetClass('Available target classes are Table, QTable and Eph.')
 
-        if units:
-            for col in cols:
-                dim = get_col_dim(col)
-                if dim:
-                    table[col].unit = units[dim]
+    if units and target is not Table:
+        for col in cols:
+            dim = get_col_dim(col)
+            if dim:
+                table[col].unit = units[dim]
 
-        return table
+    return table

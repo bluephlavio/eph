@@ -1,5 +1,6 @@
+from __future__ import print_function
 import pytest
-
+import sys
 import os
 
 from eph.jpl.parsers import *
@@ -39,8 +40,9 @@ def elements_source(elements_req_file):
 def test_parse_vectors(vectors_source):
     e = parse(vectors_source, target=Eph)
     jd, x, y, z, vx, vy, vz, lt, rg, rr = [e[col] for col in ('JDTDB', 'X', 'Y', 'Z', 'VX', 'VY', 'VZ', 'LT', 'RG', 'RR',)]
-    d = (x**2+y**2+z**2)**(1/2)
-    v = (vx**2+vy**2+vz**2)**(1/2)
+    d = (x**2+y**2+z**2)**(.5)
+    v = (vx**2+vy**2+vz**2)**(.5)
+    print(d, d.value, d.unit, type(d), file=sys.stderr)
     assert jd.unit == u.day
     assert lt.unit == u.s
     assert all([q.unit == u.km for q in (x, y, z, d, rg,)])
@@ -48,7 +50,7 @@ def test_parse_vectors(vectors_source):
 
 
 def test_parse_observer(observer_source):
-    e = parse(observer_source, target=Eph)
+    e = parse(observer_source, target=Table)
     assert 'R.A._(ICRF/J2000.0)' in e.keys()
     assert 'DEC_(ICRF/J2000.0)' in e.keys()
 
@@ -58,3 +60,4 @@ def test_parse_elements(elements_source):
     ecc, tp = [e[col] for col in ('EC', 'Tp')]
     assert all(map(lambda x: x < 1, ecc))
     assert tp.unit == u.day
+
