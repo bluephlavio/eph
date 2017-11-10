@@ -1,6 +1,9 @@
 """Defines variables and functions used to interfacing with Jpl Horizons system.
 
 """
+import datetime
+
+import astropy.time
 
 from ..util import quote, yes_or_no
 
@@ -139,28 +142,6 @@ def humanify(code):
     return ID2NAME.get(id, code)
 
 
-# aliases and filters
-
-ALIASES = dict(
-    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET'},
-    START_TIME={'START', 'BEGIN', 'FROM'},
-    STOP_TIME={'STOP', 'END', 'TO'},
-    STEP_SIZE={'STEP', 'STEPS'},
-    CENTER={'ORIGIN'},
-    CSV_FORMAT={'CSV'},
-    TABLE_TYPE={'TYPE'},
-    VEC_TABLE={'TABLE'},
-)
-
-
-FILTERS = {
-    codify_obj: ['COMMAND'],
-    codify_site: ['CENTER'],
-    quote: ['TLIST'],
-    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS'],
-}
-
-
 # key-value translation
 
 def transform_key(key):
@@ -202,4 +183,38 @@ def get_col_dim(col):
     for dim in DIM_COL.keys():
         if col in DIM_COL[dim]:
             return dim
+
+
+TFMT = '%Y-%m-%d'
+
+def format_time(t):
+    if type(t) == str:
+        return t
+    elif type(t) == datetime.datetime:
+        return t.strftime(TFMT)
+    elif type(t) == astropy.time.Time:
+        return format_time(t.datetime)
+
+
+# aliases and filters
+
+ALIASES = dict(
+    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET'},
+    START_TIME={'START', 'BEGIN', 'FROM'},
+    STOP_TIME={'STOP', 'END', 'TO'},
+    STEP_SIZE={'STEP', 'STEPS'},
+    CENTER={'ORIGIN'},
+    CSV_FORMAT={'CSV'},
+    TABLE_TYPE={'TYPE'},
+    VEC_TABLE={'TABLE'},
+)
+
+
+FILTERS = {
+    codify_obj: ['COMMAND'],
+    codify_site: ['CENTER'],
+    quote: ['TLIST'],
+    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS'],
+    format_time: ['START_TIME', 'STOP_TIME'],
+}
 

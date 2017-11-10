@@ -1,6 +1,5 @@
-from __future__ import print_function
 import pytest
-import sys
+
 import os
 
 from eph.jpl.parsers import *
@@ -42,7 +41,6 @@ def test_parse_vectors(vectors_source):
     jd, x, y, z, vx, vy, vz, lt, rg, rr = [e[col] for col in ('JDTDB', 'X', 'Y', 'Z', 'VX', 'VY', 'VZ', 'LT', 'RG', 'RR',)]
     d = (x**2+y**2+z**2)**(.5)
     v = (vx**2+vy**2+vz**2)**(.5)
-    print(d, d.value, d.unit, type(d), file=sys.stderr)
     assert jd.unit == u.day
     assert lt.unit == u.s
     assert all([q.unit == u.km for q in (x, y, z, d, rg,)])

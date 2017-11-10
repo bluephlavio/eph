@@ -1,9 +1,6 @@
 import pytest
 
 import os
-import datetime
-
-from astropy import units as u
 
 from eph.jpl import *
 from eph.jpl.interface import *
@@ -69,6 +66,8 @@ def test_transformkey(transformkey_data):
     ('COMMAND', 'earth', '399'),
     ('CENTER', '@399', '@399'),
     ('CENTER', '399', '@399'),
+    ('START_TIME', datetime.datetime(2017, 4, 22), '2017-04-22'),
+    ('STOP_TIME', astropy.time.Time('2017-4-22'), '2017-04-22'),
 ])
 def transformvalue_data(request):
     return request.param
@@ -84,6 +83,8 @@ def test_transformvalue(transformvalue_data):
     (('Command', 'Earth'), ('COMMAND', '399')),
     (('OBJECT', '399'), ('COMMAND', '399')),
     (('Origin', 'earth'), ('CENTER', '@399')),
+    (('start', astropy.time.Time('2017-4-22')), ('START_TIME', '2017-04-22')),
+    (('stop', datetime.datetime(2017, 4, 22)), ('STOP_TIME', '2017-04-22')),
 ])
 def transform_data(request):
     return request.param
@@ -195,4 +196,15 @@ def humanify_data(request):
 def test_humanify(humanify_data):
     data, result = humanify_data
     assert humanify(data) == result
+
+@pytest.fixture(params=[
+    '2017-04-22',
+    datetime.datetime(2017, 4, 22),
+    astropy.time.Time('2017-4-22'),
+])
+def format_time_data(request):
+    return request.param
+
+def test_format_time(format_time_data):
+    assert format_time(format_time_data) == '2017-04-22'
 
