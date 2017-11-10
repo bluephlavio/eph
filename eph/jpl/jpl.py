@@ -137,3 +137,6 @@ class JplRes(object):
         """
         return parse(self.get_raw(), target=target)
 
+    def __str__(self):
+        return self.get_raw()
+

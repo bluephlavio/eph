@@ -43,8 +43,8 @@ def test_parse_vectors(vectors_source):
     v = (vx**2+vy**2+vz**2)**(1/2)
     assert jd.unit == u.day
     assert lt.unit == u.s
-    assert all(q.unit == u.km for q in (x, y, z, d, rg,))
-    assert all(q.unit == u.km / u.s for q in (vx, vy, vz, v, rr,))
+    assert all([q.unit == u.km for q in (x, y, z, d, rg,)])
+    assert all([q.unit == u.km / u.s for q in (vx, vy, vz, v, rr,)])
 
 
 def test_parse_observer(observer_source):
