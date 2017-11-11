@@ -57,7 +57,8 @@ def parse_jplparams(source):
 
 def check_csv(source):
     jplparams = parse_jplparams(source)
-    return jplparams.get('CSV_FORMAT', 'NO') == 'YES'
+    csv = jplparams.get('CSV_FORMAT', 'NO')
+    return re.match(r'\'?YES\'?', csv)
 
 
 def parse_meta(header):
@@ -89,8 +90,6 @@ def parse_data(data, **kwargs):
 
     """
     try:
-        if kwargs.get('cols_del') != ',':
-            raise JplParserError()
         return numberify(parse_table(data, **kwargs))
     except:
         raise JplParserError('Error parsing ephemeris...')

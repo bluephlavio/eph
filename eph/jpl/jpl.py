@@ -17,7 +17,7 @@ from .exceptions import JplBadParam
 from .parsers import parse, get_sections
 from ..config import read_config
 from ..eph import Eph
-from ..util import addparams2url
+from ..util import addparams2url, wrap
 
 
 
@@ -70,7 +70,7 @@ class JplReq(BaseMap):
             str: the url with the Jpl parameters encoded in the query string.
 
         """
-        return addparams2url(JPL_ENDPOINT, self)
+        return addparams2url(JPL_ENDPOINT, {k: wrap(str(v)) for k, v in self.items()})
 
     def query(self):
         """Performs the query to the Jpl Horizons service.
@@ -84,7 +84,7 @@ class JplReq(BaseMap):
         """
 
         try:
-            http_response = requests.get(JPL_ENDPOINT, params=self)
+            http_response = requests.get(self.url())
         except requests.exceptions.ConnectionError as e:
             raise ConnectionError(e.__str__())
 

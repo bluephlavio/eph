@@ -56,7 +56,7 @@ def addparams2url(url, params):
         return urlunparse(urlparse(url)) + '?' + urlencode(params)
 
 
-def quote(s):
+def wrap(s):
     if s.startswith('\'') and s.endswith('\''):
         return s
     if s.startswith('"') and s.endswith('"'):

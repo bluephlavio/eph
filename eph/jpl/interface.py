@@ -1,11 +1,9 @@
 """Defines variables and functions used to interfacing with Jpl Horizons system.
 
 """
-import datetime
+from astropy.time import Time
 
-import astropy.time
-
-from ..util import quote, yes_or_no
+from ..util import wrap, yes_or_no
 
 
 JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
@@ -185,35 +183,30 @@ def get_col_dim(col):
             return dim
 
 
-TFMT = '%Y-%m-%d'
-
 def format_time(t):
-    if type(t) == str:
-        return t
-    elif type(t) == datetime.datetime:
-        return t.strftime(TFMT)
-    elif type(t) == astropy.time.Time:
-        return format_time(t.datetime)
+    if type(t) == Time:
+        t.out_subfmt = 'date_hm'
+    return t
 
 
 # aliases and filters
 
 ALIASES = dict(
-    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET'},
-    START_TIME={'START', 'BEGIN', 'FROM'},
-    STOP_TIME={'STOP', 'END', 'TO'},
-    STEP_SIZE={'STEP', 'STEPS'},
-    CENTER={'ORIGIN'},
-    CSV_FORMAT={'CSV'},
-    TABLE_TYPE={'TYPE'},
-    VEC_TABLE={'TABLE'},
+    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET',},
+    START_TIME={'START', 'BEGIN', 'FROM',},
+    STOP_TIME={'STOP', 'END', 'TO',},
+    STEP_SIZE={'STEP', 'STEPS',},
+    CENTER={'ORIGIN',},
+    CSV_FORMAT={'CSV',},
+    TABLE_TYPE={'TYPE',},
+    VEC_TABLE={'TABLE',},
 )
 
 
 FILTERS = {
     codify_obj: ['COMMAND'],
     codify_site: ['CENTER'],
-    quote: ['TLIST'],
+    wrap: ['TLIST'],
     yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS'],
     format_time: ['START_TIME', 'STOP_TIME'],
 }

@@ -1,6 +1,11 @@
 import pytest
 
 import os
+import datetime
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
 
 from eph.jpl import *
 from eph.jpl.interface import *
@@ -66,8 +71,6 @@ def test_transformkey(transformkey_data):
     ('COMMAND', 'earth', '399'),
     ('CENTER', '@399', '@399'),
     ('CENTER', '399', '@399'),
-    ('START_TIME', datetime.datetime(2017, 4, 22), '2017-04-22'),
-    ('STOP_TIME', astropy.time.Time('2017-4-22'), '2017-04-22'),
 ])
 def transformvalue_data(request):
     return request.param
@@ -83,8 +86,6 @@ def test_transformvalue(transformvalue_data):
     (('Command', 'Earth'), ('COMMAND', '399')),
     (('OBJECT', '399'), ('COMMAND', '399')),
     (('Origin', 'earth'), ('CENTER', '@399')),
-    (('start', astropy.time.Time('2017-4-22')), ('START_TIME', '2017-04-22')),
-    (('stop', datetime.datetime(2017, 4, 22)), ('STOP_TIME', '2017-04-22')),
 ])
 def transform_data(request):
     return request.param
@@ -123,7 +124,7 @@ def test_req(req_data):
 
 def test_url():
     req = JplReq({'COMMAND': '399'})
-    assert req.url() == 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&COMMAND=399'
+    assert req.url() == JPL_ENDPOINT + '&COMMAND=' + quote('\'399\'')
 
 
 def test_query(config_file, jplreq):
@@ -198,13 +199,12 @@ def test_humanify(humanify_data):
     assert humanify(data) == result
 
 @pytest.fixture(params=[
-    '2017-04-22',
-    datetime.datetime(2017, 4, 22),
-    astropy.time.Time('2017-4-22'),
+    '2017-04-22 00:00',
+    Time('2017-4-22'),
 ])
 def format_time_data(request):
     return request.param
 
 def test_format_time(format_time_data):
-    assert format_time(format_time_data) == '2017-04-22'
+    assert str(format_time(format_time_data)) == '2017-04-22 00:00'
 

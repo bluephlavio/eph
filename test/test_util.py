@@ -102,13 +102,13 @@ def test_addparams2url(addparams2url_data):
     ('\'abc\'', '\'abc\''),
     ('"abc"', '\'abc\''),
 ])
-def quote_data(request):
+def wrap_data(request):
     return request.param
 
 
-def test_quote(quote_data):
-    s, result = quote_data
-    assert quote(s) == result
+def test_wrap(wrap_data):
+    s, result = wrap_data
+    assert wrap(s) == result
 
 
 @pytest.fixture(params=[
