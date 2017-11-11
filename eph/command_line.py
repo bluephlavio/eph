@@ -203,7 +203,7 @@ def get_data(res, args):
     if args.raw:
         if args.ephem_only:
             return res.get_data()
-        return res.get_raw()
+        return res.raw()
     else:
         return res.parse()
 

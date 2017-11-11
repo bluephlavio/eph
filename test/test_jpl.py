@@ -137,7 +137,7 @@ def test_get(urls):
     for url in urls:
         try:
             res = JplRes(requests.get(url))
-            eph = res.get_raw()
+            eph = res.raw()
             assert bool(eph)
         except JplBadReq:
             assert False

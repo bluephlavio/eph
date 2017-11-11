@@ -31,6 +31,15 @@ class JplReq(BaseMap):
 
     """
 
+    def __init__(self, *args, **kwargs):
+        if 'filename' in kwargs.keys():
+            filename = kwargs['filename']
+            section = kwargs.get('section', 'jplparams')
+            self.read(filename, section)
+            for k in {'filename', 'section'}:
+                kwargs.pop(k, None)
+        super(JplReq, self).__init__(*args, **kwargs)
+
     def __getattr__(self, key):
         key = transform_key(key)
         return super(self.__class__, self).__getattr__(key)
@@ -107,22 +116,22 @@ class JplRes(object):
         """
         self.http_response = http_response
 
-    def get_raw(self):
+    def raw(self):
         """Returns the content of the Jpl Horizons http response as is.
 
         """
         return self.http_response.text
 
     def get_header(self):
-        header, ephem, footer = get_sections(self.get_raw())
+        header, ephem, footer = get_sections(self.raw())
         return header
 
     def get_data(self):
-        header, data, footer = get_sections(self.get_raw())
+        header, data, footer = get_sections(self.raw())
         return data
 
     def get_footer(self):
-        header, ephemeris, footer = get_sections(self.get_raw())
+        header, ephemeris, footer = get_sections(self.raw())
         return footer
 
     def parse(self, target=Eph):
@@ -135,8 +144,8 @@ class JplRes(object):
         .. _`astropy.table`: http://docs.astropy.org/en/stable/table/
 
         """
-        return parse(self.get_raw(), target=target)
+        return parse(self.raw(), target=target)
 
     def __str__(self):
-        return self.get_raw()
+        return self.raw()
 
