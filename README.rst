@@ -70,3 +70,6 @@ the time-step size, the output etc. through the options provided. Check availabl
 
 .. image:: https://travis-ci.org/bluephlavio/eph.svg?branch=master
    :target: https://travis-ci.org/bluephlavio/eph
+
+.. image:: https://coveralls.io/repos/github/bluephlavio/eph/badge.svg?branch=master
+:target: https://coveralls.io/github/bluephlavio/eph?branch=master
