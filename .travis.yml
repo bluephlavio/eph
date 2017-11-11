@@ -6,5 +6,9 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
-  - pip install pytest pytest-cov
-script: pytest
+  - pip install pytest pytest-cov coverage coveralls
+script:
+  - python setup.py install
+  - pytest
+after_success:
+  - coveralls
