@@ -2,6 +2,8 @@ import pytest
 
 import os
 
+from astropy import units as u
+
 from eph.jpl.parsers import *
 from eph.jpl.shortcuts import raw_data_from_req_file
 
@@ -38,7 +40,9 @@ def elements_source(elements_req_file):
 
 def test_parse_vectors(vectors_source):
     e = parse(vectors_source, target=QTable)
-    jd, x, y, z, vx, vy, vz, lt, rg, rr = [e[col] for col in ('JDTDB', 'X', 'Y', 'Z', 'VX', 'VY', 'VZ', 'LT', 'RG', 'RR',)]
+    jd, x, y, z = [e[col] for col in ('JDTDB', 'X', 'Y', 'Z',)]
+    vx, vy, vz = [e[col] for col in ('VX', 'VY', 'VZ',)]
+    lt, rg, rr = [e[col] for col in ('LT', 'RG', 'RR',)]
     d = (x**2+y**2+z**2)**(.5)
     v = (vx**2+vy**2+vz**2)**(.5)
     assert jd.unit == u.day
@@ -58,4 +62,3 @@ def test_parse_elements(elements_source):
     ecc, tp = [e[col] for col in ('EC', 'Tp')]
     assert all(map(lambda x: x < 1, ecc))
     assert tp.unit == u.day
-

@@ -13,13 +13,12 @@ except ImportError:
 
 from astropy.table import QTable
 
-from .models import BaseMap
-from .horizons import JPL_ENDPOINT, transform_key, transform
-from .exceptions import JplBadParam
-from .parsers import parse, get_sections
 from ..config import read_config
 from ..util import addparams2url, wrap
-
+from .models import BaseMap
+from .horizons import JPL_ENDPOINT, transform_key, transform
+from .exceptions import JplBadParamError
+from .parsers import parse, get_sections
 
 
 class JplReq(BaseMap):
@@ -48,7 +47,7 @@ class JplReq(BaseMap):
     def __setattr__(self, key, value):
         k, v = transform(key, value)
         if not k:
-            raise JplBadParam('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
+            raise JplBadParamError('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
         super(self.__class__, self).__setattr__(k, v)
 
     def __delattr__(self, key):

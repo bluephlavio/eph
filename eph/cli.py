@@ -10,9 +10,9 @@ except ImportError:
 
 from astropy.table import Table
 
-from .jpl.horizons import codify_obj, codify_site, JPL_PARAMS
-from .jpl import *
-from .config import *
+from eph.jpl.horizons import codify_obj, codify_site, JPL_PARAMS
+from eph.jpl import *
+from eph.config import *
 
 
 formatter = logging.Formatter('%(levelname)s: %(message)s')
@@ -240,7 +240,7 @@ def main():
 
     try:
         data = get_data(res, args)
-    except JplBadReq as e:
+    except JplBadReqError as e:
         logger.error('Horizons cannot interpret the request. Horizons says:\n\t' + e.__str__())
         sys.exit(-1)
     except JplParserError:

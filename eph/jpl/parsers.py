@@ -9,8 +9,9 @@ from astropy.table import Table, QTable
 from astropy import units as u
 
 from ..util import parse_table, parse_row, numberify, transpose
+from ..exceptions import InvalidTargetClassError
+from .exceptions import JplBadReqError, JplParserError
 from .horizons import *
-from .exceptions import *
 
 
 def get_sections(source):
@@ -32,7 +33,7 @@ def get_sections(source):
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
         problem_report, jplparams = map(lambda x: x.strip(ws), re.split(r'!\$\$SOF', source))
-        raise JplBadReq('Horizons says:\n\t' + problem_report)
+        raise JplBadReqError('Horizons says:\n\t' + problem_report)
 
 
 def get_subsections(source):
@@ -133,7 +134,7 @@ def parse(source, target=QTable):
     if target in (Table, QTable):
         table = target(data, names=cols, meta=meta)
     else:
-        raise InvalidTargetClass('Available target classes are Table, QTable and Eph.')
+        raise InvalidTargetClassError('Available target classes are Table, QTable and Eph.')
 
     if units and target is not Table:
         for col in cols:

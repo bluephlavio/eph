@@ -69,4 +69,6 @@ setup(
         'develop': CustomDevelop,
         'install': CustomInstall,
     },
+    setup_requires=['pytest-runner',],
+    tests_require=['pytest',],
 )

@@ -1,17 +1,13 @@
-import pytest
 from eph.jpl.models import BaseMap
 
 
 class ConcreteMap(BaseMap):
 
-
     def __getattr__(self, key):
         return super(self.__class__, self).__getattr__(key)
 
-
     def __setattr__(self, key, value):
         super(self.__class__, self).__setattr__(key, value)
-
 
     def __delattr__(self, key):
         super(self.__class__, self).__delattr__(key)

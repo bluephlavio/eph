@@ -10,7 +10,7 @@ except ImportError:
 from eph.jpl import *
 from eph.jpl.horizons import *
 from eph.jpl.parsers import parse
-from eph.jpl.exceptions import JplParserError, JplBadReq
+from eph.jpl.exceptions import JplParserError, JplBadReqError
 
 
 @pytest.fixture
@@ -72,7 +72,7 @@ def test_req(req_data):
         assert req[expected_key] == expected_value
         assert getattr(req, expected_key) == expected_value
     except Exception as e:
-        assert e.__class__ == JplBadParam
+        assert e.__class__ == JplBadParamError
 
 
 def test_url():
@@ -92,7 +92,7 @@ def test_get(urls):
             res = JplRes(requests.get(url))
             eph = res.raw()
             assert bool(eph)
-        except JplBadReq:
+        except JplBadReqError:
             assert False
 
 

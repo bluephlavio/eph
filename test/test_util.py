@@ -4,7 +4,7 @@ from eph.util import *
 
 
 @pytest.fixture(params=[
-    ([1,2,3], True),
+    ([1, 2, 3], True),
     ([], True),
     ('abc', False),
     (0, False),
@@ -85,7 +85,7 @@ def test_transpose(transpose_data):
 
 @pytest.fixture(params=[
     ('http://xyz.com', {'key': 'value'}, 'http://xyz.com?key=value'),
-    ('http://xyz.com?', {'key': 'value'},'http://xyz.com?key=value'),
+    ('http://xyz.com?', {'key': 'value'}, 'http://xyz.com?key=value'),
     ('http://xyz.com?a=b', {'key': 'value'}, 'http://xyz.com?a=b&key=value'),
 ])
 def addparams2url_data(request):
