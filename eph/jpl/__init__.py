@@ -14,5 +14,5 @@ The main classes defined by :mod:`jpl` package are
 """
 
 
-from .jpl import *
+from .interface import *
 from .exceptions import *

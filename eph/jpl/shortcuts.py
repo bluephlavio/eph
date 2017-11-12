@@ -2,7 +2,7 @@
 
 """
 
-from .jpl import *
+from .interface import *
 
 def raw_data_from_req_file(req_file):
     req = JplReq().read(req_file)

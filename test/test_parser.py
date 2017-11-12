@@ -37,7 +37,7 @@ def elements_source(elements_req_file):
 
 
 def test_parse_vectors(vectors_source):
-    e = parse(vectors_source, target=Eph)
+    e = parse(vectors_source, target=QTable)
     jd, x, y, z, vx, vy, vz, lt, rg, rr = [e[col] for col in ('JDTDB', 'X', 'Y', 'Z', 'VX', 'VY', 'VZ', 'LT', 'RG', 'RR',)]
     d = (x**2+y**2+z**2)**(.5)
     v = (vx**2+vy**2+vz**2)**(.5)
@@ -54,7 +54,7 @@ def test_parse_observer(observer_source):
 
 
 def test_parse_elements(elements_source):
-    e = parse(elements_source, target=Eph)
+    e = parse(elements_source, target=QTable)
     ecc, tp = [e[col] for col in ('EC', 'Tp')]
     assert all(map(lambda x: x < 1, ecc))
     assert tp.unit == u.day

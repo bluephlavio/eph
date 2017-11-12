@@ -1,213 +1,151 @@
-"""Defines variables and functions used to interfacing with Jpl Horizons system.
+"""Contains classes and functions useful to interact with the `Jpl Horizons service`_ from NASA.
+
+.. _`Jpl Horizons service`: https://ssd.jpl.nasa.gov/?horizons
 
 """
-from astropy.time import Time
-
-from ..util import wrap, yes_or_no
 
 
-JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
+import requests
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
+
+from astropy.table import QTable
+
+from .models import BaseMap
+from .horizons import JPL_ENDPOINT, transform_key, transform
+from .exceptions import JplBadParam
+from .parsers import parse, get_sections
+from ..config import read_config
+from ..util import addparams2url, wrap
 
 
-JPL_PARAMS = {
-    # target
-    'COMMAND',
-    # time
-    'START_TIME',
-    'STOP_TIME',
-    'STEP_SIZE',
-    'TLIST',
-    'TIME_ZONE',
-    # reference
-    'REF_PLANE',
-    'REF_SYSTEM',
-    'CENTER',
-    'COORD_TYPE',
-    'SITE_COORD',
-    # switches
-    'MAKE_EPHEM',
-    # output
-    'TABLE_TYPE',
-    'QUANTITIES',
-    'VEC_TABLE',
-    'VEC_CORR',
-    'APPARTENT',
-    'TIME_DIGITS',
-    'OUT_UNITS',
-    'RANGE_UNITS',
-    'SUPPRESS_RANGE_RATE',
-    'ELEV_CUT',
-    'SKIP_DAYLT',
-    'SOLAR_ELONG',
-    'AIRMASS',
-    'LHA_CUTOFF',
-    'EXTRA_PREC',
-    'VEC_DELTA_T',
-    'TP_TYPE',
-    'R_T_S_ONLY',
-    'CA_TABLE_TYPE',
-    'TCA3SG_LIMIT',
-    'CALIM_SB',
-    'CALIM_PL',
-    # format
-    'CSV_FORMAT',
-    'CAL_FORMAT',
-    'ANG_FORMAT',
-    'VEC_LABELS',
-    'ELM_LABELS',
-    'OBJ_DATA',
-}
 
+class JplReq(BaseMap):
+    """A requests to Jpl Horizons service.
 
-# object name translation
-
-NAME2ID = dict(
-    sun=10,
-    mercury=199,
-    venus=299,
-    earth=399,
-    mars=499,
-    jupiter=599,
-    saturn=699,
-    uranus=799,
-    neptune=899,
-)
-
-
-ID2NAME = {v: k for k, v in NAME2ID.items()}
-
-
-def codify_obj(name):
-    """Tries to translate a human readable celestial object name to the corresponding Jpl Horizons code.
-
-    If the name is not known the name itself will be returned.
-
-    Args:
-         name (str): the name to be translated.
-
-    Returns:
-        str: the code of the object (stringified version of the id).
+    It can be thought as a :class:`dict` where key-value pairs represents Jpl Horizons parameters.
+    Jpl parameters can be also set as attributes of the :class:`JplReq` instance.
+    Furthermore, keys and values are adjusted to match Jpl Horizons interface in order to enhance
+    readability and usability.
 
     """
-    cleaned = name.strip('\'"')
-    lowered = cleaned.lower()
-    if lowered in NAME2ID.keys():
-        id = NAME2ID[lowered]
-        return str(id)
-    else:
-        return cleaned
+
+    def __init__(self, *args, **kwargs):
+        if 'filename' in kwargs.keys():
+            filename = kwargs['filename']
+            section = kwargs.get('section', 'jplparams')
+            self.read(filename, section)
+            for k in {'filename', 'section'}:
+                kwargs.pop(k, None)
+        super(JplReq, self).__init__(*args, **kwargs)
+
+    def __getattr__(self, key):
+        key = transform_key(key)
+        return super(self.__class__, self).__getattr__(key)
+
+    def __setattr__(self, key, value):
+        k, v = transform(key, value)
+        if not k:
+            raise JplBadParam('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
+        super(self.__class__, self).__setattr__(k, v)
+
+    def __delattr__(self, key):
+        key = transform_key(key)
+        super(self.__class__, self).__delattr__(key)
+
+    def read(self, filename, section='jplparams'):
+        """Reads configurations parameters from an ini file.
+
+        Reads the `section` section of the ini config file `filename` and set all parameters
+        for the Jpl request.
+
+        Args:
+            filename (str): the config file to be read.
+            section (str): the section of the ini config file to be read.
+
+        Returns:
+            :class:`JplReq`: the object itself.
+
+        """
+        cp = read_config(filename)
+        jplparams = dict(cp.items(section))
+        return self.set(jplparams)
+
+    def url(self):
+        """Calculate the Jpl Horizons url corresponding to the :class:`JplReq` object.
+
+        Returns:
+            str: the url with the Jpl parameters encoded in the query string.
+
+        """
+        return addparams2url(JPL_ENDPOINT, {k: wrap(str(v)) for k, v in self.items()})
+
+    def query(self):
+        """Performs the query to the Jpl Horizons service.
+
+        Returns:
+            :class:`JplRes`: the response from Jpl Horizons service.
+
+        Raises:
+            :class:`ConnectionError`
+
+        """
+
+        try:
+            http_response = requests.get(self.url())
+        except requests.exceptions.ConnectionError as e:
+            raise ConnectionError(e.__str__())
+
+        return JplRes(http_response)
 
 
-def codify_site(name):
-    """Tries to translate a human readable celestial object name to the corresponding Jpl Horizons site code.
-    If the name is not known the name itself will be returned preceded by a @ sign
-    if @ is not already present in the name.
-
-    Args:
-         name (str): the name to be translated.
-
-    Returns:
-        str: the code of the site.
+class JplRes(object):
+    """A response from the Jpl Horizons service.
 
     """
-    cleaned = name.strip('\'"')
-    lowered = cleaned.lower()
-    if lowered in NAME2ID.keys():
-        id = NAME2ID[lowered]
-        return '@' + str(id)
-    elif '@' in cleaned:
-        return cleaned
-    else:
-        return '@' + cleaned
 
+    def __init__(self, http_response):
+        """Initialize a :class:`JplRes` object from a `requests`_ http response object.
 
-def humanify(code):
-    """Tries to interpret a Jpl object or site code as a human readable celestial object name.
+        Args:
+            http_response: the http response from Jpl Horizons service.
 
-    Args:
-        code (str): the code to be translated.
+        .. _`requests`: http://docs.python-requests.org/en/master/
 
-    Returns:
-        str: the corresponding human readable name.
+        """
+        self.http_response = http_response
 
-    """
-    if code.isdigit():
-        id = int(code)
-    elif code.startswith('@') and code[1:].isdigit():
-        id = int(code[1:])
-    else:
-        return code
-    return ID2NAME.get(id, code)
+    def raw(self):
+        """Returns the content of the Jpl Horizons http response as is.
 
+        """
+        return self.http_response.text
 
-# key-value translation
+    def get_header(self):
+        header, ephem, footer = get_sections(self.raw())
+        return header
 
-def transform_key(key):
-    key = key.upper().replace('-', '_')
-    if key in JPL_PARAMS:
-        return key
-    for jplparam, aliases in ALIASES.items():
-        if key in aliases:
-            return jplparam
+    def get_data(self):
+        header, data, footer = get_sections(self.raw())
+        return data
 
+    def get_footer(self):
+        header, ephemeris, footer = get_sections(self.raw())
+        return footer
 
-def transform_value(key, value):
-    for filter, jplparams in FILTERS.items():
-        if key in jplparams:
-            return filter(value)
-    return value
+    def parse(self, target=QTable):
+        """Parse the http response from Jpl Horizons and return, according to target
 
+         * an `astropy.table.Table`_ object.
+         * an `astropy.table.QTable`_ object.
 
-def transform(key, value):
-    k = transform_key(key)
-    v = transform_value(k, value)
-    return k, v
+        .. _`astropy.table`: http://docs.astropy.org/en/stable/table/
 
+        """
+        return parse(self.raw(), target=target)
 
-# dimensions and units
-
-DIM_COL = dict(
-    # dimension: columns
-    JD={'JDTDB', 'Tp',},
-    TIME={'LT',},
-    SPACE={'X', 'Y', 'Z', 'RG', 'QR', 'A', 'AD',},
-    VELOCITY={'VX', 'VY', 'VZ', 'RR',},
-    ANGLE={'IN', 'OM', 'W', 'MA', 'TA',},
-    ANGULAR_VELOCITY={'N',},
-)
-
-
-def get_col_dim(col):
-    for dim in DIM_COL.keys():
-        if col in DIM_COL[dim]:
-            return dim
-
-
-def format_time(t):
-    if type(t) == Time:
-        t.out_subfmt = 'date_hm'
-    return t
-
-
-# aliases and filters
-
-ALIASES = dict(
-    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET',},
-    START_TIME={'START', 'BEGIN', 'FROM',},
-    STOP_TIME={'STOP', 'END', 'TO',},
-    STEP_SIZE={'STEP', 'STEPS',},
-    CENTER={'ORIGIN',},
-    CSV_FORMAT={'CSV',},
-    TABLE_TYPE={'TYPE',},
-    VEC_TABLE={'TABLE',},
-)
-
-
-FILTERS = {
-    codify_obj: ['COMMAND'],
-    codify_site: ['CENTER'],
-    wrap: ['TLIST'],
-    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS'],
-    format_time: ['START_TIME', 'STOP_TIME'],
-}
+    def __str__(self):
+        return self.raw()
 

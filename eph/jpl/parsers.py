@@ -9,8 +9,7 @@ from astropy.table import Table, QTable
 from astropy import units as u
 
 from ..util import parse_table, parse_row, numberify, transpose
-from ..eph import Eph
-from .interface import *
+from .horizons import *
 from .exceptions import *
 
 
@@ -111,7 +110,7 @@ def parse_cols(header):
 
 
 
-def parse(source, target=Eph):
+def parse(source, target=QTable):
     """Parses an entire Jpl Horizons ephemeris and build an `astropy`_ table out of it.
 
     Args:
@@ -131,7 +130,7 @@ def parse(source, target=Eph):
     meta = parse_meta(header)
     units = parse_units(meta)
 
-    if target in (Table, QTable, Eph):
+    if target in (Table, QTable):
         table = target(data, names=cols, meta=meta)
     else:
         raise InvalidTargetClass('Available target classes are Table, QTable and Eph.')

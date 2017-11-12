@@ -10,8 +10,7 @@ except ImportError:
 
 from astropy.table import Table
 
-from .jpl.interface import codify_obj, codify_site, JPL_PARAMS
-from .jpl.parsers import get_subsections
+from .jpl.horizons import codify_obj, codify_site, JPL_PARAMS
 from .jpl import *
 from .config import *
 
