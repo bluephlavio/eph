@@ -12,6 +12,14 @@ eph\.config\.config module
     :undoc-members:
     :show-inheritance:
 
+eph\.config\.exceptions module
+------------------------------
+
+.. automodule:: eph.config.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

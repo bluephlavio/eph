@@ -1,24 +1,35 @@
 eph package
 ===========
 
-.. automodule:: eph
-    :members:
-    :undoc-members:
-    :show-inheritance:
+Subpackages
+-----------
+
+.. toctree::
+
+    eph.config
+    eph.jpl
 
 Submodules
 ----------
 
-eph.eph module
---------------
+eph\.cli module
+---------------
 
-.. automodule:: eph.eph
+.. automodule:: eph.cli
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph.util module
----------------
+eph\.exceptions module
+----------------------
+
+.. automodule:: eph.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+eph\.util module
+----------------
 
 .. automodule:: eph.util
     :members:
@@ -26,3 +37,10 @@ eph.util module
     :show-inheritance:
 
 
+Module contents
+---------------
+
+.. automodule:: eph
+    :members:
+    :undoc-members:
+    :show-inheritance:

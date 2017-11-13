@@ -12,10 +12,18 @@ eph\.jpl\.exceptions module
     :undoc-members:
     :show-inheritance:
 
-eph\.jpl\.jpl module
---------------------
+eph\.jpl\.horizons module
+-------------------------
 
-.. automodule:: eph.jpl.jpl
+.. automodule:: eph.jpl.horizons
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+eph\.jpl\.interface module
+--------------------------
+
+.. automodule:: eph.jpl.interface
     :members:
     :undoc-members:
     :show-inheritance:

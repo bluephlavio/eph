@@ -1,10 +1,8 @@
-Readme
-======
+Getting Started
+===============
 
-The :mod:`eph` package provides some useful functions, classes and tools to `retrieve`, `parse` and `manipulate` ephemerides. 
-
-Basic Usage (using Jpl Horizons service)
-----------------------------------------
+Basic Usage
+-----------
 
 .. code-block:: python
 
@@ -20,15 +18,7 @@ Basic Usage (using Jpl Horizons service)
     res = req.query() # perform the request obtaining a response from Jpl Horizons service
     ephemeris = res.parse() # extract and parse the ephemeris contained in the http response
 
-    print(ephemeris) # print data
-
-or, in one line
-
-.. code-block:: python
-
-    import eph
-
-    print(eph.JplReq().read('.ephrc', 'jplparams').set({'COMMAND': '399', 'START_TIME': '2007-11-17', 'STOP_TIME': '2017-04-22'}).query().parse())
+    ephemeris.write() # print data to stdout
 
 
 The content of :file:`.ephrc` can be something like this (see ftp://ssd.jpl_process.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
@@ -52,14 +42,15 @@ The content of :file:`.ephrc` can be something like this (see ftp://ssd.jpl_proc
 Command line tool
 -----------------
 
-:mod:`eph` package also provides a command line tool with some sub-commands.
-For example, to retrive ephemerides from services like JPL Horizons use the `jpl` sub-command
+:mod:`eph` package also provides a command line tool:
 
 .. code-block:: bash
 
-    $ eph jpl 2007-11-17 2017-4-22 venus
+    $ eph 2007-11-17 2017-4-22 venus
 
-and you get ephemeris table of Venus starting from 2007-11-17 to 2017-4-22. You can also change the reference frame, the time-step size, the output etc. through the options provided. Check available options with
+This command gives you an ephemeris table of Venus starting from 2007-11-17 to 2017-4-22.
+You can also change the reference frame, the time-step size, the output etc.. through the options provided.
+Check available options typing
 
 .. code-block:: bash
 

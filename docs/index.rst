@@ -6,7 +6,8 @@
 Welcome to eph
 ==============
 
-:mod:`eph` package aims to provide functions, classes and tools to `represent`, `retrieve` and `manipulate` ephemerides.
+:mod:`eph` package aims to provide functions, classes and tools to `represent`, `retrieve` and `manipulate` ephemerides
+in a `astropy <http://www.astropy.org/>`_-compatible way.
 
 Documention
 ===========
