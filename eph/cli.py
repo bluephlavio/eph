@@ -172,59 +172,63 @@ def get_parser():
                         help='strip header and footer of a raw Jpl Horizons response')
     parser.add_argument('--suppress-warnings',
                         action='store_true',
-                        help='strip header and footer of a raw Jpl Horizons response')
+                        help='suppress warnings such as missing config files etc..')
     return parser
 
 
-def build_request(args):
+def parse_args(args):
+    parser = get_parser()
+    return parser.parse_args(args)
+
+
+def build_request(ns):
 
     req = JplReq()
 
     try:
-        req.read(args.config)
+        req.read(ns.config)
     except ConfigNotFoundError as e:
-        if args.config:
+        if ns.config:
             raise
-        elif args.suppress_warnings:
+        elif ns.suppress_warnings:
             pass
         else:
             logger.warning('None of the following configuration files found: \n' +
                            e.format_search_list(delimiter='\n', bullet='* '))
 
     req.set({
-        k: v for k, v in vars(args).items() if transform_key(k) in JPL_PARAMS and v
+        k: v for k, v in vars(ns).items() if transform_key(k) in JPL_PARAMS and v
     })
 
     return req
 
 
-def get_data(res, args):
-    if args.raw:
-        if args.ephem_only:
+def get_data(res, ns):
+    if ns.raw:
+        if ns.ephem_only:
             return res.get_data()
         return res.raw()
     else:
         return res.parse()
 
 
-def write(data, args):
-    if isinstance(data, Table) and args.format:
-        data.write(args.output, format=args.format)
+def write(data, ns):
+    if isinstance(data, Table) and ns.format:
+        data.write(ns.output, format=ns.format)
     else:
-        if args.output is sys.stdout:
+        if ns.output is sys.stdout:
             sys.stdout.write(data)
         else:
-            with open(args.output, 'w') as f:
+            with open(ns.output, 'w') as f:
                 f.write(data)
 
 
 def main():
 
-    parser = get_parser()
-    args = parser.parse_args()
+    ns = parse_args(sys.argv[1:])
 
     try:
-        req = build_request(args)
+        req = build_request(ns)
     except ConfigNotFoundError as e:
         logger.error('Configuration file not found:\n\t' + e.format_search_list())
         sys.exit(-1)
@@ -239,7 +243,7 @@ def main():
         sys.exit(-1)
 
     try:
-        data = get_data(res, args)
+        data = get_data(res, ns)
     except JplBadReqError as e:
         logger.error('Horizons cannot interpret the request. Horizons says:\n\t' + e.__str__())
         sys.exit(-1)
@@ -247,8 +251,10 @@ def main():
         logger.error('''eph cannot parse this format. Try passing --csv YES option or --raw to get Horizons response as is.''')
         sys.exit(-1)
 
-    write(data, args)
-
+    try:
+        write(data, ns)
+    except IOError as e:
+        logger.error('''Problems trying to write data:\n\t''' + str(e))
 
 if __name__ == '__main__':
     main()
