@@ -24,7 +24,7 @@ from .jpl import JplReq, JplRes
 
 
 __project__ = 'eph'
-__release__ = '0.1.0'
+__release__ = '0.2.0'
 __version__ = '.'.join(__release__.split('.')[:2])
 __description__ = 'Represent, retrieve and manipulate ephemerides.'
 __keywords__ = ['jpl_process', 'horizons', 'ephemeris', 'astronomy', 'planets']
