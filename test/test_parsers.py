@@ -43,8 +43,8 @@ def test_parse_vectors(vectors_source):
     jd, x, y, z = [e[col] for col in ('JDTDB', 'X', 'Y', 'Z',)]
     vx, vy, vz = [e[col] for col in ('VX', 'VY', 'VZ',)]
     lt, rg, rr = [e[col] for col in ('LT', 'RG', 'RR',)]
-    d = (x**2+y**2+z**2)**(.5)
-    v = (vx**2+vy**2+vz**2)**(.5)
+    d = (x**2 + y**2 + z**2)**(.5)
+    v = (vx**2 + vy**2 + vz**2)**(.5)
     assert jd.unit == u.day
     assert lt.unit == u.s
     assert all([q.unit == u.km for q in (x, y, z, d, rg,)])

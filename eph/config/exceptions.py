@@ -2,12 +2,12 @@
 
 """
 
-import os
 
 class ConfigError(Exception):
     """Base class for configuration related exceptions.
 
     """
+    pass
 
 
 class ConfigNotFoundError(ConfigError):
@@ -19,7 +19,6 @@ class ConfigNotFoundError(ConfigError):
     def __init__(self, search_list):
         self.search_list = search_list
         super(self.__class__, self).__init__()
-
 
     def format_search_list(self, delimiter=', ', bullet=str()):
         return delimiter.join(bullet + file for file in self.search_list)

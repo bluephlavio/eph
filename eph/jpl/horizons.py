@@ -168,12 +168,12 @@ def transform(key, value):
 
 DIM_COL = dict(
     # dimension: columns
-    JD={'JDTDB', 'Tp',},
-    TIME={'LT',},
-    SPACE={'X', 'Y', 'Z', 'RG', 'QR', 'A', 'AD',},
-    VELOCITY={'VX', 'VY', 'VZ', 'RR',},
-    ANGLE={'IN', 'OM', 'W', 'MA', 'TA',},
-    ANGULAR_VELOCITY={'N',},
+    JD={'JDTDB', 'Tp', },
+    TIME={'LT', },
+    SPACE={'X', 'Y', 'Z', 'RG', 'QR', 'A', 'AD', },
+    VELOCITY={'VX', 'VY', 'VZ', 'RR', },
+    ANGLE={'IN', 'OM', 'W', 'MA', 'TA', },
+    ANGULAR_VELOCITY={'N', },
 )
 
 
@@ -192,22 +192,21 @@ def format_time(t):
 # aliases and filters
 
 ALIASES = dict(
-    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET',},
-    START_TIME={'START', 'BEGIN', 'FROM',},
-    STOP_TIME={'STOP', 'END', 'TO',},
-    STEP_SIZE={'STEP', 'STEPS',},
-    CENTER={'ORIGIN',},
-    CSV_FORMAT={'CSV',},
-    TABLE_TYPE={'TYPE',},
-    VEC_TABLE={'TABLE',},
+    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET', },
+    START_TIME={'START', 'BEGIN', 'FROM', },
+    STOP_TIME={'STOP', 'END', 'TO', },
+    STEP_SIZE={'STEP', 'STEPS', },
+    CENTER={'ORIGIN', },
+    CSV_FORMAT={'CSV', },
+    TABLE_TYPE={'TYPE', },
+    VEC_TABLE={'TABLE', },
 )
 
 
 FILTERS = {
-    codify_obj: ['COMMAND'],
-    codify_site: ['CENTER'],
-    wrap: ['TLIST'],
-    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS'],
-    format_time: ['START_TIME', 'STOP_TIME'],
+    codify_obj: ['COMMAND', ],
+    codify_site: ['CENTER', ],
+    wrap: ['TLIST', ],
+    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS', ],
+    format_time: ['START_TIME', 'STOP_TIME', ],
 }
-

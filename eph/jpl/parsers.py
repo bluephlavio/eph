@@ -110,7 +110,6 @@ def parse_cols(header):
     return tuple(cols)
 
 
-
 def parse(source, target=QTable):
     """Parses an entire Jpl Horizons ephemeris and build an `astropy`_ table out of it.
 
@@ -134,7 +133,7 @@ def parse(source, target=QTable):
     if target in (Table, QTable):
         table = target(data, names=cols, meta=meta)
     else:
-        raise InvalidTargetClassError('Available target classes are Table, QTable and Eph.')
+        raise InvalidTargetClassError('Available target classes are Table and QTable.')
 
     if units and target is not Table:
         for col in cols:

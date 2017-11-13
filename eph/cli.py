@@ -31,14 +31,14 @@ def get_parser():
     )
     parser.add_argument('start',
                         metavar='TIME_START',
-                        help='''specifies ephemeris start time 
-                        (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}" 
+                        help='''specifies ephemeris start time
+                        (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}"
                         denote optional inputs'''
                         )
     parser.add_argument('stop',
                         metavar='STOP_TIME',
-                        help='''specifies ephemeris stop time 
-                        (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}" 
+                        help='''specifies ephemeris stop time
+                        (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}"
                         denote optional inputs''')
     parser.add_argument('object',
                         metavar='COMMAND',
@@ -75,7 +75,7 @@ def get_parser():
     parser.add_argument('--ref-plane',
                         choices=['E', 'F', 'B'],
                         help='''
-                        table reference plane; 
+                        table reference plane;
                         ECLIPTIC (E), FRAME (F) or 'BODY EQUATOR' (B)
                         ''')
     parser.add_argument('--ref-system',
@@ -112,14 +112,14 @@ def get_parser():
                         choices=['NONE', 'LT', 'LT+S'],
                         help='''
                         selects level of correction to output vectors
-                        when TABLE_TYPE=VECTOR. Values are NONE (geometric states), 
-                        'LT' (astrometric states) or 
+                        when TABLE_TYPE=VECTOR. Values are NONE (geometric states),
+                        'LT' (astrometric states) or
                         'LT+S' (astrometric states corrected for stellar aberration)
                         ''')
     parser.add_argument('--out-units', '-u',
                         choices=['KM-S', 'AU-D', 'KM-D'],
                         help='''
-                        selects output units when TABLE_TYPE=VECTOR or ELEMENT. 
+                        selects output units when TABLE_TYPE=VECTOR or ELEMENT.
                         Values can be KM-S, AU-D, KM-D indicating distance and time units
                         ''')
     parser.add_argument('--range-units',

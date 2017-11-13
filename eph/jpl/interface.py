@@ -147,4 +147,3 @@ class JplRes(object):
 
     def __str__(self):
         return self.raw()
-
