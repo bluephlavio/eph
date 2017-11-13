@@ -46,8 +46,6 @@ class JplReq(BaseMap):
 
     def __setattr__(self, key, value):
         k, v = transform(key, value)
-        if not k:
-            raise JplBadParamError('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
         super(self.__class__, self).__setattr__(k, v)
 
     def __delattr__(self, key):
@@ -140,7 +138,8 @@ class JplRes(object):
          * an `astropy.table.Table`_ object.
          * an `astropy.table.QTable`_ object.
 
-        .. _`astropy.table`: http://docs.astropy.org/en/stable/table/
+        .. _`astropy.table.Table`: http://docs.astropy.org/en/stable/table/
+        .. _`astropy.table.QTable`: http://docs.astropy.org/en/stable/table/
 
         """
         return parse(self.raw(), target=target)

@@ -71,7 +71,7 @@ def test_format_time(format_time_data):
     ('target', 'COMMAND'),
     ('OBJECT', 'COMMAND'),
     ('table-type', 'TABLE_TYPE'),
-    ('alias', None),
+    ('key', None),
 ])
 def transformkey_data(request):
     return request.param
@@ -79,7 +79,10 @@ def transformkey_data(request):
 
 def test_transformkey(transformkey_data):
     key, jplparam = transformkey_data
-    assert transform_key(key) == jplparam
+    try:
+        assert transform_key(key) == jplparam
+    except Exception as e:
+        assert e.__class__ == JplBadParamError
 
 
 @pytest.fixture(params=[
@@ -101,6 +104,7 @@ def test_transformvalue(transformvalue_data):
     (('Command', 'Earth'), ('COMMAND', '399')),
     (('OBJECT', '399'), ('COMMAND', '399')),
     (('Origin', 'earth'), ('CENTER', '@399')),
+    (('key', 'value'), (None, None)),
 ])
 def transform_data(request):
     return request.param
@@ -109,4 +113,7 @@ def transform_data(request):
 def test_transform(transform_data):
     data, result = transform_data
     key, value = data
-    assert transform(key, value) == result
+    try:
+        assert transform(key, value) == result
+    except Exception as e:
+        assert e.__class__ == JplBadParamError

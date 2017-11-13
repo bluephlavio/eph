@@ -25,8 +25,8 @@ def get_sections(source):
 
     .. note:
        Note that whitespaces and \* are stripped out from section contents.
-
     """
+
     m = re.match(r'(.*?)\$\$SOE(.*?)\$\$EOE(.*?)', source, flags=re.DOTALL)
     if m:
         to_strip = ws + '*'
@@ -44,8 +44,8 @@ def get_subsections(source):
 
     Returns:
         :class:`list`: the lists of subsections.
-
     """
+
     to_strip = ws
     return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*{3,}', source)))
 
@@ -87,8 +87,8 @@ def parse_data(data, **kwargs):
 
     Returns:
         :class:`list`: the list of lists representing a data table.
-
     """
+
     try:
         return numberify(parse_table(data, **kwargs))
     except:
@@ -103,8 +103,8 @@ def parse_cols(header):
 
     Returns:
         :class:`tuple`: a tuple with the names of columns.
-
     """
+
     cols_subsection = get_subsections(header)[-1]
     cols = parse_row(cols_subsection)
     return tuple(cols)
@@ -115,6 +115,7 @@ def parse(source, target=QTable):
 
     Args:
         source (str): the content of the Jpl Horizons data file.
+        target: the type of table to produce (Table or QTable).
 
     Returns:
         table: the table containing data from Jpl Horizons source ephemeris.

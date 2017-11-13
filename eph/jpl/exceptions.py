@@ -19,15 +19,15 @@ class JplParserError(JplError):
 
 
 class JplBadReqError(JplError):
-    """A :class:`JplBadReq` exceptions is raised when a request (:class:`JplReq`) to the Horizons service cannot
-    be interpreted by the system.
+    """A :class:`JplBadReqError` exceptions is raised when a request (:class:`JplReq`) to the Horizons service cannot
+    be interpreted by the Horizons system.
 
     """
     pass
 
 
 class JplBadParamError(JplError):
-    """A :class:`InvalidParameter` is raised when a :class:`JplReq` tries to set a parameter that do not match
+    """A :class:`JplBadParamError` is raised when a :class:`JplReq` tries to set a parameter that do not match
     with Jpl Horizons specifications.
 
     """

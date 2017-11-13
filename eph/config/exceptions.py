@@ -1,4 +1,4 @@
-"""Defines configuration related exceptions
+"""Defines configuration related exceptions.
 
 """
 

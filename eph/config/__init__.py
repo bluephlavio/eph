@@ -1,4 +1,4 @@
-"""Contains configuration-related data and modules.
+""":mod:`config` package contains configuration-related data and modules.
 
 :mod:`config` package contains:
 
