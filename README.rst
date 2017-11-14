@@ -1,11 +1,17 @@
+.. image:: https://travis-ci.org/bluephlavio/eph.svg?branch=master
+   :target: https://travis-ci.org/bluephlavio/eph
+
+.. image:: https://coveralls.io/repos/github/bluephlavio/eph/badge.svg?branch=master
+   :target: https://coveralls.io/github/bluephlavio/eph?branch=master
+
 Readme
 ======
 
 The ``eph`` package provides some useful functions, classes and tools
 to`retrieve`, `parse` and `manipulate` ephemerides.
 
-Basic Usage (using Jpl Horizons service)
-----------------------------------------
+Basic Usage
+-----------
 
 .. code-block:: python
 
@@ -67,9 +73,3 @@ the time-step size, the output etc. through the options provided. Check availabl
 .. code-block:: bash
 
     $ eph --help
-
-.. image:: https://travis-ci.org/bluephlavio/eph.svg?branch=master
-   :target: https://travis-ci.org/bluephlavio/eph
-
-.. image:: https://coveralls.io/repos/github/bluephlavio/eph/badge.svg?branch=master
-:target: https://coveralls.io/github/bluephlavio/eph?branch=master
