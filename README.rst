@@ -8,7 +8,7 @@ Readme
 ======
 
 The ``eph`` package provides some useful functions, classes and tools
-to`retrieve`, `parse` and `manipulate` ephemerides.
+to *retrieve*, *parse* and *manipulate* ephemerides in an `astropy <http://www.astropy.org/>`_-compatible way.
 
 Basic Usage
 -----------
@@ -29,16 +29,8 @@ Basic Usage
 
     print(ephemeris) # print data
 
-or, the one-liner
 
-.. code-block:: python
-
-    import eph
-
-    print(eph.JplReq().read('.ephrc', 'jplparams').set({'COMMAND': '399', 'START_TIME': '2007-11-17', 'STOP_TIME': '2017-04-22'}).query().parse())
-
-
-The content of :file:`.ephrc` can be something like this
+The content of ``.ephrc`` can be something like this
 (see ftp://ssd.jpl_process.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
 
 .. code-block:: ini
@@ -68,7 +60,7 @@ To use it, open the terminal and type
     $ eph 2007-11-17 2017-4-22 venus
 
 and you get ephemeris table of Venus starting from 2007-11-17 to 2017-4-22. You can also change the reference frame,
-the time-step size, the output etc. through the options provided. Check available options with
+time-step, output etc.. through the options provided. Check available options typing
 
 .. code-block:: bash
 
