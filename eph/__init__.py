@@ -17,20 +17,7 @@
 .. _`Jpl Horizons`: https://ssd.jpl.nasa.gov/?horizons
 """
 
-
-import datetime
-
 from .jpl import JplReq, JplRes
+from .shortcuts import *
 
 
-__project__ = 'eph'
-__release__ = '0.2.0'
-__version__ = '.'.join(__release__.split('.')[:2])
-__description__ = 'Represent, retrieve and manipulate ephemerides.'
-__keywords__ = ['jpl_process', 'horizons', 'ephemeris', 'astronomy', 'planets']
-__author__ = 'Flavio Grandin'
-__author_email__ = 'flavio.grandin@gmail.com'
-__year__ = datetime.datetime.now().year
-__copyright__ = ', '.join([__author__, str(__year__)])
-__license__ = 'MIT'
-__url__ = 'https://github.com/bluephlavio/eph'

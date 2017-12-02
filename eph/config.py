@@ -8,7 +8,7 @@ except ImportError:
     import ConfigParser as configparser
 
 from eph.util import path
-from .exceptions import *
+from eph.config.exceptions import *
 
 
 def get_parser():
@@ -26,7 +26,7 @@ def get_config_files(config_file=None):
 
 
 def get_default_config_file():
-    return pkg_resources.resource_filename(__name__, 'config.ini')
+    return pkg_resources.resource_filename(__name__, 'eph.cfg')
 
 
 def create_config_file(out_filename):

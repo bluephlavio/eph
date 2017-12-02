@@ -1,11 +1,8 @@
-import pytest
-
 import os
 
-from astropy import units as u
-
+import pytest
 from eph.jpl.parsers import *
-from eph.jpl.shortcuts import raw_data_from_req_file
+from eph.shortcuts import raw_data_from_req_file
 
 
 @pytest.fixture
