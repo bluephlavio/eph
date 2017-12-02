@@ -1,15 +1,15 @@
+import datetime
+import os
+
 import pytest
 
-import os
-import datetime
 try:
     from urllib.parse import quote
 except ImportError:
     from urllib import quote
 
-from eph.jpl import *
-from eph.jpl.horizons import *
-from eph.jpl.parsers import parse
+from eph.horizons import *
+from eph.parsers import parse
 from eph.jpl.exceptions import JplParserError, JplBadReqError
 
 

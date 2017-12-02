@@ -1,4 +1,4 @@
-from eph.jpl.models import BaseMap
+from eph.models import BaseMap
 
 
 class ConcreteMap(BaseMap):

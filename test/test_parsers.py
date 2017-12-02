@@ -1,7 +1,7 @@
 import os
 
 import pytest
-from eph.jpl.parsers import *
+from eph.parsers import *
 from eph.shortcuts import raw_data_from_req_file
 
 

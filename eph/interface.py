@@ -13,12 +13,11 @@ except ImportError:
 
 from astropy.table import QTable
 
-from ..config import read_config
-from ..util import addparams2url, wrap
-from .models import BaseMap
-from .horizons import JPL_ENDPOINT, transform_key, transform
-from .exceptions import JplBadParamError
-from .parsers import parse, get_sections
+from eph.config import read_config
+from eph.util import addparams2url, wrap
+from eph.models import BaseMap
+from eph.horizons import JPL_ENDPOINT, transform_key, transform
+from eph.parsers import parse, get_sections
 
 
 class JplReq(BaseMap):

@@ -3,7 +3,7 @@
 """
 from astropy.time import Time
 
-from ..util import wrap, yes_or_no
+from eph.util import wrap, yes_or_no
 from .exceptions import JplBadParamError
 
 

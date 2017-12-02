@@ -1,6 +1,6 @@
 import pytest
 
-from eph.jpl.horizons import *
+from eph.horizons import *
 
 
 @pytest.fixture(params=[

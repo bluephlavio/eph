@@ -2,7 +2,7 @@
 
 """
 
-from eph.jpl.interface import *
+from eph.interface import *
 
 
 def raw_data_from_req_file(req_file):

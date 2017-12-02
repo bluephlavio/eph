@@ -5,13 +5,13 @@
 import re
 from string import whitespace as ws
 
-from astropy.table import Table, QTable
 from astropy import units as u
+from astropy.table import Table, QTable
+from eph.horizons import *
 
-from ..util import parse_table, parse_row, numberify, transpose
-from ..exceptions import InvalidTargetClassError
 from .exceptions import JplBadReqError, JplParserError
-from .horizons import *
+from eph.exceptions import InvalidTargetClassError
+from eph.util import parse_table, parse_row, numberify, transpose
 
 
 def get_sections(source):

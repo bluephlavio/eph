@@ -1,8 +1,7 @@
 import argparse
 import logging
 import sys
-import string
-import re
+
 try:
     import configparser
 except ImportError:
@@ -10,8 +9,7 @@ except ImportError:
 
 from astropy.table import Table
 
-from eph.jpl.horizons import codify_obj, codify_site, JPL_PARAMS
-from eph.jpl import *
+from eph.horizons import codify_obj, codify_site, JPL_PARAMS
 from eph.config import *
 
 
