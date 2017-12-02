@@ -7,37 +7,28 @@ try:
 except ImportError:
     import ConfigParser as configparser
 
-from eph.util import path
-from eph.config.exceptions import *
+from .util import path
 
 
-def get_parser():
-    parser = configparser.ConfigParser()
-    parser.optionxform = str
-    return parser
+def get_config_dir():
+    return path('~/')
 
 
-def get_config_dirs():
-    return list(map(lambda dir: path(dir), ['~/', './']))
-
-
-def get_config_files(config_file=None):
-    return [path(config_file)] if config_file else list(map(lambda dir: os.path.join(dir, '.ephrc'), get_config_dirs()))
+def get_config_file():
+    return os.path.join(get_config_dir(), '.ephrc')
 
 
 def get_default_config_file():
     return pkg_resources.resource_filename(__name__, 'eph.cfg')
 
 
-def create_config_file(out_filename):
+def create_config_file(out_filename=get_config_file()):
     src_filename = get_default_config_file()
     copy2(src_filename, out_filename)
 
 
-def read_config(config_file=None):
-    parser = get_parser()
-    config_files = get_config_files(config_file=config_file)
-    read_files = parser.read(config_files)
-    if not read_files:
-        raise ConfigNotFoundError(config_files)
-    return parser
+def read_config(filename=None, section=None):
+    parser = configparser.ConfigParser()
+    parser.optionxform = str
+    parser.read(filename if filename else get_config_file())
+    return dict(parser.items(section if section else 'DEFAULT'))

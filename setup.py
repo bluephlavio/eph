@@ -3,16 +3,25 @@ from setuptools.command.install import install
 from setuptools.command.develop import develop
 import os
 
-from eph.config import get_config_files, create_config_file
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
+
+from eph.config import get_config_file, create_config_file
 
 here = os.path.abspath(os.path.dirname(__file__))
 
 with open(os.path.join(here, 'README.rst')) as f:
     long_description = f.read()
 
+parser = configparser.ConfigParser()
+parser.read('setup.cfg')
+metadata = dict(parser.items('metadata'))
+
 
 def install_config():
-    config_file = get_config_files()[0]
+    config_file = get_config_file()
     if not os.path.isfile(config_file):
         create_config_file(config_file)
 
@@ -32,15 +41,14 @@ class CustomDevelop(develop):
 
 
 setup(
-    name=eph.__project__,
-    version=eph.__release__,
-    description=eph.__description__,
+    name=metadata['package'],
+    version=metadata['version'],
+    description=metadata['description'],
     long_description=long_description,
-    keywords=' '.join(eph.__keywords__),
-    author=eph.__author__,
-    author_email=eph.__author_email__,
-    license=eph.__license__,
-    url=eph.__url__,
+    author=metadata['author'],
+    author_email=metadata['author_email'],
+    license=metadata['license'],
+    url=metadata['url'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

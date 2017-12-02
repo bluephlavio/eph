@@ -19,5 +19,3 @@
 
 from .jpl import JplReq, JplRes
 from .shortcuts import *
-
-
