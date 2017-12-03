@@ -9,8 +9,7 @@ from astropy import units as u
 from astropy.table import Table, QTable
 from eph.horizons import *
 
-from .exceptions import JplBadReqError, JplParserError
-from eph.exceptions import InvalidTargetClassError
+from .exceptions import JplBadReqError, ParserError
 from eph.util import parse_table, parse_row, numberify, transpose
 
 
@@ -92,7 +91,7 @@ def parse_data(data, **kwargs):
     try:
         return numberify(parse_table(data, **kwargs))
     except:
-        raise JplParserError('Error parsing ephemeris...')
+        raise ParserError('Error parsing ephemeris...')
 
 
 def parse_cols(header):
@@ -134,7 +133,7 @@ def parse(source, target=QTable):
     if target in (Table, QTable):
         table = target(data, names=cols, meta=meta)
     else:
-        raise InvalidTargetClassError('Available target classes are Table and QTable.')
+        raise TypeError('Available target classes are Table and QTable.')
 
     if units and target is not Table:
         for col in cols:

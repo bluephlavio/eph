@@ -112,14 +112,14 @@ def test_wrap(wrap_data):
 
 
 @pytest.fixture(params=[
-    ('y', 'YES'),
-    ('Y', 'YES'),
-    ('Yes', 'YES'),
-    (True, 'YES'),
-    (1, 'YES'),
-    ('n', 'NO'),
-    (False, 'NO'),
-    ('false', 'NO'),
+    ('y', True),
+    ('Y', True),
+    ('Yes', True),
+    (True, True),
+    (1, True),
+    ('n', False),
+    (False, False),
+    ('false', False),
     ('bla', None),
 ])
 def yes_or_no_data(request):

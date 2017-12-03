@@ -1,9 +1,10 @@
-"""Defines variables and functions used to interfacing with Jpl Horizons system.
+"""Defines variables and functions used to interfacing with JPL Horizons system.
 
 """
+
 from astropy.time import Time
 
-from eph.util import wrap, yes_or_no
+from .util import wrap, yes_or_no
 from .exceptions import JplBadParamError
 
 
@@ -92,8 +93,8 @@ def codify_obj(name):
     cleaned = name.strip('\'"')
     lowered = cleaned.lower()
     if lowered in NAME2ID.keys():
-        id = NAME2ID[lowered]
-        return str(id)
+        id_ = NAME2ID[lowered]
+        return str(id_)
     else:
         return cleaned
 
@@ -113,8 +114,8 @@ def codify_site(name):
     cleaned = name.strip('\'"')
     lowered = cleaned.lower()
     if lowered in NAME2ID.keys():
-        id = NAME2ID[lowered]
-        return '@' + str(id)
+        id_ = NAME2ID[lowered]
+        return '@' + str(id_)
     elif '@' in cleaned:
         return cleaned
     else:
@@ -132,66 +133,12 @@ def humanify(code):
 
     """
     if code.isdigit():
-        id = int(code)
+        id_ = int(code)
     elif code.startswith('@') and code[1:].isdigit():
-        id = int(code[1:])
+        id_ = int(code[1:])
     else:
         return code
-    return ID2NAME.get(id, code)
-
-
-# key-value translation
-
-def transform_key(key):
-    """Tranforms an input key to a Jpl-compatible parameter key.
-
-    Args:
-        key (str): the key to be interpreted and translated.
-
-    Returns:
-        str: the interpreted Jpl-compatible key.
-
-    Raises:
-        :class:`JplBadParamError`
-    """
-    key = key.upper().replace('-', '_')
-    if key in JPL_PARAMS:
-        return key
-    for jplparam, aliases in ALIASES.items():
-        if key in aliases:
-            return jplparam
-    raise JplBadParamError('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
-
-
-def transform_value(key, value):
-    """Transforms an input value into a Jpl-compatible one or it leaves as is.
-
-    Args:
-        key (str): the Jpl-compatible key.
-        value: a ``str`` to be translated or an object such as ``str(value)`` can be interpreted by Jpl.
-
-    Returns:
-        str: the transofrmed value.
-    """
-    for filter, jplparams in FILTERS.items():
-        if key in jplparams:
-            return filter(value)
-    return value
-
-
-def transform(key, value):
-    """Transforms an input key-value pair in a Jpl-compatible one.
-
-    Args:
-        key (str): the key to be interpreted or translated.
-        value: a ``str`` to be translated or the object such as ``str(value)`` is Jpl-compatible.
-
-    Returns:
-        tuple: the final key-value pair.
-    """
-    k = transform_key(key)
-    v = transform_value(k, value)
-    return k, v
+    return ID2NAME.get(id_, code)
 
 
 # dimensions and units
@@ -225,7 +172,8 @@ def format_time(t):
     """Modify time data ``t`` so that ``str(t)`` can be interpreted by Jpl.
 
     Args:
-        t: the time data. It can be a ``str``, an ``astropy.time.Time`` object or an object such as ``str(t)`` can be understood by Jpl.
+        t: the time data. It can be a ``str``, an ``astropy.time.Time`` object
+        or an object such as ``str(t)`` can be understood by Jpl.
 
     Returns:
         the final object.
@@ -256,3 +204,57 @@ FILTERS = {
     yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS', ],
     format_time: ['START_TIME', 'STOP_TIME', ],
 }
+
+
+# key-value translation
+
+def transform_key(key):
+    """Tranforms an input key to a Jpl-compatible parameter key.
+
+    Args:
+        key (str): the key to be interpreted and translated.
+
+    Returns:
+        str: the interpreted Jpl-compatible key.
+
+    Raises:
+        :class:`JplBadParamError`
+    """
+    key = key.upper().replace('-', '_')
+    if key in JPL_PARAMS:
+        return key
+    for param, aliases in ALIASES.items():
+        if key in aliases:
+            return param
+    raise JplBadParamError('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
+
+
+def transform_value(key, value):
+    """Tries to transforms an input value into a Jpl-compatible one or it leaves as is.
+
+    Args:
+        key (str): the Jpl-compatible key.
+        value: a ``str`` to be translated or an object such as ``str(value)`` can be interpreted by Jpl.
+
+    Returns:
+        str: the transofrmed value.
+    """
+    for filter_, params in FILTERS.items():
+        if key in params:
+            return filter_(value)
+    return value
+
+
+def transform(key, value):
+    """Transforms an input key-value pair in a Jpl-compatible one.
+
+    Args:
+        key (str): the key to be interpreted or translated.
+        value: a ``str`` to be translated or the object such as ``str(value)`` is Jpl-compatible.
+
+    Returns:
+        tuple: the final key-value pair.
+    """
+    k = transform_key(key)
+    v = transform_value(k, value)
+    return k, v

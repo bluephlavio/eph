@@ -1,4 +1,4 @@
-"""Aims to provide useful classes, functions and tools to *represent*, *retrieve* and *manipulate* ephemerides.
+"""Aims to provide useful classes, functions and tools to *retrieve*, *represent* and *manipulate* ephemerides.
 
 :mod:`eph` modules:
 
@@ -17,5 +17,5 @@
 .. _`Jpl Horizons`: https://ssd.jpl.nasa.gov/?horizons
 """
 
-from .jpl import JplReq, JplRes
+from .interface import JplReq, JplRes
 from .shortcuts import *

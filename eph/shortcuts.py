@@ -15,6 +15,6 @@ def raw_data_from_req_file(req_file):
         str: the raw text output from Jpl.
     """
 
-    req = JplReq().read(req_file)
+    req = JplReq().read(req_file, 'DEFAULT')
     res = req.query()
     return res.raw()

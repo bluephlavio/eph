@@ -1,12 +1,8 @@
 import copy
-from os.path import abspath, expanduser
+import os.path
 import string
 import re
-try:
-    from urllib.parse import urlparse, urlunparse, urlencode
-except ImportError:
-    from urlparse import urlparse, urlunparse
-    from urllib import urlencode
+from six.moves.urllib.parse import urlparse, urlunparse, urlencode
 
 
 def is_vector(obj):
@@ -20,13 +16,15 @@ def clean_row(row):
 
 def parse_row(raw, cols_del=r','):
     to_strip = string.whitespace + cols_del
-    row = re.split(cols_del, raw.strip(to_strip))
+    cleaned = raw.strip(to_strip)
+    row = re.split(cols_del, cleaned)
     return clean_row(row)
 
 
 def parse_table(raw, cols_del=r',', rows_del=r'\r?\n'):
     to_strip = string.whitespace + rows_del + cols_del
-    rows = re.split(rows_del, raw.strip(to_strip))
+    cleaned = raw.strip(to_strip)
+    rows = re.split(rows_del, cleaned)
     return list(map(lambda row: parse_row(row, cols_del=cols_del), rows))
 
 
@@ -46,7 +44,7 @@ def transpose(data):
 
 
 def path(filename):
-    return abspath(expanduser(filename))
+    return os.path.abspath(os.path.expanduser(filename))
 
 
 def addparams2url(url, params):
@@ -56,19 +54,16 @@ def addparams2url(url, params):
         return urlunparse(urlparse(url)) + '?' + urlencode(params)
 
 
-def wrap(s):
-    if s.startswith('\'') and s.endswith('\''):
-        return s
-    if s.startswith('"') and s.endswith('"'):
-        return '\'' + s[1:-1] + '\''
-    return '\'' + s + '\''
+def wrap(s, wrapper='\'', to_strip='"'):
+    cleaned = s.strip(to_strip)
+    if cleaned.startswith(wrapper) and cleaned.endswith(wrapper):
+        return cleaned
+    return wrapper + cleaned + wrapper
 
 
-def yes_or_no(value, y='YES', n='NO'):
+def yes_or_no(value, yes=True, no=False):
     value = value.lower() if isinstance(value, str) else value
     if value in ('y', 'yes', 'true', '1', True, 1):
-        return y
+        return yes
     elif value in ('n', 'no', 'false', '0', False, 0):
-        return n
-    else:
-        return None
+        return no

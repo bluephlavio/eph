@@ -8,9 +8,10 @@ try:
 except ImportError:
     from urllib import quote
 
+from eph import *
 from eph.horizons import *
 from eph.parsers import parse
-from eph.jpl.exceptions import JplParserError, JplBadReqError
+from eph.exceptions import JplParserError, JplBadReqError
 
 
 @pytest.fixture

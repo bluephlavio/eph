@@ -13,11 +13,11 @@ except ImportError:
 
 from astropy.table import QTable
 
-from eph.config import read_config
-from eph.util import addparams2url, wrap
-from eph.models import BaseMap
-from eph.horizons import JPL_ENDPOINT, transform_key, transform
-from eph.parsers import parse, get_sections
+from .config import read_config
+from .util import addparams2url, wrap
+from .models import BaseMap
+from .horizons import JPL_ENDPOINT, transform_key, transform
+from .parsers import parse, get_sections
 
 
 class JplReq(BaseMap):
@@ -29,15 +29,6 @@ class JplReq(BaseMap):
     readability and usability.
 
     """
-
-    def __init__(self, *args, **kwargs):
-        if 'filename' in kwargs.keys():
-            filename = kwargs['filename']
-            section = kwargs.get('section', 'jplparams')
-            self.read(filename, section)
-            for k in {'filename', 'section'}:
-                kwargs.pop(k, None)
-        super(JplReq, self).__init__(*args, **kwargs)
 
     def __getattr__(self, key):
         key = transform_key(key)
@@ -51,7 +42,7 @@ class JplReq(BaseMap):
         key = transform_key(key)
         super(self.__class__, self).__delattr__(key)
 
-    def read(self, filename, section='jplparams'):
+    def read(self, filename, section='DEFAULT'):
         """Reads configurations parameters from an ini file.
 
         Reads the `section` section of the ini config file `filename` and set all parameters
@@ -65,8 +56,7 @@ class JplReq(BaseMap):
             :class:`JplReq`: the object itself.
 
         """
-        cp = read_config(filename)
-        jplparams = dict(cp.items(section))
+        jplparams = read_config(filename, section)
         return self.set(jplparams)
 
     def url(self):
