@@ -1,5 +1,3 @@
-import pytest
-
 from eph.cli import *
 
 

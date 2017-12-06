@@ -61,7 +61,7 @@ def wrap(s, wrapper='\'', to_strip='"'):
     return wrapper + cleaned + wrapper
 
 
-def yes_or_no(value, yes=True, no=False):
+def yes_or_no(value, yes='YES', no='NO'):
     value = value.lower() if isinstance(value, str) else value
     if value in ('y', 'yes', 'true', '1', True, 1):
         return yes

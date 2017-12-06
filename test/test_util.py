@@ -128,4 +128,4 @@ def yes_or_no_data(request):
 
 def test_yes_or_no(yes_or_no_data):
     value, result = yes_or_no_data
-    assert yes_or_no(value) == result
+    assert yes_or_no(value, yes=True, no=False) == result

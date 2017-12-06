@@ -1,17 +1,13 @@
+import pytest
 import datetime
 import os
-
-import pytest
-
-try:
-    from urllib.parse import quote
-except ImportError:
-    from urllib import quote
+import requests
+from six.moves.urllib.parse import quote
 
 from eph import *
 from eph.horizons import *
 from eph.parsers import parse
-from eph.exceptions import JplParserError, JplBadReqError
+from eph.exceptions import ParserError, JplBadReqError
 
 
 @pytest.fixture
@@ -91,15 +87,15 @@ def test_get(urls):
     for url in urls:
         try:
             res = JplRes(requests.get(url))
-            eph = res.raw()
-            assert bool(eph)
+            e = res.raw()
+            assert bool(e)
         except JplBadReqError:
             assert False
 
 
 def test_parse(jpleph):
     try:
-        eph = parse(jpleph)
-        assert bool(eph)
-    except JplParserError:
+        e = parse(jpleph)
+        assert bool(e)
+    except ParserError:
         assert False

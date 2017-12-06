@@ -1,0 +1,85 @@
+*******************************************************************************
+Ephemeris / WWW_USER Wed Dec  6 11:36:55 2017 Pasadena, USA      / Horizons    
+*******************************************************************************
+Target body name: Venus (299)                     {source: DE431mx}
+Center body name: Solar System Barycenter (0)     {source: DE431mx}
+Center-site name: BODY CENTER
+*******************************************************************************
+Start time      : A.D. 2000-Jan-01 00:00:00.0000 TDB
+Stop  time      : A.D. 2018-Jan-01 00:00:00.0000 TDB
+Step-size       : 3 steps
+*******************************************************************************
+Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
+Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
+Center radii    : (undefined)                                                  
+Keplerian GM    : 2.9630710189377173E-04 au^3/d^2
+Output units    : AU-D, deg, Julian Day Number (Tp)                            
+Output type     : GEOMETRIC osculating elements
+Output format   : 10
+Reference frame : ICRF/J2000.0                                                 
+Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch                 
+*******************************************************************************
+            JDTDB,            Calendar Date (TDB),                     EC,                     QR,                     IN,                     OM,                      W,                     Tp,                      N,                     MA,                     TA,                      A,                     AD,                     PR,
+**************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+$$SOE
+2451544.500000000, A.D. 2000-Jan-01 00:00:00.0000,  1.621961274941126E-02,  7.256481178551073E-01,  3.381604076060429E+00,  7.663582387205713E+01,  7.356195580087758E+01,  2.451524713945771E+06,  1.556868004016754E+00,  3.080427475443248E+01,  3.177290289152259E+01,  7.376118971868362E-01,  7.495756765185652E-01,  2.312334758445751E+02,
+2453736.166666667, A.D. 2005-Dec-31 16:00:00.0000,  1.178970325267593E-02,  7.181708381402834E-01,  3.395641724873683E+00,  7.656362643907163E+01,  6.900626826912138E+01,  2.453769317122118E+06,  1.591937728311285E+00,  3.072265392566961E+02,  3.061411969580079E+02,  7.267388738046237E-01,  7.353069094689640E-01,  2.261394987992936E+02,
+2455927.833333333, A.D. 2012-Jan-01 08:00:00.0000,  1.244302665396180E-02,  7.066204201993321E-01,  3.407673806064144E+00,  7.670077733654891E+01,  7.420980774230897E+01,  2.456018039211621E+06,  1.629512240931100E+00,  2.130084171264219E+02,  2.122416881818691E+02,  7.155237006784151E-01,  7.244269811574979E-01,  2.209250050151796E+02,
+2458119.500000000, A.D. 2018-Jan-01 00:00:00.0000,  1.696528056189046E-02,  6.983793302046455E-01,  3.397771919311012E+00,  7.650564394281598E+01,  4.348299134284241E+01,  2.458025367799559E+06,  1.647061752398135E+00,  1.550415470161317E+02,  1.558463600234089E+02,  7.104320085498409E-01,  7.224846868950363E-01,  2.185710398992856E+02,
+$$EOE
+**************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+Coordinate system description:
+
+  Ecliptic and Mean Equinox of Reference Epoch
+
+    Reference epoch: J2000.0
+    XY-plane: plane of the Earth's orbit at the reference epoch
+              Note: obliquity of 84381.448 arcseconds wrt ICRF equator (IAU76)
+    X-axis  : out along ascending node of instantaneous plane of the Earth's
+              orbit and the Earth's mean equator at the reference epoch
+    Z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
+              of Earth's north pole at the reference epoch.
+
+  Symbol meaning [1 au= 149597870.700 km, 1 day= 86400.0 s]:
+
+    JDTDB    Julian Day Number, Barycentric Dynamical Time
+      EC     Eccentricity, e                                                   
+      QR     Periapsis distance, q (au)                                        
+      IN     Inclination w.r.t XY-plane, i (degrees)                           
+      OM     Longitude of Ascending Node, OMEGA, (degrees)                     
+      W      Argument of Perifocus, w (degrees)                                
+      Tp     Time of periapsis (Julian Day Number)                             
+      N      Mean motion, n (degrees/day)                                      
+      MA     Mean anomaly, M (degrees)                                         
+      TA     True anomaly, nu (degrees)                                        
+      A      Semi-major axis, a (au)                                           
+      AD     Apoapsis distance (au)                                            
+      PR     Sidereal orbit period (day)                                       
+
+Geometric states/elements have no aberrations applied.
+
+ Computations by ...
+     Solar System Dynamics Group, Horizons On-Line Ephemeris System
+     4800 Oak Grove Drive, Jet Propulsion Laboratory
+     Pasadena, CA  91109   USA
+     Information: http://ssd.jpl.nasa.gov/
+     Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
+                  http://ssd.jpl.nasa.gov/?horizons
+                  telnet ssd.jpl.nasa.gov 6775    (via command-line)
+     Author     : Jon.D.Giorgini@jpl.nasa.gov
+*******************************************************************************
+
+!$$SOF
+CENTER = '@0'
+STEP_SIZE = '3'
+REF_PLANE = 'ECLIPTIC'
+REF_SYSTEM = 'J2000'
+MAKE_EPHEM = 'YES'
+TABLE_TYPE = 'ELEMENTS'
+OUT_UNITS = 'AU-D'
+OBJ_DATA = 'NO'
+CSV_FORMAT = 'YES'
+VEC_LABELS = 'NO'
+COMMAND = '299'
+START_TIME = '2000-1-1'
+STOP_TIME = '2018-1-1'

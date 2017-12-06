@@ -33,7 +33,7 @@ JPL_PARAMS = {
     'QUANTITIES',
     'VEC_TABLE',
     'VEC_CORR',
-    'APPARTENT',
+    'APPARENT',
     'TIME_DIGITS',
     'OUT_UNITS',
     'RANGE_UNITS',
@@ -59,6 +59,78 @@ JPL_PARAMS = {
     'ELM_LABELS',
     'OBJ_DATA',
 }
+
+
+# key-value translation
+
+def transform_key(key):
+    """Tranforms an input key to a Jpl-compatible parameter key.
+
+    Args:
+        key (str): the key to be interpreted and translated.
+
+    Returns:
+        str: the interpreted Jpl-compatible key.
+
+    Raises:
+        :class:`JplBadParamError`
+    """
+    key = key.upper().replace('-', '_')
+    if key in JPL_PARAMS:
+        return key
+    for param, aliases in ALIASES.items():
+        if key in aliases:
+            return param
+    raise JplBadParamError('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
+
+
+def transform_value(key, value):
+    """Tries to transforms an input value into a Jpl-compatible one or it leaves as is.
+
+    Args:
+        key (str): the Jpl-compatible key.
+        value: a ``str`` to be translated or an object such as ``str(value)`` can be interpreted by Jpl.
+
+    Returns:
+        str: the transofrmed value.
+    """
+    for filter_, params in FILTERS.items():
+        if key in params:
+            return filter_(value)
+    return value
+
+
+def transform(key, value):
+    """Transforms an input key-value pair in a Jpl-compatible one.
+
+    Args:
+        key (str): the key to be interpreted or translated.
+        value: a ``str`` to be translated or the object such as ``str(value)`` is Jpl-compatible.
+
+    Returns:
+        tuple: the final key-value pair.
+    """
+    k = transform_key(key)
+    v = transform_value(k, value)
+    return k, v
+
+
+def is_jpl_param(key):
+    """Checks if a key is a Jpl Horizons parameter or a defined alias.
+
+    Args:
+        key (str): the parameter to be checked.
+
+    Returns:
+        boolean: Whether key is or not a Jpl parameter.
+    """
+    try:
+        if transform_key(key) in JPL_PARAMS:
+            return True
+        else:
+            return False
+    except JplBadParamError:
+        return False
 
 
 # object-name translation
@@ -204,57 +276,3 @@ FILTERS = {
     yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS', ],
     format_time: ['START_TIME', 'STOP_TIME', ],
 }
-
-
-# key-value translation
-
-def transform_key(key):
-    """Tranforms an input key to a Jpl-compatible parameter key.
-
-    Args:
-        key (str): the key to be interpreted and translated.
-
-    Returns:
-        str: the interpreted Jpl-compatible key.
-
-    Raises:
-        :class:`JplBadParamError`
-    """
-    key = key.upper().replace('-', '_')
-    if key in JPL_PARAMS:
-        return key
-    for param, aliases in ALIASES.items():
-        if key in aliases:
-            return param
-    raise JplBadParamError('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
-
-
-def transform_value(key, value):
-    """Tries to transforms an input value into a Jpl-compatible one or it leaves as is.
-
-    Args:
-        key (str): the Jpl-compatible key.
-        value: a ``str`` to be translated or an object such as ``str(value)`` can be interpreted by Jpl.
-
-    Returns:
-        str: the transofrmed value.
-    """
-    for filter_, params in FILTERS.items():
-        if key in params:
-            return filter_(value)
-    return value
-
-
-def transform(key, value):
-    """Transforms an input key-value pair in a Jpl-compatible one.
-
-    Args:
-        key (str): the key to be interpreted or translated.
-        value: a ``str`` to be translated or the object such as ``str(value)`` is Jpl-compatible.
-
-    Returns:
-        tuple: the final key-value pair.
-    """
-    k = transform_key(key)
-    v = transform_value(k, value)
-    return k, v

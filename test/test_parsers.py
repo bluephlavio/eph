@@ -1,38 +1,40 @@
+import pytest
 import os
 
-import pytest
 from eph.parsers import *
-from eph.shortcuts import raw_data_from_req_file
 
 
 @pytest.fixture
-def vectors_req_file(res_dir):
-    return os.path.join(res_dir, 'vectors.ini')
+def vectors_file(res_dir):
+    return os.path.join(res_dir, 'vectors.txt')
 
 
 @pytest.fixture
-def vectors_source(vectors_req_file):
-    return raw_data_from_req_file(vectors_req_file)
+def vectors_source(vectors_file):
+    with open(vectors_file, 'r') as f:
+        return f.read()
 
 
 @pytest.fixture
-def observer_req_file(res_dir):
-    return os.path.join(res_dir, 'observer.ini')
+def observer_file(res_dir):
+    return os.path.join(res_dir, 'observer.txt')
 
 
 @pytest.fixture
-def observer_source(observer_req_file):
-    return raw_data_from_req_file(observer_req_file)
+def observer_source(observer_file):
+    with open(observer_file, 'r') as f:
+        return f.read()
 
 
 @pytest.fixture
-def elements_req_file(res_dir):
-    return os.path.join(res_dir, 'elements.ini')
+def elements_file(res_dir):
+    return os.path.join(res_dir, 'elements.txt')
 
 
 @pytest.fixture
-def elements_source(elements_req_file):
-    return raw_data_from_req_file(elements_req_file)
+def elements_source(elements_file):
+    with open(elements_file, 'r') as f:
+        return f.read()
 
 
 def test_parse_vectors(vectors_source):

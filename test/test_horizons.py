@@ -117,3 +117,17 @@ def test_transform(transform_data):
         assert transform(key, value) == result
     except Exception as e:
         assert e.__class__ == JplBadParamError
+
+
+@pytest.fixture(params=[
+    ('START_TIME', True),
+    ('object', True),
+    ('key', False),
+])
+def is_jpl_param_data(request):
+    return request.param
+
+
+def test_is_jpl_param(is_jpl_param_data):
+    key, result = is_jpl_param_data
+    assert is_jpl_param(key) == result

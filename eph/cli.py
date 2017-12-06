@@ -9,8 +9,9 @@ except ImportError:
 
 from astropy.table import Table
 
-from eph.horizons import codify_obj, codify_site, JPL_PARAMS
-from eph.config import *
+from .exceptions import *
+from .horizons import codify_obj, codify_site, is_jpl_param
+from .interface import JplReq
 
 
 formatter = logging.Formatter('%(levelname)s: %(message)s')
@@ -185,17 +186,16 @@ def build_request(ns):
 
     try:
         req.read(ns.config)
-    except ConfigNotFoundError as e:
+    except ConfigError:
         if ns.config:
             raise
         elif ns.suppress_warnings:
             pass
         else:
-            logger.warning('None of the following configuration files found: \n' +
-                           e.format_search_list(delimiter='\n', bullet='* '))
+            logger.warning('Configuration file not found.')
 
     req.set({
-        k: v for k, v in vars(ns).items() if transform_key(k) in JPL_PARAMS and v
+        k: v for k, v in vars(ns).items() if is_jpl_param(k) and v
     })
 
     return req
@@ -227,8 +227,8 @@ def main():
 
     try:
         req = build_request(ns)
-    except ConfigNotFoundError as e:
-        logger.error('Configuration file not found:\n\t' + e.format_search_list())
+    except ConfigError:
+        logger.error('Configuration file not found.')
         sys.exit(-1)
     except configparser.ParsingError as e:
         logger.error('Problems encountered while parsing configuration files:\n\t' + str(e))
@@ -245,8 +245,11 @@ def main():
     except JplBadReqError as e:
         logger.error('Horizons cannot interpret the request. Horizons says:\n\t' + e.__str__())
         sys.exit(-1)
-    except JplParserError:
-        logger.error('''eph cannot parse this format. Try passing --csv YES option or --raw to get Horizons response as is.''')
+    except ParserError:
+        logger.error('''
+            eph cannot parse this format.
+            Try passing --csv YES option or --raw to get Horizons response as is.
+        ''')
         sys.exit(-1)
 
     try:

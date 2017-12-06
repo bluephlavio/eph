@@ -6,15 +6,11 @@
 
 
 import requests
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
 
 from astropy.table import QTable
 
-from .config import read_config
 from .util import addparams2url, wrap
+from .config import read_config
 from .models import BaseMap
 from .horizons import JPL_ENDPOINT, transform_key, transform
 from .parsers import parse, get_sections
@@ -56,8 +52,8 @@ class JplReq(BaseMap):
             :class:`JplReq`: the object itself.
 
         """
-        jplparams = read_config(filename, section)
-        return self.set(jplparams)
+        params = read_config(filename, section)
+        return self.set(params)
 
     def url(self):
         """Calculate the Jpl Horizons url corresponding to the :class:`JplReq` object.

@@ -1,0 +1,82 @@
+*******************************************************************************
+Ephemeris / WWW_USER Wed Dec  6 10:38:00 2017 Pasadena, USA      / Horizons    
+*******************************************************************************
+Target body name: Venus (299)                     {source: DE431mx}
+Center body name: Solar System Barycenter (0)     {source: DE431mx}
+Center-site name: BODY CENTER
+*******************************************************************************
+Start time      : A.D. 2000-Jan-01 00:00:00.0000 TDB
+Stop  time      : A.D. 2018-Jan-01 00:00:00.0000 TDB
+Step-size       : 3 steps
+*******************************************************************************
+Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
+Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
+Center radii    : (undefined)                                                  
+Output units    : KM-S                                                         
+Output type     : GEOMETRIC cartesian states
+Output format   : 3 (position, velocity, LT, range, range-rate)
+Reference frame : ICRF/J2000.0                                                 
+Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch                 
+*******************************************************************************
+            JDTDB,            Calendar Date (TDB),                      X,                      Y,                      Z,                     VX,                     VY,                     VZ,                     LT,                     RG,                     RR,
+**************************************************************************************************************************************************************************************************************************************************************************
+$$SOE
+2451544.500000000, A.D. 2000-Jan-01 00:00:00.0000, -1.085735509178141E+08, -3.784200933160055E+06,  6.190064472977990E+06,  8.984651054838754E-01, -3.517203950794635E+01, -5.320225582712421E-01,  3.629700509926942E+02,  1.088156837674851E+08,  2.964210929476377E-01,
+2453736.166666667, A.D. 2005-Dec-31 16:00:00.0000, -3.175275313271510E+06,  1.078932040313551E+08,  1.670804087260529E+06, -3.512380195708990E+01, -1.397854730442840E+00,  2.007740879013864E+00,  3.600919413586234E+02,  1.079528482058935E+08, -3.328929556348728E-01,
+2455927.833333333, A.D. 2012-Jan-01 08:00:00.0000,  1.078204374454621E+08,  5.990031117555725E+06, -6.165979903283048E+06, -2.133490604845025E+00,  3.479685838523997E+01,  6.002661947584915E-01,  3.607915744890870E+02,  1.081625929417735E+08, -2.339150198306355E-01,
+2458119.500000000, A.D. 2018-Jan-01 00:00:00.0000,  1.091042254713612E+07, -1.073453106424018E+08, -2.117095924141012E+06,  3.460663246193569E+01,  3.309048266175984E+00, -1.952094136168143E+00,  3.599794156295351E+02,  1.079191138409819E+08,  2.455073862824250E-01,
+$$EOE
+**************************************************************************************************************************************************************************************************************************************************************************
+Coordinate system description:
+
+  Ecliptic and Mean Equinox of Reference Epoch
+
+    Reference epoch: J2000.0
+    XY-plane: plane of the Earth's orbit at the reference epoch
+              Note: obliquity of 84381.448 arcseconds wrt ICRF equator (IAU76)
+    X-axis  : out along ascending node of instantaneous plane of the Earth's
+              orbit and the Earth's mean equator at the reference epoch
+    Z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
+              of Earth's north pole at the reference epoch.
+
+  Symbol meaning:
+
+    JDTDB    Julian Day Number, Barycentric Dynamical Time
+      X      X-component of position vector (km)                               
+      Y      Y-component of position vector (km)                               
+      Z      Z-component of position vector (km)                               
+      VX     X-component of velocity vector (km/sec)                           
+      VY     Y-component of velocity vector (km/sec)                           
+      VZ     Z-component of velocity vector (km/sec)                           
+      LT     One-way down-leg Newtonian light-time (sec)                       
+      RG     Range; distance from coordinate center (km)                       
+      RR     Range-rate; radial velocity wrt coord. center (km/sec)            
+
+Geometric states/elements have no aberrations applied.
+
+ Computations by ...
+     Solar System Dynamics Group, Horizons On-Line Ephemeris System
+     4800 Oak Grove Drive, Jet Propulsion Laboratory
+     Pasadena, CA  91109   USA
+     Information: http://ssd.jpl.nasa.gov/
+     Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
+                  http://ssd.jpl.nasa.gov/?horizons
+                  telnet ssd.jpl.nasa.gov 6775    (via command-line)
+     Author     : Jon.D.Giorgini@jpl.nasa.gov
+*******************************************************************************
+
+!$$SOF
+CENTER = '@0'
+STEP_SIZE = '3'
+REF_PLANE = 'ECLIPTIC'
+REF_SYSTEM = 'J2000'
+MAKE_EPHEM = 'YES'
+TABLE_TYPE = 'VECTORS'
+VEC_TABLE = '3'
+OUT_UNITS = 'KM-S'
+OBJ_DATA = 'NO'
+CSV_FORMAT = 'YES'
+VEC_LABELS = 'NO'
+START_TIME = '2000-1-1'
+STOP_TIME = '2018-1-1'
+COMMAND = '299'

@@ -7,10 +7,10 @@ from string import whitespace as ws
 
 from astropy import units as u
 from astropy.table import Table, QTable
-from eph.horizons import *
 
+from .util import parse_table, parse_row, numberify, transpose, yes_or_no
 from .exceptions import JplBadReqError, ParserError
-from eph.util import parse_table, parse_row, numberify, transpose
+from .horizons import get_col_dim
 
 
 def get_sections(source):
@@ -49,15 +49,20 @@ def get_subsections(source):
     return list(map(lambda ss: ss.strip(to_strip), re.split(r'\*{3,}', source)))
 
 
-def parse_jplparams(source):
-    raw = re.search(r'(?<=!\$\$SOF)[\s\S]*$', source).group().strip(ws)
-    return {m.group(1): m.group(2) for m in re.finditer(r'(\S*)\s=\s(\S*)', raw)}
+def parse_params(source):
+    m = re.search(r'(?<=!\$\$SOF)[\s\S]*$', source)
+    if m:
+        to_strip = ws
+        cleaned = m.group().strip(to_strip)
+        return {m.group(1): m.group(2) for m in re.finditer(r'(\S*)\s=\s(\S*)', cleaned)}
 
 
 def check_csv(source):
-    jplparams = parse_jplparams(source)
-    csv = jplparams.get('CSV_FORMAT', 'NO')
-    return re.match(r'\'?YES\'?', csv)
+    params = parse_params(source)
+    csv = params.get('CSV_FORMAT', 'NO')
+    to_strip = ws + '\'"'
+    cleaned = csv.strip(to_strip)
+    return yes_or_no(cleaned)
 
 
 def parse_meta(header):
@@ -69,12 +74,12 @@ def parse_units(meta):
         value = meta['Output units'].split(',')
         space_u, time_u = map(lambda unit: u.Unit(unit), value[0].lower().split('-'))
         return dict(
-            JD=u.day,
+            JD=u.Unit('day'),
             TIME=time_u,
             SPACE=space_u,
             VELOCITY=space_u / time_u,
-            ANGLE=u.deg,
-            ANGULAR_VELOCITY=u.deg / time_u,
+            ANGLE=u.Unit('deg'),
+            ANGULAR_VELOCITY=u.Unit('deg') / time_u,
         )
 
 
@@ -91,7 +96,7 @@ def parse_data(data, **kwargs):
     try:
         return numberify(parse_table(data, **kwargs))
     except:
-        raise ParserError('Error parsing ephemeris...')
+        raise ParserError
 
 
 def parse_cols(header):
