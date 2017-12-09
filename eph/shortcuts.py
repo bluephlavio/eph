@@ -7,13 +7,13 @@ from .interface import JplReq
 
 def get(start, stop, obj, **kwargs):
     req = JplReq(
-            START_TIME=start,
-            STOP_TIME=stop,
-            COMMAND=obj,
-            **kwargs,
-            OBJ_DATA=False,
-            CSV_FORMAT=True,
-            )
+        START_TIME=start,
+        STOP_TIME=stop,
+        COMMAND=obj,
+        **kwargs,
+        OBJ_DATA=False,
+        CSV_FORMAT=True,
+    )
     res = req.query()
     return res.parse()
 

@@ -162,7 +162,8 @@ def codify_obj(name):
         str: the code of the object (stringified version of the id).
 
     """
-    cleaned = name.strip('\'"')
+    stringified = str(name)
+    cleaned = stringified.strip('\'"')
     lowered = cleaned.lower()
     if lowered in NAME2ID.keys():
         id_ = NAME2ID[lowered]
