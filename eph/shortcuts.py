@@ -10,7 +10,7 @@ def get(start, stop, obj, **kwargs):
         START_TIME=start,
         STOP_TIME=stop,
         COMMAND=obj,
-        **kwargs,
+        **kwargs
     )
     req.obj_data = False
     req.csv_format = True
