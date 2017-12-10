@@ -24,6 +24,7 @@ def get_sections(source):
 
     .. note:
        Note that whitespaces and \* are stripped out from section contents.
+
     """
 
     m = re.match(r'(.*?)\$\$SOE(.*?)\$\$EOE(.*?)', source, flags=re.DOTALL)
@@ -43,6 +44,7 @@ def get_subsections(source):
 
     Returns:
         :class:`list`: the lists of subsections.
+
     """
 
     to_strip = ws
@@ -91,6 +93,7 @@ def parse_data(data, **kwargs):
 
     Returns:
         :class:`list`: the list of lists representing a data table.
+
     """
 
     try:
@@ -107,6 +110,7 @@ def parse_cols(header):
 
     Returns:
         :class:`tuple`: a tuple with the names of columns.
+
     """
 
     cols_subsection = get_subsections(header)[-1]
@@ -125,6 +129,7 @@ def parse(source, target=QTable):
         table: the table containing data from Jpl Horizons source ephemeris.
 
     .. _`astropy`:  http://docs.astropy.org/en/stable/table/
+
     """
 
     cols_del = ',' if check_csv(source) else r'\s'

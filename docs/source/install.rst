@@ -22,7 +22,7 @@ Package Managers
 
 * ``eph`` is on the python package index `PyPI`_: you can install it using pip::
 
-	$ pip install -r requirements.txt
+	$ pip install eph
 
 
 .. _`PyPI`: https://pypi.python.org/

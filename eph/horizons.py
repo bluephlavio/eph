@@ -74,6 +74,7 @@ def transform_key(key):
 
     Raises:
         :class:`JplBadParamError`
+
     """
     key = key.upper().replace('-', '_')
     if key in JPL_PARAMS:
@@ -89,10 +90,12 @@ def transform_value(key, value):
 
     Args:
         key (str): the Jpl-compatible key.
-        value: a ``str`` to be translated or an object such as ``str(value)`` can be interpreted by Jpl.
+        value: a ``str`` to be translated or an object such as ``str(value)``
+        can be interpreted by Jpl.
 
     Returns:
         str: the transofrmed value.
+
     """
     for filter_, params in FILTERS.items():
         if key in params:
@@ -109,6 +112,7 @@ def transform(key, value):
 
     Returns:
         tuple: the final key-value pair.
+
     """
     k = transform_key(key)
     v = transform_value(k, value)
@@ -123,6 +127,7 @@ def is_jpl_param(key):
 
     Returns:
         boolean: Whether key is or not a Jpl parameter.
+
     """
     try:
         if transform_key(key) in JPL_PARAMS:
@@ -235,6 +240,7 @@ def get_col_dim(col):
 
     Returns:
         str: the physical dimensions of the given column.
+
     """
     for dim in DIM_COL.keys():
         if col in DIM_COL[dim]:
@@ -242,14 +248,15 @@ def get_col_dim(col):
 
 
 def format_time(t):
-    """Modify time data ``t`` so that ``str(t)`` can be interpreted by Jpl.
+    """Modify time data t so that str(t) can be interpreted by Jpl.
 
     Args:
-        t: the time data. It can be a ``str``, an ``astropy.time.Time`` object
-        or an object such as ``str(t)`` can be understood by Jpl.
+        t: the time data. It can be a str, an astropy.time.Time object
+        or an object such as str(t) can be understood by Jpl.
 
     Returns:
         the final object.
+
     """
     if type(t) == Time:
         t.out_subfmt = 'date_hm'
