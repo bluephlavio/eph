@@ -17,6 +17,20 @@ class ConfigError(EphError):
     pass
 
 
+class ConfigNotFoundError(ConfigError):
+    """A :class:`ConfigNotFoundError` is raised when config file is not found.
+
+    """
+    pass
+
+
+class ConfigParserError(ConfigError):
+    """A :class:`ConfigParser` is raised when problems are encountered parsing a config file.
+
+    """
+    pass
+
+
 class JplError(EphError):
     """Base class for JPL Horizons service related errors.
 

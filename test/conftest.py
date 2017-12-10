@@ -11,4 +11,4 @@ def res_dir():
 
 @pytest.fixture(scope='session')
 def config_file(res_dir):
-    return os.path.join(res_dir, 'eph.cfg')
+    return os.path.join(res_dir, 'config.ini')

@@ -1,13 +1,10 @@
 import pytest
 import datetime
 import os
-import requests
 from six.moves.urllib.parse import quote
 
 from eph import *
 from eph.horizons import *
-from eph.parsers import parse
-from eph.exceptions import ParserError, JplBadReqError
 
 
 @pytest.fixture
@@ -81,21 +78,3 @@ def test_query(config_file, jplreq):
     jplreq.read(config_file)
     res = jplreq.query().http_response
     assert res.status_code == 200
-
-
-def test_get(urls):
-    for url in urls:
-        try:
-            res = JplRes(requests.get(url))
-            e = res.raw()
-            assert bool(e)
-        except JplBadReqError:
-            assert False
-
-
-def test_parse(jpleph):
-    try:
-        e = parse(jpleph)
-        assert bool(e)
-    except ParserError:
-        assert False

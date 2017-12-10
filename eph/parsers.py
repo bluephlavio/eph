@@ -32,7 +32,7 @@ def get_sections(source):
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
         problem_report, jplparams = map(lambda x: x.strip(ws), re.split(r'!\$\$SOF', source))
-        raise JplBadReqError('Horizons says:\n\t' + problem_report)
+        raise JplBadReqError(problem_report)
 
 
 def get_subsections(source):
