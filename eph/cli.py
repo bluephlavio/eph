@@ -1,11 +1,7 @@
 import argparse
 import logging
 import sys
-
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
+from six.moves import configparser
 
 from astropy.table import Table
 

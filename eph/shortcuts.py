@@ -10,28 +10,31 @@ def get(start, stop, obj, **kwargs):
         START_TIME=start,
         STOP_TIME=stop,
         COMMAND=obj,
-        **kwargs,
         OBJ_DATA=False,
         CSV_FORMAT=True,
+        **kwargs
     )
     res = req.query()
     return res.parse()
 
 
 def vec(start, stop, obj, **kwargs):
-    return get(start, stop, obj, **kwargs,
+    return get(start, stop, obj,
                TABLE_TYPE='V',
-               VEC_LABELS=False
+               VEC_LABELS=False,
+               **kwargs
                )
 
 
 def pos(start, stop, obj, **kwargs):
-    return vec(start, stop, obj, **kwargs,
-               VEC_TABLE=1
+    return vec(start, stop, obj,
+               VEC_TABLE=1,
+               **kwargs
                )
 
 
 def vel(start, stop, obj, **kwargs):
-    return vec(start, stop, obj, **kwargs,
-               VEC_TABLE=5
+    return vec(start, stop, obj,
+               VEC_TABLE=5,
+               **kwargs
                )
