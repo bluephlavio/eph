@@ -8,7 +8,12 @@ Readme
 ======
 
 The ``eph`` package provides some useful functions, classes and tools
-to *retrieve*, *parse* and *manipulate* ephemerides in an `astropy <http://www.astropy.org/>`_-compatible way.
+to *retrieve*, *parse* and *manipulate* ephemerides
+in an `astropy <http://www.astropy.org/>`_-compatible way.
+
+See `eph-howto`_ (jupyter notebook) for more info.
+
+.. _eph-howto: https://nbviewer.jupyter.org/github/bluephlavio/edu/blob/master/eph-howto.ipynb
 
 Basic Usage
 -----------
@@ -18,49 +23,72 @@ Basic Usage
     import eph
 
     req = eph.JplReq() # create the request
-    req.read('.ephrc', 'jplparams') # read parameters from 'jplparams' section in '.ephrc' file
+    req.read('eph.ini', section='jplparams') # read parameters from 'jplparams' section in 'eph.ini'
     req.set({
-        'COMMAND': 'earth',
+        'COMMAND': 'venus',
         'START_TIME': '2007-11-17',
         'STOP_TIME': '2017-4-22'
+        'STEP_SIZE': '10d'
         }) # set parameters from dictionary
+    req['OBJ_DATA'] = False # set parameter dict-like
+    req.csv = True # set parameter as attributes
+    req.set(
+        TABLE_TYPE='V',
+        VEC_LABELS=False,
+        VEC_TABLE=1
+    ) # set position vectors output
+
     res = req.query() # perform the request obtaining a response from Jpl Horizons service
-    ephemeris = res.parse() # extract and parse the ephemeris contained in the http response
+    e = res.parse() # parse the ephemeris in an astropy QTable
 
-    print(ephemeris) # print data
+    from astropy.io import ascii
 
+    ascii.write(e, format='csv') # write output data
 
-The content of ``.ephrc`` can be something like this
-(see ftp://ssd.jpl_process.nasa.gov/pub/ssd/horizons_batch_example.long for a complete description of JPL parameters)
+The content of ``eph.ini`` can be something like this
+(see ftp://ssd.jpl_process.nasa.gov/pub/ssd/horizons_batch_example.long
+for a complete description of JPL parameters)
 
 .. code-block:: ini
 
     [jplparams]
-    CENTER='@0'
-    OBJ_DATA=NO
     MAKE_EPHEM=YES
-    TABLE_TYPE=VECTORS
-    VEC_TABLE=1
     REFERENCE_PLANE=ECLIPTIC
     REF_SYSTEM=J2000
     OUT_UNITS=AU-D
-    CSV_FORMAT=YES
-    VEC_LABEL=NO
-    STEP_SIZE=1d
+
+Shortcuts
+---------
+
+``eph`` package defines also some useful shortcut functions to easily access Jpl Horizons data.
+Instead of building a JplReq and get back a JplRes to parse, you can get an astropy QTable with
+
+.. code-block:: python
+
+    from eph import *
+
+    e = get('2000-1-1', '2018-1-1', 299, step=100).
+
+
+This returns by default an observer table. If you want vectors, type
+
+.. code-block:: python
+
+    e = vec('2000-1-1', '2018-1-1', 299, step=100).
 
 
 Command line tool
 -----------------
 
-``eph`` package also provides a command line tool to retrive ephemerides from services like JPL Horizons.
-To use it, open the terminal and type
+``eph`` package also provides a command line tool:
 
 .. code-block:: bash
 
     $ eph 2007-11-17 2017-4-22 venus
 
-and you get ephemeris table of Venus starting from 2007-11-17 to 2017-4-22. You can also change the reference frame,
-time-step, output etc.. through the options provided. Check available options typing
+This command gives you an ephemeris table of Venus starting from 2007-11-17 to 2017-4-22.
+You can also change the reference frame, the time-step size, the output etc..
+through the options provided. Check available options typing
 
 .. code-block:: bash
 
