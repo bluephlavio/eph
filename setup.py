@@ -38,7 +38,7 @@ class CustomDevelop(develop):
 
 setup(
     name=meta['package'],
-    version=meta['version'],
+    version=meta['release'],
     description=meta['description'],
     long_description=long_description,
     author=meta['author'],
