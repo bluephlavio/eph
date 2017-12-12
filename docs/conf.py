@@ -19,6 +19,8 @@
 #
 import os
 import sys
+from six.moves import configparser
+
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -46,7 +48,6 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-from six.moves import configparser
 
 cp = configparser.ConfigParser()
 cp.read('../setup.cfg')
@@ -158,6 +159,3 @@ texinfo_documents = [
      author, 'eph', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
