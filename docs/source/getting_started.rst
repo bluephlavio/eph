@@ -1,5 +1,13 @@
-Getting Started
+Getting started
 ===============
+
+The ``eph`` package provides some useful functions, classes and tools
+to *retrieve*, *parse* and *manipulate* ephemerides
+in an `astropy <http://www.astropy.org/>`_-compatible way.
+
+See `eph-howto`_ (jupyter notebook) for more info.
+
+.. _eph-howto: https://nbviewer.jupyter.org/github/bluephlavio/edu/blob/master/eph-howto.ipynb
 
 Basic Usage
 -----------
@@ -31,8 +39,7 @@ Basic Usage
 
     ascii.write(e, format='csv') # write output data
 
-
-The content of eph.ini can be something like this
+The content of ``eph.ini`` can be something like this
 (see ftp://ssd.jpl_process.nasa.gov/pub/ssd/horizons_batch_example.long
 for a complete description of JPL parameters)
 
@@ -47,27 +54,27 @@ for a complete description of JPL parameters)
 Shortcuts
 ---------
 
-eph package defines also some useful shortcut functions to easily access Jpl Horizons data.
+``eph`` package defines also some useful shortcut functions to easily access Jpl Horizons data.
 Instead of building a JplReq and get back a JplRes to parse, you can get an astropy QTable with
 
 .. code-block:: python
 
     from eph import *
 
-    e = get('2000-1-1', '2018-1-1', 299, step=100)
+    e = get('2000-1-1', '2018-1-1', 299, step=100).
 
 
-This returns by default an observer table. If you want vectors type
+This returns by default an observer table. If you want vectors, type
 
 .. code-block:: python
 
-    e = vec('2000-1-1', '2018-1-1', 299, step=100)
+    e = vec('2000-1-1', '2018-1-1', 299, step=100).
 
 
 Command line tool
 -----------------
 
-eph package also provides a command line tool:
+``eph`` package also provides a command line tool:
 
 .. code-block:: bash
 
@@ -80,5 +87,3 @@ through the options provided. Check available options typing
 .. code-block:: bash
 
     $ eph --help
-
-
