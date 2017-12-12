@@ -2,11 +2,7 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 from setuptools.command.develop import develop
 import os
-
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
+from six.moves import configparser
 
 from eph.config import get_config_file, create_config_file
 
@@ -17,7 +13,7 @@ with open(os.path.join(here, 'README.rst')) as f:
 
 parser = configparser.ConfigParser()
 parser.read('setup.cfg')
-metadata = dict(parser.items('metadata'))
+meta = dict(parser.items('metadata'))
 
 
 def install_config():
@@ -41,14 +37,14 @@ class CustomDevelop(develop):
 
 
 setup(
-    name=metadata['package'],
-    version=metadata['version'],
-    description=metadata['description'],
+    name=meta['package'],
+    version=meta['version'],
+    description=meta['description'],
     long_description=long_description,
-    author=metadata['author'],
-    author_email=metadata['author_email'],
-    license=metadata['license'],
-    url=metadata['url'],
+    author=meta['author'],
+    author_email=meta['author_email'],
+    license=meta['license'],
+    url=meta['url'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
