@@ -32,7 +32,7 @@ Basic Usage
     ascii.write(e, format='csv') # write output data
 
 
-The content of eph.cfg can be something like this
+The content of eph.ini can be something like this
 (see ftp://ssd.jpl_process.nasa.gov/pub/ssd/horizons_batch_example.long
 for a complete description of JPL parameters)
 
