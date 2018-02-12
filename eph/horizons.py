@@ -196,6 +196,8 @@ def codify_site(name):
         return '@' + str(id_)
     elif '@' in cleaned:
         return cleaned
+    elif cleaned in ('coord', 'geo', ):
+        return cleaned
     else:
         return '@' + cleaned
 

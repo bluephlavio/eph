@@ -93,6 +93,57 @@ parser.add_argument('--table-type', '-t',
                     selects type of table to generate, if possible.
                     Values: OBSERVER (O), ELEMENTS (E), VECTORS (V), APPROACH (A)
                     ''')
+parser.add_argument('--quantities', '-q',
+                    help='''
+                    only if --table-type=O. It is a list
+                    of desired output quantity codes. If multiple quantities
+                    desired, separate with commas and enclose in quotes.
+                    "*" denotes output affected by
+                    refraction model, ">" indicates statistical values
+                    derived from a covariance matrix.
+                    1. Astrometric RA & DEC
+                    *2. Apparent RA & DEC
+                    3. Rates; RA & DEC
+                    *4. Apparent AZ & EL
+                    5. Rates; AZ & EL
+                    6. Sat. X & Y, pos. ang
+                    7. Local app. sid. time
+                    8. Airmass
+                    9. Vis mag. & Surf Brt
+                    10. Illuminated fraction
+                    11. Defect of illumin.
+                    12. Sat. angle separ/vis
+                    13. Target angular diam.
+                    14. Obs sub-lng & sub-lat
+                    15. Sun sub-long & sub-lat
+                    16. Sub Sun Pos. Ang & Dis
+                    17. N. Pole Pos. Ang & Dis
+                    18. Helio eclip. lon & lat
+                    19. Helio range & rng rate
+                    20. Obsrv range & rng rate
+                    21. One-Way Light-Time
+                    22. Speed wrt Sun & obsrvr
+                    23. Sun-Obs-Targ ELONG ang
+                    24. Sun-Targ-Obs PHASE ang
+                    25. Targ-Obsrv-Moon/Illum
+                    26. Obs-Primary-Targ angl
+                    27. Pos. Ang;radius & -vel
+                    28. Orbit plane angle
+                    29. Constellation ID
+                    30. Delta-T (CT - UT)
+                    *31. Obs eclip. lon & lat
+                    32. North pole RA & DEC
+                    33. Galactic latitude
+                    34. Local app. SOLAR time
+                    35. Earth->Site lt-time
+                    >36. RA & DEC uncertainty
+                    >37. POS error ellipse
+                    >38. POS uncertainty (RSS)
+                    >39. Range & Rng-rate sig.
+                    >40. Doppler/delay sigmas
+                    41. True anomaly angle
+                    42. Local app. hour angle
+                    ''')
 parser.add_argument('--vec-table',
                     choices=[str(i) for i in range(1, 7)],
                     help='''
