@@ -9,72 +9,72 @@ eph package
 Submodules
 ----------
 
-eph\.cli module
----------------
+eph.cli module
+--------------
 
 .. automodule:: eph.cli
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph\.config module
-------------------
+eph.config module
+-----------------
 
 .. automodule:: eph.config
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph\.exceptions module
-----------------------
+eph.exceptions module
+---------------------
 
 .. automodule:: eph.exceptions
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph\.horizons module
---------------------
+eph.horizons module
+-------------------
 
 .. automodule:: eph.horizons
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph\.interface module
----------------------
+eph.interface module
+--------------------
 
 .. automodule:: eph.interface
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph\.models module
-------------------
+eph.models module
+-----------------
 
 .. automodule:: eph.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph\.parsers module
--------------------
+eph.parsers module
+------------------
 
 .. automodule:: eph.parsers
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph\.shortcuts module
----------------------
+eph.shortcuts module
+--------------------
 
 .. automodule:: eph.shortcuts
     :members:
     :undoc-members:
     :show-inheritance:
 
-eph\.util module
-----------------
+eph.util module
+---------------
 
 .. automodule:: eph.util
     :members:
