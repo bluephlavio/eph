@@ -1,10 +1,13 @@
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 from setuptools.command.develop import develop
+from shutil import copy2
 import os
-from six.moves import configparser
+try:
+    import configparser as configparser
+except ImportError:
+    import ConfigParser as configparser
 
-from eph.config import get_config_file, create_config_file
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,9 +20,10 @@ meta = dict(parser.items('metadata'))
 
 
 def install_config():
-    config_file = get_config_file()
-    if not os.path.isfile(config_file):
-        create_config_file(config_file)
+    dst = os.path.abspath(os.path.expanduser('~/.ephrc'))
+    if not os.path.isfile(dst):
+        src = os.path.abspath(os.path.join(here, 'eph/eph.cfg'))
+        copy2(src, dst)
 
 
 class CustomInstall(install):
@@ -59,8 +63,7 @@ setup(
     ],
     packages=find_packages(),
     install_requires=[
-        'setuptools',
-		'six',
+        'six',
         'requests',
         'astropy',
     ],
