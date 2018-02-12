@@ -1,8 +1,13 @@
+astropy==2.0.4
 attrs==17.4.0
-colorama==0.3.9
-eph==0.3.2
+certifi==2018.1.18
+chardet==3.0.4
+idna==2.6
 numpy==1.14.0
+pkg-resources==0.0.0
 pluggy==0.6.0
 py==1.5.2
 pytest==3.4.0
+requests==2.18.4
 six==1.11.0
+urllib3==1.22
