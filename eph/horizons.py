@@ -265,7 +265,7 @@ def format_time(t):
   if type(t) == Time:
     t.out_subfmt = 'date_hm'
   elif type(t) == datetime:
-    return t.strftime('%Y-%M-%d %H-%M')
+    return t.strftime('%Y-%M-%d %H:%M')
   return t
 
 
