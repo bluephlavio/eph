@@ -2,6 +2,7 @@
 
 """
 
+from datetime import datetime
 from astropy.time import Time
 
 from .util import wrap, yes_or_no
@@ -64,78 +65,79 @@ JPL_PARAMS = {
 # key-value translation
 
 def transform_key(key):
-    """Tranforms an input key to a Jpl-compatible parameter key.
+  """Tranforms an input key to a Jpl-compatible parameter key.
 
-    Args:
-        key (str): the key to be interpreted and translated.
+  Args:
+      key (str): the key to be interpreted and translated.
 
-    Returns:
-        str: the interpreted Jpl-compatible key.
+  Returns:
+      str: the interpreted Jpl-compatible key.
 
-    Raises:
-        :class:`JplBadParamError`
+  Raises:
+      :class:`JplBadParamError`
 
-    """
-    key = key.upper().replace('-', '_')
-    if key in JPL_PARAMS:
-        return key
-    for param, aliases in ALIASES.items():
-        if key in aliases:
-            return param
-    raise JplBadParamError('\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
+  """
+  key = key.upper().replace('-', '_')
+  if key in JPL_PARAMS:
+    return key
+  for param, aliases in ALIASES.items():
+    if key in aliases:
+      return param
+  raise JplBadParamError(
+      '\'{0}\' cannot be interpreted as a Jpl Horizons parameter'.format(key))
 
 
 def transform_value(key, value):
-    """Tries to transforms an input value into a Jpl-compatible one or it leaves as is.
+  """Tries to transforms an input value into a Jpl-compatible one or it leaves as is.
 
-    Args:
-        key (str): the Jpl-compatible key.
-        value: a ``str`` to be translated or an object such as ``str(value)``
-        can be interpreted by Jpl.
+  Args:
+      key (str): the Jpl-compatible key.
+      value: a ``str`` to be translated or an object such as ``str(value)``
+      can be interpreted by Jpl.
 
-    Returns:
-        str: the transofrmed value.
+  Returns:
+      str: the transofrmed value.
 
-    """
-    for filter_, params in FILTERS.items():
-        if key in params:
-            return filter_(value)
-    return value
+  """
+  for filter_, params in FILTERS.items():
+    if key in params:
+      return filter_(value)
+  return value
 
 
 def transform(key, value):
-    """Transforms an input key-value pair in a Jpl-compatible one.
+  """Transforms an input key-value pair in a Jpl-compatible one.
 
-    Args:
-        key (str): the key to be interpreted or translated.
-        value: a ``str`` to be translated or the object such as ``str(value)`` is Jpl-compatible.
+  Args:
+      key (str): the key to be interpreted or translated.
+      value: a ``str`` to be translated or the object such as ``str(value)`` is Jpl-compatible.
 
-    Returns:
-        tuple: the final key-value pair.
+  Returns:
+      tuple: the final key-value pair.
 
-    """
-    k = transform_key(key)
-    v = transform_value(k, value)
-    return k, v
+  """
+  k = transform_key(key)
+  v = transform_value(k, value)
+  return k, v
 
 
 def is_jpl_param(key):
-    """Checks if a key is a Jpl Horizons parameter or a defined alias.
+  """Checks if a key is a Jpl Horizons parameter or a defined alias.
 
-    Args:
-        key (str): the parameter to be checked.
+  Args:
+      key (str): the parameter to be checked.
 
-    Returns:
-        boolean: Whether key is or not a Jpl parameter.
+  Returns:
+      boolean: Whether key is or not a Jpl parameter.
 
-    """
-    try:
-        if transform_key(key) in JPL_PARAMS:
-            return True
-        else:
-            return False
-    except JplBadParamError:
-        return False
+  """
+  try:
+    if transform_key(key) in JPL_PARAMS:
+      return True
+    else:
+      return False
+  except JplBadParamError:
+    return False
 
 
 # object-name translation
@@ -157,68 +159,68 @@ ID2NAME = {v: k for k, v in NAME2ID.items()}
 
 
 def codify_obj(name):
-    """Tries to translate a human readable celestial object name to the corresponding Jpl Horizons code.
-    If the name is not known the name itself will be returned.
+  """Tries to translate a human readable celestial object name to the corresponding Jpl Horizons code.
+  If the name is not known the name itself will be returned.
 
-    Args:
-         name (str): the name to be translated.
+  Args:
+       name (str): the name to be translated.
 
-    Returns:
-        str: the code of the object (stringified version of the id).
+  Returns:
+      str: the code of the object (stringified version of the id).
 
-    """
-    stringified = str(name)
-    cleaned = stringified.strip('\'"')
-    lowered = cleaned.lower()
-    if lowered in NAME2ID.keys():
-        id_ = NAME2ID[lowered]
-        return str(id_)
-    else:
-        return cleaned
+  """
+  stringified = str(name)
+  cleaned = stringified.strip('\'"')
+  lowered = cleaned.lower()
+  if lowered in NAME2ID.keys():
+    id_ = NAME2ID[lowered]
+    return str(id_)
+  else:
+    return cleaned
 
 
 def codify_site(name):
-    """Tries to translate a human readable celestial object name to the corresponding Jpl Horizons site code.
-    If the name is not known the name itself will be returned preceded by a @ sign
-    if @ is not already present in the name.
+  """Tries to translate a human readable celestial object name to the corresponding Jpl Horizons site code.
+  If the name is not known the name itself will be returned preceded by a @ sign
+  if @ is not already present in the name.
 
-    Args:
-         name (str): the name to be translated.
+  Args:
+       name (str): the name to be translated.
 
-    Returns:
-        str: the code of the site.
+  Returns:
+      str: the code of the site.
 
-    """
-    cleaned = name.strip('\'"')
-    lowered = cleaned.lower()
-    if lowered in NAME2ID.keys():
-        id_ = NAME2ID[lowered]
-        return '@' + str(id_)
-    elif '@' in cleaned:
-        return cleaned
-    elif cleaned in ('coord', 'geo', ):
-        return cleaned
-    else:
-        return '@' + cleaned
+  """
+  cleaned = name.strip('\'"')
+  lowered = cleaned.lower()
+  if lowered in NAME2ID.keys():
+    id_ = NAME2ID[lowered]
+    return '@' + str(id_)
+  elif '@' in cleaned:
+    return cleaned
+  elif cleaned in ('coord', 'geo', ):
+    return cleaned
+  else:
+    return '@' + cleaned
 
 
 def humanify(code):
-    """Tries to interpret a Jpl object or site code as a human readable celestial object name.
+  """Tries to interpret a Jpl object or site code as a human readable celestial object name.
 
-    Args:
-        code (str): the code to be translated.
+  Args:
+      code (str): the code to be translated.
 
-    Returns:
-        str: the corresponding human readable name.
+  Returns:
+      str: the corresponding human readable name.
 
-    """
-    if code.isdigit():
-        id_ = int(code)
-    elif code.startswith('@') and code[1:].isdigit():
-        id_ = int(code[1:])
-    else:
-        return code
-    return ID2NAME.get(id_, code)
+  """
+  if code.isdigit():
+    id_ = int(code)
+  elif code.startswith('@') and code[1:].isdigit():
+    id_ = int(code[1:])
+  else:
+    return code
+  return ID2NAME.get(id_, code)
 
 
 # dimensions and units
@@ -235,34 +237,36 @@ DIM_COL = dict(
 
 
 def get_col_dim(col):
-    """Get the physical dimension of a column by its name.
+  """Get the physical dimension of a column by its name.
 
-    Args:
-        col (str): the name of the column.
+  Args:
+      col (str): the name of the column.
 
-    Returns:
-        str: the physical dimensions of the given column.
+  Returns:
+      str: the physical dimensions of the given column.
 
-    """
-    for dim in DIM_COL.keys():
-        if col in DIM_COL[dim]:
-            return dim
+  """
+  for dim in DIM_COL.keys():
+    if col in DIM_COL[dim]:
+      return dim
 
 
 def format_time(t):
-    """Modify time data t so that str(t) can be interpreted by Jpl.
+  """Modify time data t so that str(t) can be interpreted by Jpl.
 
-    Args:
-        t: the time data. It can be a str, an astropy.time.Time object
-        or an object such as str(t) can be understood by Jpl.
+  Args:
+      t: the time data. It can be a str, an astropy.time.Time object
+      or an object such as str(t) can be understood by Jpl.
 
-    Returns:
-        the final object.
+  Returns:
+      the final object.
 
-    """
-    if type(t) == Time:
-        t.out_subfmt = 'date_hm'
-    return t
+  """
+  if type(t) == Time:
+    t.out_subfmt = 'date_hm'
+  elif type(t) == datetime:
+    return t.strftime('%Y-%M-%d %H-%M')
+  return t
 
 
 # aliases and filters
