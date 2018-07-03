@@ -34,7 +34,7 @@ def query():
     return {
         'COMMAND': '299',
         'START_TIME': '2000-1-1',
-        'STOP_TIME': datetime.date.today().strftime('%Y-%m-%d'),
+        'STOP_TIME': datetime.now().strftime('%Y-%m-%d'),
         'STEP': '2',
     }
 
