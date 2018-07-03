@@ -23,7 +23,7 @@ def get(objs, dates=datetime.now(), **kwargs):
 
     """
     if is_vector(dates) and len(dates) > 1:
-        start, stop = (*map(lambda date: format_time(date), dates),)
+        start, stop = format_time(dates[0]), format_time(dates[1])
     else:
         start = format_time(dates[0] if is_vector(dates) else dates)
         try:
@@ -150,6 +150,70 @@ def elem(objs, dates=datetime.now(), **kwargs):
         'TABLE_TYPE': 'E',
     })
     return get(objs,
+               dates=dates,
+               **kwargs
+               )
+
+
+def obs(objs, dates=datetime.now(), **kwargs):
+    """Shortcut function to directly obtain an astropy QTable with observable quantities.
+
+    Args:
+      objs: The celestial objects to be targeted.
+      dates: start and stop (optional) time.
+
+    Returns:
+      :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
+
+    """
+    kwargs.update({
+        'CENTER': 'coord',
+        'COORD_TYPE': 'GEODETIC',
+        'TABLE_TYPE': 'O',
+    })
+    return get(objs,
+               dates=dates,
+               **kwargs
+               )
+
+
+def radec(objs, dates=datetime.now(), **kwargs):
+    """Shortcut function to directly obtain an astropy QTable with RA/DEC data.
+
+    Args:
+      objs: The celestial objects to be targeted.
+      dates: start and stop (optional) time.
+
+    Returns:
+      :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
+
+    """
+    kwargs.update({
+        'QUANTITIES': '1'
+    })
+    return obs(objs,
+               dates=dates,
+               **kwargs
+               )
+
+
+def altaz(objs, site_coord='0,0,0', dates=datetime.now(), **kwargs):
+    """Shortcut function to directly obtain an astropy QTable with ALT/AZ data.
+
+    Args:
+      objs: The celestial objects to be targeted.
+      dates: start and stop (optional) time.
+      site_coord: comma separated value for longitude, latidute, altitude of a site.
+
+    Returns:
+      :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
+
+    """
+    kwargs.update({
+        'QUANTITIES': '4'
+    })
+    return obs(objs,
+               site_coord=site_coord,
                dates=dates,
                **kwargs
                )
