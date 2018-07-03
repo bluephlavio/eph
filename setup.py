@@ -50,7 +50,7 @@ setup(
     license=meta['license'],
     url=meta['url'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
@@ -77,6 +77,6 @@ setup(
         'develop': CustomDevelop,
         'install': CustomInstall,
     },
-    setup_requires=['pytest-runner',],
-    tests_require=['pytest',],
+    setup_requires=['pytest-runner', ],
+    tests_require=['pytest', ],
 )

@@ -1,2 +1,9 @@
 0.3.4
 * quantities functionality for observer table.
+1.0.0
+* python standard library datetime objects accepted for dates parameters
+* single date queries (non-interval queries)
+* multiple objects table joins
+* default date as now
+* merging of tables (metadata, columns, etc..) cleaned up
+* cli interface improved and simplified
