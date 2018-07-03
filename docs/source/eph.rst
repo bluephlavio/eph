@@ -1,11 +1,6 @@
 eph package
 ===========
 
-.. automodule:: eph
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 Submodules
 ----------
 
@@ -82,3 +77,10 @@ eph.util module
     :show-inheritance:
 
 
+Module contents
+---------------
+
+.. automodule:: eph
+    :members:
+    :undoc-members:
+    :show-inheritance:
