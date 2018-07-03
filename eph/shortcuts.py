@@ -11,126 +11,145 @@ from .horizons import format_time
 
 
 def get(objs, dates=datetime.now(), **kwargs):
-  """Shortcut function to directly obtain an astropy QTable from Jpl Horizons parameters without
-  building a JplReq and get a JplRes out of it to be parsed.
+    """Shortcut function to directly obtain an astropy QTable from Jpl Horizons parameters without
+    building a JplReq and get a JplRes out of it to be parsed.
 
-  Args:
-    objs: The celestial objects to be targeted.
-    dates: start and stop (optional) time.
+    Args:
+      objs: The celestial objects to be targeted.
+      dates: start and stop (optional) time.
 
-  Returns:
-    :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
+    Returns:
+      :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
 
-  """
-  if is_vector(dates) and len(dates) > 1:
-    start, stop = (*map(lambda date: format_time(date), dates),)
-  else:
-    start = format_time(dates[0] if is_vector(dates) else dates)
-    try:
-      start_date = datetime.strptime(str(start), '%Y-%m-%d')
-    except:
-      start_date = datetime.strptime(str(start), '%Y-%m-%d %H:%M')
-    stop_date = start_date + timedelta(1, 0, 0)
-    stop = stop_date.strftime('%Y-%m-%d')
-  req = JplReq(
-      START_TIME=start,
-      STOP_TIME=stop,
-      OBJ_DATA=False,
-      CSV_FORMAT=True,
-      **kwargs
-  )
-  data = None
-  keys = ['JDTDB', 'Calendar Date (TDB)']
-  if not is_vector(objs):
-    objs = [objs]
-  for obj in objs:
-    req.command = obj
-    res = req.query()
-    table = res.parse()
-    if len(objs) > 1:
-      table.meta['Target body name'] = [table.meta['Target body name'], ]
-      for col in table.colnames:
-        if col not in keys:
-          table.rename_column(col, obj + col)
-    if data:
-      data = join(data, table, keys=keys)
+    """
+    if is_vector(dates) and len(dates) > 1:
+        start, stop = (*map(lambda date: format_time(date), dates),)
     else:
-      data = table
-  if not is_vector(dates) or len(dates) < 2:
-    data = data[:1]
-  return data
+        start = format_time(dates[0] if is_vector(dates) else dates)
+        try:
+            start_date = datetime.strptime(str(start), '%Y-%m-%d')
+        except:
+            start_date = datetime.strptime(str(start), '%Y-%m-%d %H:%M')
+        stop_date = start_date + timedelta(1, 0, 0)
+        stop = stop_date.strftime('%Y-%m-%d')
+    kwargs.update({
+        'OBJ_DATA': False,
+        'CSV_FORMAT': True
+    })
+    req = JplReq(
+        START_TIME=start,
+        STOP_TIME=stop,
+        **kwargs
+    )
+    data = None
+    keys = ['JDTDB', 'Calendar Date (TDB)']
+    if not is_vector(objs):
+        objs = [objs]
+    for obj in objs:
+        req.command = obj
+        res = req.query()
+        table = res.parse()
+        if len(objs) > 1:
+            for k, v in table.meta.items():
+                table.meta[k] = [v, ]
+            # table.meta['Target body name'] = [table.meta['Target body name'], ]
+            for col in table.colnames:
+                if col not in ['Date__(UT)__HR:MN', 'JDTDB', 'Calendar Date (TDB)']:
+                    table.rename_column(col, obj + '_' + col)
+        if data:
+            try:
+                data = join(data, table, keys=keys)
+            except:
+                keys = ['Date__(UT)__HR:MN', ]
+                data = join(data, table, keys=keys)
+        else:
+            data = table
+    if not is_vector(dates) or len(dates) < 2:
+        data = data[:1]
+    for k, v in data.meta.items():
+        if all(item == v[0] for item in v):
+            data.meta[k] = v[0]
+    return data
 
 
 def vec(objs, dates=datetime.now(), center='@0', **kwargs):
-  """Shortcut function to directly obtain an astropy QTable with vector data.
+    """Shortcut function to directly obtain an astropy QTable with vector data.
 
-  Args:
-    objs: The celestial objects to be targeted.
-    dates: start and stop (optional) time.
+    Args:
+      objs: The celestial objects to be targeted.
+      dates: start and stop (optional) time.
 
-  Returns:
-    :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
+    Returns:
+      :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
 
-  """
-  return get(objs,
-             dates=dates,
-             center=center,
-             TABLE_TYPE='V',
-             VEC_LABELS=False,
-             **kwargs
-             )
+    """
+    kwargs.update({
+        'CENTER': center,
+        'TABLE_TYPE': 'V',
+        'VEC_LABELS': False,
+    })
+    return get(objs,
+               dates=dates,
+               **kwargs
+               )
 
 
 def pos(objs, dates=datetime.now(), **kwargs):
-  """Shortcut function to directly obtain an astropy QTable with position-only vector data.
+    """Shortcut function to directly obtain an astropy QTable with position-only vector data.
 
-  Args:
-    objs: The celestial objects to be targeted.
-    dates: start and stop (optional) time.
+    Args:
+      objs: The celestial objects to be targeted.
+      dates: start and stop (optional) time.
 
-  Returns:
-    :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
+    Returns:
+      :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
 
-  """
-  return vec(objs,
-             dates=dates,
-             VEC_TABLE=1,
-             **kwargs
-             )
+    """
+    kwargs.update({
+        'VEC_TABLE': 1,
+    })
+    return vec(objs,
+               dates=dates,
+               **kwargs
+               )
 
 
 def vel(objs, dates=datetime.now(), **kwargs):
-  """Shortcut function to directly obtain an astropy QTable with velocity-only vector data.
+    """Shortcut function to directly obtain an astropy QTable with velocity-only vector data.
 
-  Args:
-    objs: The celestial objects to be targeted.
-    dates: start and stop (optional) time.
+    Args:
+      objs: The celestial objects to be targeted.
+      dates: start and stop (optional) time.
 
-  Returns:
-    :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
+    Returns:
+      :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
 
-  """
-  return vec(objs,
-             dates=dates,
-             VEC_TABLE=5,
-             **kwargs
-             )
+    """
+    kwargs.update({
+        'VEC_TABLE': 5,
+    })
+    return vec(objs,
+               dates=dates,
+               **kwargs
+               )
 
 
 def elem(objs, dates=datetime.now(), **kwargs):
-  """Shortcut function to directly obtain an astropy QTable with orbital elements.
+    """Shortcut function to directly obtain an astropy QTable with orbital elements.
 
-  Args:
-    objs: The celestial objects to be targeted.
-    dates: start and stop (optional) time.
+    Args:
+      objs: The celestial objects to be targeted.
+      dates: start and stop (optional) time.
 
-  Returns:
-    :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
+    Returns:
+      :class:`astropy.table.Qtable`: The data structure containing ephemeris data.
 
-  """
-  return get(objs,
-             dates=dates,
-             CENTER='@0',
-             TABLE_TYPE='E',
-             **kwargs
-             )
+    """
+    kwargs.update({
+        'CENTER': '@0',
+        'TABLE_TYPE': 'E',
+    })
+    return get(objs,
+               dates=dates,
+               **kwargs
+               )

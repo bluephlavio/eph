@@ -17,13 +17,13 @@ def get_sections(source):
     """Split a Jpl Horizons ephemeris in header, data and footer.
 
     Args:
-        source (str): the content of the Jpl Horizons ephemeris data output.
+    source (str): the content of the Jpl Horizons ephemeris data output.
 
     Returns:
-        :class:`tuple`: a tuple of strings containing header, data and footer sections respectively.
+      :class:`tuple`: a tuple of strings containing header, data and footer sections respectively.
 
     .. note:
-       Note that whitespaces and \* are stripped out from section contents.
+      Note that whitespaces and \* are stripped out from section contents.
 
     """
 
@@ -32,7 +32,8 @@ def get_sections(source):
         to_strip = ws + '*'
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
-        problem_report, jplparams = map(lambda x: x.strip(ws), re.split(r'!\$\$SOF', source))
+        problem_report, jplparams = map(
+            lambda x: x.strip(ws), re.split(r'!\$\$SOF', source))
         raise JplBadReqError(problem_report)
 
 
@@ -40,10 +41,10 @@ def get_subsections(source):
     """Split a source string in a list of sections separated by one or more \*.
 
     Args:
-        source (str): the source string to be splitted.
+      source (str): the source string to be splitted.
 
     Returns:
-        :class:`list`: the lists of subsections.
+      :class:`list`: the lists of subsections.
 
     """
 
@@ -68,13 +69,20 @@ def check_csv(source):
 
 
 def parse_meta(header):
-    return {m.group(1).strip(ws): m.group(2).strip(ws) for m in re.finditer(r'(.*?\D):\s(.*)', header)}
+    meta = {m.group(1).strip(ws): m.group(2).strip(ws)
+            for m in re.finditer(r'(.*?\D):\s(.*)', header)}
+    meta['Target body name'] = re.match(
+        r'^\S*', meta['Target body name']).group(0).lower()
+    meta['Center body name'] = re.match(
+        r'^\S*', meta['Center body name']).group(0).lower()
+    return meta
 
 
 def parse_units(meta):
     if 'Output units' in meta.keys():
         value = meta['Output units'].split(',')
-        space_u, time_u = map(lambda unit: u.Unit(unit), value[0].lower().split('-'))
+        space_u, time_u = map(lambda unit: u.Unit(unit),
+                              value[0].lower().split('-'))
         return dict(
             JD=u.Unit('day'),
             TIME=time_u,
@@ -89,10 +97,10 @@ def parse_data(data, **kwargs):
     """Parses the data section of a Jpl Horizons ephemeris in a *list of lists* table.
 
     Args:
-        data (str): the section containing data of a Jpl Horizons ephemeris.
+      data (str): the section containing data of a Jpl Horizons ephemeris.
 
     Returns:
-        :class:`list`: the list of lists representing a data table.
+      :class:`list`: the list of lists representing a data table.
 
     """
 
@@ -106,10 +114,10 @@ def parse_cols(header):
     """Finds and parses ephemeris column names in a Jpl Horizons ephemeris.
 
     Args:
-        header (str): the header of a Jpl Horizons ephemeris.
+      header (str): the header of a Jpl Horizons ephemeris.
 
     Returns:
-        :class:`tuple`: a tuple with the names of columns.
+      :class:`tuple`: a tuple with the names of columns.
 
     """
 
@@ -122,11 +130,11 @@ def parse(source, target=QTable):
     """Parses an entire Jpl Horizons ephemeris and build an `astropy`_ table out of it.
 
     Args:
-        source (str): the content of the Jpl Horizons data file.
-        target: the type of table to produce (Table or QTable).
+      source (str): the content of the Jpl Horizons data file.
+      target: the type of table to produce (Table or QTable).
 
     Returns:
-        table: the table containing data from Jpl Horizons source ephemeris.
+      table: the table containing data from Jpl Horizons source ephemeris.
 
     .. _`astropy`:  http://docs.astropy.org/en/stable/table/
 

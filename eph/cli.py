@@ -5,12 +5,15 @@
 import argparse
 import logging
 import sys
+from datetime import datetime
 
 from astropy.table import Table
 
 from .exceptions import *
-from .horizons import codify_obj, codify_site, is_jpl_param
+from .horizons import codify_obj, codify_site, is_jpl_param, transform_key
 from .interface import JplReq
+from .shortcuts import get
+from .config import read_config
 
 # logger
 
@@ -28,21 +31,18 @@ logger.addHandler(console_handler)
 parser = argparse.ArgumentParser(
     description='Retrive, parse and format Jpl Horizons ephemerides.',
 )
-parser.add_argument('start',
-                    metavar='TIME_START',
-                    help='''specifies ephemeris start time
+parser.add_argument('objs',
+                    nargs='+',
+                    metavar='objects',
+                    help='program to execute OR target object to select for data & ephemeris output')
+parser.add_argument('--dates',
+                    nargs='+',
+                    metavar='dates',
+                    default=datetime.now(),
+                    help='''specifies ephemeris start and stop times
                     (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}"
                     denote optional inputs'''
                     )
-parser.add_argument('stop',
-                    metavar='STOP_TIME',
-                    help='''specifies ephemeris stop time
-                    (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}"
-                    denote optional inputs''')
-parser.add_argument('object',
-                    metavar='COMMAND',
-                    type=codify_obj,
-                    help='program to execute OR target object to select for data & ephemeris output')
 parser.add_argument('--center', '-c',
                     type=codify_site,
                     help='''
@@ -214,75 +214,97 @@ parser.add_argument('--output', '-o',
 parser.add_argument('--format',
                     default='ascii',
                     help='specify how the data table must be formatted')
-parser.add_argument('--raw',
-                    action='store_true',
-                    help='disables parsing of horizons output')
-parser.add_argument('--ephem-only',
-                    action='store_true',
-                    help='strip header and footer of a raw Jpl Horizons response')
-parser.add_argument('--suppress-warnings',
-                    action='store_true',
-                    help='suppress warnings such as missing config files etc..')
 
 
 def main():
 
     args = parser.parse_args()
-    req = JplReq()
 
     try:
-        req.read(args.config)
+        jplparams = read_config(filename=args.config)
     except ConfigNotFoundError:
-        if args.config:
-            logger.error('Configuration file not found.')
-            sys.exit(-1)
-        elif args.suppress_warnings:
-            pass
-        else:
-            logger.warning('Configuration file not found.')
+        logger.warning('Configuration file not found.')
     except ConfigParserError:
         logger.error('Problems encountered while parsing configuration file.')
-        sys.exit(-1)
 
-    req.set({
-        k: v for k, v in vars(args).items() if is_jpl_param(k) and v
+    jplparams.update({
+        transform_key(k): v for k, v in vars(args).items() if is_jpl_param(k) and v
     })
 
     try:
-        res = req.query()
+        data = get(args.objs, dates=args.dates, **jplparams)
     except ConnectionError:
         logger.error('Connection error.')
         sys.exit(-1)
-
-    try:
-        if args.raw:
-            if args.ephem_only:
-                data = res.get_data()
-            else:
-                data = res.raw()
-        else:
-            data = res.parse()
     except JplBadReqError as e:
         logger.error('Horizons says:\n\t' + e.__str__())
         sys.exit(-1)
     except ParserError:
         logger.error('''
-            eph cannot parse this format.
-            Try passing --csv YES option or --raw to get Horizons response as is.
-            ''')
+        eph cannot parse this format.
+        Try passing --csv YES option.
+        ''')
         sys.exit(-1)
 
     try:
-        if isinstance(data, Table) and args.format:
-            data.write(args.output, format=args.format)
-        else:
-            if args.output is sys.stdout:
-                sys.stdout.write(data)
-            else:
-                with open(args.output, 'w') as f:
-                    f.write(data)
+        data.write(args.output, format=args.format)
     except IOError:
         logger.error('Problems trying to write data.')
+    # req = JplReq()
+    #
+    # try:
+    # 	req.read(args.config)
+    # except ConfigNotFoundError:
+    # 	if args.config:
+    # 		logger.error('Configuration file not found.')
+    # 		sys.exit(-1)
+    # 	elif args.suppress_warnings:
+    # 		pass
+    # 	else:
+    # 		logger.warning('Configuration file not found.')
+    # except ConfigParserError:
+    # 	logger.error('Problems encountered while parsing configuration file.')
+    # 	sys.exit(-1)
+    #
+    # req.set({
+    # 	k: v for k, v in vars(args).items() if is_jpl_param(k) and v
+    # })
+    #
+    # try:
+    # 	res = req.query()
+    # except ConnectionError:
+    # 	logger.error('Connection error.')
+    # 	sys.exit(-1)
+    #
+    # try:
+    # 	if args.raw:
+    # 		if args.ephem_only:
+    # 			data = res.get_data()
+    # 		else:
+    # 			data = res.raw()
+    # 	else:
+    # 		data = res.parse()
+    # except JplBadReqError as e:
+    # 	logger.error('Horizons says:\n\t' + e.__str__())
+    # 	sys.exit(-1)
+    # except ParserError:
+    # 	logger.error('''
+    # 		eph cannot parse this format.
+    # 		Try passing --csv YES option or --raw to get Horizons response as is.
+    # 		''')
+    # 	sys.exit(-1)
+    #
+    # try:
+    # 	if isinstance(data, Table) and args.format:
+    # 		data.write(args.output, format=args.format)
+    # 	else:
+    # 		if args.output is sys.stdout:
+    # 			sys.stdout.write(data)
+    # 		else:
+    # 			with open(args.output, 'w') as f:
+    # 				f.write(data)
+    # except IOError:
+    # 	logger.error('Problems trying to write data.')
 
 
 if __name__ == '__main__':
