@@ -9,7 +9,7 @@ from .util import wrap, yes_or_no
 from .exceptions import JplBadParamError
 
 
-JPL_ENDPOINT = 'http://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
+JPL_ENDPOINT = 'https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
 
 
 JPL_PARAMS = {

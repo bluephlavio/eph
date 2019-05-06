@@ -32,6 +32,7 @@ def get_sections(source):
         to_strip = ws + '*'
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
+        print(source)
         problem_report, jplparams = map(
             lambda x: x.strip(ws), re.split(r'!\$\$SOF', source))
         raise JplBadReqError(problem_report)
@@ -58,6 +59,7 @@ def parse_params(source):
         to_strip = ws
         cleaned = m.group().strip(to_strip)
         return {m.group(1): m.group(2) for m in re.finditer(r'(\S*)\s=\s(\S*)', cleaned)}
+    return dict()
 
 
 def check_csv(source):
