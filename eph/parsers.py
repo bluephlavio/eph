@@ -32,7 +32,6 @@ def get_sections(source):
         to_strip = ws + '*'
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
-        print(source)
         problem_report, jplparams = map(
             lambda x: x.strip(ws), re.split(r'!\$\$SOF', source))
         raise JplBadReqError(problem_report)
