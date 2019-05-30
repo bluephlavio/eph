@@ -106,3 +106,6 @@ ENV/
 
 # Testing
 .ephrc
+
+# vscode
+.vscode
