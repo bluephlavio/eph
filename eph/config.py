@@ -32,7 +32,8 @@ def read_config(filename=None, section=None):
         try:
             parser.read(config_file)
         except configparser.ParsingError:
-            raise ConfigParserError('Problems encountered parsing config file.')
+            raise ConfigParserError(
+                'Problems encountered parsing config file.')
         return dict(parser.items(section if section else 'DEFAULT'))
     else:
         raise ConfigNotFoundError('Config file not found.')
