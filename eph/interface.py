@@ -1,7 +1,8 @@
-"""Contains classes and functions useful to interact with the `Jpl Horizons service`_ from NASA.
+"""
+Contains classes and functions useful to interact with the `Jpl Horizons
+service`_ from NASA.
 
 .. _`Jpl Horizons service`: https://ssd.jpl.nasa.gov/?horizons
-
 """
 
 
@@ -17,13 +18,14 @@ from .parsers import parse, get_sections
 
 
 class JplReq(BaseMap):
-    """A requests to Jpl Horizons service.
+    """
+    A requests to Jpl Horizons service.
 
-    It can be thought as a :class:`dict` where key-value pairs represents Jpl Horizons parameters.
-    Jpl parameters can be also set as attributes of the :class:`JplReq` instance.
-    Furthermore, keys and values are adjusted to match Jpl Horizons interface in order to enhance
-    readability and usability.
-
+    It can be thought as a :class:`dict` where key-value pairs
+    represents Jpl Horizons parameters. Jpl parameters can be also set
+    as attributes of the :class:`JplReq` instance. Furthermore, keys and
+    values are adjusted to match Jpl Horizons interface in order to
+    enhance readability and usability.
     """
 
     def __getattr__(self, key):
@@ -39,7 +41,8 @@ class JplReq(BaseMap):
         super(self.__class__, self).__delattr__(key)
 
     def read(self, filename, section='DEFAULT'):
-        """Reads configurations parameters from an ini file.
+        """
+        Reads configurations parameters from an ini file.
 
         Reads the `section` section of the ini config file `filename` and set all parameters
         for the Jpl request.
@@ -50,29 +53,29 @@ class JplReq(BaseMap):
 
         Returns:
             :class:`JplReq`: the object itself.
-
         """
         params = read_config(filename, section)
         return self.set(params)
 
     def url(self):
-        """Calculate the Jpl Horizons url corresponding to the :class:`JplReq` object.
+        """
+        Calculate the Jpl Horizons url corresponding to the :class:`JplReq`
+        object.
 
         Returns:
             str: the url with the Jpl parameters encoded in the query string.
-
         """
         return addparams2url(JPL_ENDPOINT, {k: wrap(str(v)) for k, v in self.items()})
 
     def query(self):
-        """Performs the query to the Jpl Horizons service.
+        """
+        Performs the query to the Jpl Horizons service.
 
         Returns:
             :class:`JplRes`: the response from Jpl Horizons service.
 
         Raises:
             :class:`ConnectionError`
-
         """
 
         try:
@@ -84,25 +87,22 @@ class JplReq(BaseMap):
 
 
 class JplRes(object):
-    """A response from the Jpl Horizons service.
-
-    """
+    """A response from the Jpl Horizons service."""
 
     def __init__(self, http_response):
-        """Initialize a :class:`JplRes` object from a `requests`_ http response object.
+        """
+        Initialize a :class:`JplRes` object from a `requests`_ http response
+        object.
 
         Args:
             http_response: the http response from Jpl Horizons service.
 
         .. _`requests`: http://docs.python-requests.org/en/master/
-
         """
         self.http_response = http_response
 
     def raw(self):
-        """Returns the content of the Jpl Horizons http response as is.
-
-        """
+        """Returns the content of the Jpl Horizons http response as is."""
         return self.http_response.text
 
     def get_header(self):
@@ -118,14 +118,15 @@ class JplRes(object):
         return footer
 
     def parse(self, target=QTable):
-        """Parse the http response from Jpl Horizons and return, according to target
+        """
+        Parse the http response from Jpl Horizons and return, according to
+        target.
 
          * an `astropy.table.Table`_ object.
          * an `astropy.table.QTable`_ object.
 
         .. _`astropy.table.Table`: http://docs.astropy.org/en/stable/table/
         .. _`astropy.table.QTable`: http://docs.astropy.org/en/stable/table/
-
         """
         return parse(self.raw(), target=target)
 

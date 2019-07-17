@@ -10,7 +10,8 @@ from .horizons import format_time
 
 
 def get(objs, dates=datetime.now(), **kwargs):
-    """Shortcut function to directly obtain an astropy QTable from Jpl Horizons
+    """
+    Shortcut function to directly obtain an astropy QTable from Jpl Horizons
     parameters without building a JplReq and get a JplRes out of it to be
     parsed.
 
@@ -70,7 +71,8 @@ def get(objs, dates=datetime.now(), **kwargs):
 
 
 def vec(objs, dates=datetime.now(), center='@0', **kwargs):
-    """Shortcut function to directly obtain an astropy QTable with vector data.
+    """
+    Shortcut function to directly obtain an astropy QTable with vector data.
 
     Args:
       objs: The celestial objects to be targeted.
@@ -122,7 +124,8 @@ def vel(objs, dates=datetime.now(), **kwargs):
 
 
 def elem(objs, dates=datetime.now(), **kwargs):
-    """Shortcut function to directly obtain an astropy QTable with orbital
+    """
+    Shortcut function to directly obtain an astropy QTable with orbital
     elements.
 
     Args:
@@ -140,7 +143,8 @@ def elem(objs, dates=datetime.now(), **kwargs):
 
 
 def obs(objs, dates=datetime.now(), **kwargs):
-    """Shortcut function to directly obtain an astropy QTable with observable
+    """
+    Shortcut function to directly obtain an astropy QTable with observable
     quantities.
 
     Args:
@@ -159,7 +163,8 @@ def obs(objs, dates=datetime.now(), **kwargs):
 
 
 def radec(objs, dates=datetime.now(), **kwargs):
-    """Shortcut function to directly obtain an astropy QTable with RA/DEC data.
+    """
+    Shortcut function to directly obtain an astropy QTable with RA/DEC data.
 
     Args:
       objs: The celestial objects to be targeted.
@@ -173,7 +178,8 @@ def radec(objs, dates=datetime.now(), **kwargs):
 
 
 def altaz(objs, site_coord='0,0,0', dates=datetime.now(), **kwargs):
-    """Shortcut function to directly obtain an astropy QTable with ALT/AZ data.
+    """
+    Shortcut function to directly obtain an astropy QTable with ALT/AZ data.
 
     Args:
       objs: The celestial objects to be targeted.

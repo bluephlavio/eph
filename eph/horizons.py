@@ -1,6 +1,5 @@
-"""Defines variables and functions used to interfacing with JPL Horizons system.
-
-"""
+"""Defines variables and functions used to interfacing with JPL Horizons
+system."""
 
 from datetime import datetime
 from astropy.time import Time
@@ -65,7 +64,8 @@ JPL_PARAMS = {
 # key-value translation
 
 def transform_key(key):
-    """Tranforms an input key to a Jpl-compatible parameter key.
+    """
+    Tranforms an input key to a Jpl-compatible parameter key.
 
     Args:
         key (str): the key to be interpreted and translated.
@@ -75,7 +75,6 @@ def transform_key(key):
 
     Raises:
         :class:`JplBadParamError`
-
     """
     key = key.upper().replace('-', '_')
     if key in JPL_PARAMS:
@@ -88,7 +87,9 @@ def transform_key(key):
 
 
 def transform_value(key, value):
-    """Tries to transforms an input value into a Jpl-compatible one or it leaves as is.
+    """
+    Tries to transforms an input value into a Jpl-compatible one or it leaves
+    as is.
 
     Args:
         key (str): the Jpl-compatible key.
@@ -97,7 +98,6 @@ def transform_value(key, value):
 
     Returns:
         str: the transofrmed value.
-
     """
     for filter_, params in FILTERS.items():
         if key in params:
@@ -106,7 +106,8 @@ def transform_value(key, value):
 
 
 def transform(key, value):
-    """Transforms an input key-value pair in a Jpl-compatible one.
+    """
+    Transforms an input key-value pair in a Jpl-compatible one.
 
     Args:
         key (str): the key to be interpreted or translated.
@@ -114,7 +115,6 @@ def transform(key, value):
 
     Returns:
         tuple: the final key-value pair.
-
     """
     k = transform_key(key)
     v = transform_value(k, value)
@@ -122,14 +122,14 @@ def transform(key, value):
 
 
 def is_jpl_param(key):
-    """Checks if a key is a Jpl Horizons parameter or a defined alias.
+    """
+    Checks if a key is a Jpl Horizons parameter or a defined alias.
 
     Args:
         key (str): the parameter to be checked.
 
     Returns:
         boolean: Whether key is or not a Jpl parameter.
-
     """
     try:
         if transform_key(key) in JPL_PARAMS:
@@ -159,15 +159,16 @@ ID2NAME = {v: k for k, v in NAME2ID.items()}
 
 
 def codify_obj(name):
-    """Tries to translate a human readable celestial object name to the corresponding Jpl Horizons code.
-    If the name is not known the name itself will be returned.
+    """
+    Tries to translate a human readable celestial object name to the
+    corresponding Jpl Horizons code. If the name is not known the name itself
+    will be returned.
 
     Args:
          name (str): the name to be translated.
 
     Returns:
         str: the code of the object (stringified version of the id).
-
     """
     stringified = str(name)
     cleaned = stringified.strip('\'"')
@@ -180,7 +181,10 @@ def codify_obj(name):
 
 
 def codify_site(name):
-    """Tries to translate a human readable celestial object name to the corresponding Jpl Horizons site code.
+    """
+    Tries to translate a human readable celestial object name to the
+    corresponding Jpl Horizons site code.
+
     If the name is not known the name itself will be returned preceded by a @ sign
     if @ is not already present in the name.
 
@@ -189,7 +193,6 @@ def codify_site(name):
 
     Returns:
         str: the code of the site.
-
     """
     cleaned = name.strip('\'"')
     lowered = cleaned.lower()
@@ -205,14 +208,15 @@ def codify_site(name):
 
 
 def humanify(code):
-    """Tries to interpret a Jpl object or site code as a human readable celestial object name.
+    """
+    Tries to interpret a Jpl object or site code as a human readable celestial
+    object name.
 
     Args:
         code (str): the code to be translated.
 
     Returns:
         str: the corresponding human readable name.
-
     """
     if code.isdigit():
         id_ = int(code)
@@ -237,14 +241,14 @@ DIM_COL = dict(
 
 
 def get_col_dim(col):
-    """Get the physical dimension of a column by its name.
+    """
+    Get the physical dimension of a column by its name.
 
     Args:
         col (str): the name of the column.
 
     Returns:
         str: the physical dimensions of the given column.
-
     """
     for dim in DIM_COL.keys():
         if col in DIM_COL[dim]:
@@ -252,7 +256,8 @@ def get_col_dim(col):
 
 
 def format_time(t):
-    """Modify time data t so that str(t) can be interpreted by Jpl.
+    """
+    Modify time data t so that str(t) can be interpreted by Jpl.
 
     Args:
         t: the time data. It can be a str, an astropy.time.Time object
@@ -260,7 +265,6 @@ def format_time(t):
 
     Returns:
         the final object.
-
     """
     if type(t) == Time:
         t.out_subfmt = 'date_hm'

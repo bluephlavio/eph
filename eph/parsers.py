@@ -1,6 +1,4 @@
-"""Defines parsing functions to read Jpl Horizons ephemeris.
-
-"""
+"""Defines parsing functions to read Jpl Horizons ephemeris."""
 
 import re
 from string import whitespace as ws
@@ -14,7 +12,8 @@ from .horizons import get_col_dim
 
 
 def get_sections(source):
-    """Split a Jpl Horizons ephemeris in header, data and footer.
+    """
+    Split a Jpl Horizons ephemeris in header, data and footer.
 
     Args:
     source (str): the content of the Jpl Horizons ephemeris data output.
@@ -24,7 +23,6 @@ def get_sections(source):
 
     .. note:
       Note that whitespaces and \* are stripped out from section contents.
-
     """
 
     m = re.match(r'(.*?)\$\$SOE(.*?)\$\$EOE(.*?)', source, flags=re.DOTALL)
@@ -38,14 +36,14 @@ def get_sections(source):
 
 
 def get_subsections(source):
-    """Split a source string in a list of sections separated by one or more \*.
+    """
+    Split a source string in a list of sections separated by one or more \*.
 
     Args:
       source (str): the source string to be splitted.
 
     Returns:
       :class:`list`: the lists of subsections.
-
     """
 
     to_strip = ws
@@ -95,14 +93,15 @@ def parse_units(meta):
 
 
 def parse_data(data, **kwargs):
-    """Parses the data section of a Jpl Horizons ephemeris in a *list of lists* table.
+    """
+    Parses the data section of a Jpl Horizons ephemeris in a *list of lists*
+    table.
 
     Args:
       data (str): the section containing data of a Jpl Horizons ephemeris.
 
     Returns:
       :class:`list`: the list of lists representing a data table.
-
     """
 
     try:
@@ -112,14 +111,14 @@ def parse_data(data, **kwargs):
 
 
 def parse_cols(header):
-    """Finds and parses ephemeris column names in a Jpl Horizons ephemeris.
+    """
+    Finds and parses ephemeris column names in a Jpl Horizons ephemeris.
 
     Args:
       header (str): the header of a Jpl Horizons ephemeris.
 
     Returns:
       :class:`tuple`: a tuple with the names of columns.
-
     """
 
     cols_subsection = get_subsections(header)[-1]
@@ -128,7 +127,9 @@ def parse_cols(header):
 
 
 def parse(source, target=QTable):
-    """Parses an entire Jpl Horizons ephemeris and build an `astropy`_ table out of it.
+    """
+    Parses an entire Jpl Horizons ephemeris and build an `astropy`_ table out
+    of it.
 
     Args:
       source (str): the content of the Jpl Horizons data file.
@@ -138,7 +139,6 @@ def parse(source, target=QTable):
       table: the table containing data from Jpl Horizons source ephemeris.
 
     .. _`astropy`:  http://docs.astropy.org/en/stable/table/
-
     """
 
     cols_del = ',' if check_csv(source) else r'\s'

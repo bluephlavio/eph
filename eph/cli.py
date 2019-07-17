@@ -1,6 +1,4 @@
-"""eph console script module.
-
-"""
+"""eph console script module."""
 
 import argparse
 import logging
