@@ -5,7 +5,6 @@ service`_ from NASA.
 .. _`Jpl Horizons service`: https://ssd.jpl.nasa.gov/?horizons
 """
 
-
 import requests
 
 from astropy.table import QTable
@@ -65,7 +64,8 @@ class JplReq(BaseMap):
         Returns:
             str: the url with the Jpl parameters encoded in the query string.
         """
-        return addparams2url(JPL_ENDPOINT, {k: wrap(str(v)) for k, v in self.items()})
+        return addparams2url(JPL_ENDPOINT,
+                             {k: wrap(str(v)) for k, v in self.items()})
 
     def query(self):
         """

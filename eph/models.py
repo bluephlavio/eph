@@ -43,12 +43,14 @@ class BaseMap(MutableMapping):
         return self.__class__.__name__ + '(' + self.__dict__.__repr__() + ')'
 
     def __str__(self):
-        return '\n'.join('{key}={value}'.format(key=k, value=v) for k, v in self.__dict__.items())
+        return '\n'.join('{key}={value}'.format(key=k, value=v)
+                         for k, v in self.__dict__.items())
 
     def set(self, *args, **kwargs):
         if args:
             if len(args) > 1:
-                raise TypeError('You can pass only one positional argument to set method.')
+                raise TypeError(
+                    'You can pass only one positional argument to set method.')
             else:
                 arg = args[0]
                 for k, v in arg.items():

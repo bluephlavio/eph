@@ -30,8 +30,8 @@ def get_sections(source):
         to_strip = ws + '*'
         return (m.group(i).strip(to_strip) for i in range(1, 4))
     else:
-        problem_report, jplparams = map(
-            lambda x: x.strip(ws), re.split(r'!\$\$SOF', source))
+        problem_report, jplparams = map(lambda x: x.strip(ws),
+                                        re.split(r'!\$\$SOF', source))
         raise JplBadReqError(problem_report)
 
 
@@ -55,7 +55,10 @@ def parse_params(source):
     if m:
         to_strip = ws
         cleaned = m.group().strip(to_strip)
-        return {m.group(1): m.group(2) for m in re.finditer(r'(\S*)\s=\s(\S*)', cleaned)}
+        return {
+            m.group(1): m.group(2)
+            for m in re.finditer(r'(\S*)\s=\s(\S*)', cleaned)
+        }
     return dict()
 
 
@@ -68,8 +71,10 @@ def check_csv(source):
 
 
 def parse_meta(header):
-    meta = {m.group(1).strip(ws): m.group(2).strip(ws)
-            for m in re.finditer(r'(.*?\D):\s(.*)', header)}
+    meta = {
+        m.group(1).strip(ws): m.group(2).strip(ws)
+        for m in re.finditer(r'(.*?\D):\s(.*)', header)
+    }
     meta['Target body name'] = re.match(
         r'^\S*', meta['Target body name']).group(0).lower()
     meta['Center body name'] = re.match(

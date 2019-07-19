@@ -7,9 +7,7 @@ from astropy.time import Time
 from .util import wrap, yes_or_no
 from .exceptions import JplBadParamError
 
-
 JPL_ENDPOINT = 'https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1'
-
 
 JPL_PARAMS = {
     # target
@@ -60,8 +58,8 @@ JPL_PARAMS = {
     'OBJ_DATA',
 }
 
-
 # key-value translation
+
 
 def transform_key(key):
     """
@@ -154,7 +152,6 @@ NAME2ID = dict(
     neptune=899,
 )
 
-
 ID2NAME = {v: k for k, v in NAME2ID.items()}
 
 
@@ -201,7 +198,10 @@ def codify_site(name):
         return '@' + str(id_)
     elif '@' in cleaned:
         return cleaned
-    elif cleaned in ('coord', 'geo', ):
+    elif cleaned in (
+            'coord',
+            'geo',
+    ):
         return cleaned
     else:
         return '@' + cleaned
@@ -231,12 +231,38 @@ def humanify(code):
 
 DIM_COL = dict(
     # dimension: columns
-    JD={'JDTDB', 'Tp', },
-    TIME={'LT', },
-    SPACE={'X', 'Y', 'Z', 'RG', 'QR', 'A', 'AD', },
-    VELOCITY={'VX', 'VY', 'VZ', 'RR', },
-    ANGLE={'IN', 'OM', 'W', 'MA', 'TA', },
-    ANGULAR_VELOCITY={'N', },
+    JD={
+        'JDTDB',
+        'Tp',
+    },
+    TIME={
+        'LT',
+    },
+    SPACE={
+        'X',
+        'Y',
+        'Z',
+        'RG',
+        'QR',
+        'A',
+        'AD',
+    },
+    VELOCITY={
+        'VX',
+        'VY',
+        'VZ',
+        'RR',
+    },
+    ANGLE={
+        'IN',
+        'OM',
+        'W',
+        'MA',
+        'TA',
+    },
+    ANGULAR_VELOCITY={
+        'N',
+    },
 )
 
 
@@ -276,21 +302,52 @@ def format_time(t):
 # aliases and filters
 
 ALIASES = dict(
-    COMMAND={'OBJECT', 'OBJ', 'BODY', 'TARGET', },
-    START_TIME={'START', 'BEGIN', 'FROM', },
-    STOP_TIME={'STOP', 'END', 'TO', },
-    STEP_SIZE={'STEP', 'STEPS', },
-    CENTER={'ORIGIN', },
-    CSV_FORMAT={'CSV', },
-    TABLE_TYPE={'TYPE', },
-    VEC_TABLE={'TABLE', },
+    COMMAND={
+        'OBJECT',
+        'OBJ',
+        'BODY',
+        'TARGET',
+    },
+    START_TIME={
+        'START',
+        'BEGIN',
+        'FROM',
+    },
+    STOP_TIME={
+        'STOP',
+        'END',
+        'TO',
+    },
+    STEP_SIZE={
+        'STEP',
+        'STEPS',
+    },
+    CENTER={
+        'ORIGIN',
+    },
+    CSV_FORMAT={
+        'CSV',
+    },
+    TABLE_TYPE={
+        'TYPE',
+    },
+    VEC_TABLE={
+        'TABLE',
+    },
 )
 
-
 FILTERS = {
-    codify_obj: ['COMMAND', ],
-    codify_site: ['CENTER', ],
-    wrap: ['TLIST', ],
-    yes_or_no: ['CSV_FORMAT', 'MAKE_EPHEM', 'OBJ_DATA', 'VEC_LABELS', ],
-    format_time: ['START_TIME', 'STOP_TIME', ],
+    codify_obj: ['COMMAND',],
+    codify_site: ['CENTER',],
+    wrap: ['TLIST',],
+    yes_or_no: [
+        'CSV_FORMAT',
+        'MAKE_EPHEM',
+        'OBJ_DATA',
+        'VEC_LABELS',
+    ],
+    format_time: [
+        'START_TIME',
+        'STOP_TIME',
+    ],
 }

@@ -27,21 +27,22 @@ logger.addHandler(console_handler)
 # parser
 
 parser = argparse.ArgumentParser(
-    description='Retrive, parse and format Jpl Horizons ephemerides.',
-)
-parser.add_argument('objs',
-                    nargs='+',
-                    metavar='objects',
-                    help='program to execute OR target object to select for data & ephemeris output')
+    description='Retrive, parse and format Jpl Horizons ephemerides.',)
+parser.add_argument(
+    'objs',
+    nargs='+',
+    metavar='objects',
+    help=
+    'program to execute OR target object to select for data & ephemeris output')
 parser.add_argument('--dates',
                     nargs='+',
                     metavar='dates',
                     default=datetime.now(),
                     help='''specifies ephemeris start and stop times
                     (i.e. YYYY-MMM-DD {HH:MM} {UT/TT}) ... where braces "{}"
-                    denote optional inputs'''
-                    )
-parser.add_argument('--center', '-c',
+                    denote optional inputs''')
+parser.add_argument('--center',
+                    '-c',
                     type=codify_site,
                     help='''
                     selects coordinate origin. Can be observing site
@@ -55,9 +56,9 @@ parser.add_argument('--coord-type',
                     Used only when CENTER = 'coord'.
                     Values: GEODETIC or CYLINDRICAL
                     ''')
-parser.add_argument('--site-coord',
-                    help='sets coordinates of type COORD_TYPE')
-parser.add_argument('--step', '-s',
+parser.add_argument('--site-coord', help='sets coordinates of type COORD_TYPE')
+parser.add_argument('--step',
+                    '-s',
                     metavar='STEP_SIZE',
                     help='''
                     gives ephemeris output print step in form:
@@ -85,13 +86,15 @@ parser.add_argument('--ref-system',
 parser.add_argument('--make-ephem',
                     choices=['YES', 'NO'],
                     help='toggles generation of ephemeris, if possible')
-parser.add_argument('--table-type', '-t',
+parser.add_argument('--table-type',
+                    '-t',
                     choices=['O', 'V', 'E', 'A'],
                     help='''
                     selects type of table to generate, if possible.
                     Values: OBSERVER (O), ELEMENTS (E), VECTORS (V), APPROACH (A)
                     ''')
-parser.add_argument('--quantities', '-q',
+parser.add_argument('--quantities',
+                    '-q',
                     help='''
                     only if --table-type=O. It is a list
                     of desired output quantity codes. If multiple quantities
@@ -164,7 +167,8 @@ parser.add_argument('--vec-corr',
                     'LT' (astrometric states) or
                     'LT+S' (astrometric states corrected for stellar aberration)
                     ''')
-parser.add_argument('--out-units', '-u',
+parser.add_argument('--out-units',
+                    '-u',
                     choices=['KM-S', 'AU-D', 'KM-D'],
                     help='''
                     selects output units when TABLE_TYPE=VECTOR or ELEMENT.
@@ -185,10 +189,12 @@ parser.add_argument('--suppress-range-rate',
 parser.add_argument('--ang-format',
                     choices=['HMS', 'DEG'],
                     help='selects RA/DEC output when TABLE_TYPE=OBSERVER')
-parser.add_argument('--csv',
-                    choices=['YES', 'NO'],
-                    help='toggles output of table in comma-separated value format')
-parser.add_argument('--vec-labels', '-l',
+parser.add_argument(
+    '--csv',
+    choices=['YES', 'NO'],
+    help='toggles output of table in comma-separated value format')
+parser.add_argument('--vec-labels',
+                    '-l',
                     choices=['YES', 'NO'],
                     help='''
                     toggles labelling of each vector component.
@@ -206,7 +212,8 @@ parser.add_argument('--apparent',
                     ''')
 parser.add_argument('--config',
                     help='specifies a configuration file to be used')
-parser.add_argument('--output', '-o',
+parser.add_argument('--output',
+                    '-o',
                     default=sys.stdout,
                     help='specify the output filename')
 parser.add_argument('--format',
@@ -226,7 +233,9 @@ def main():
         logger.error('Problems encountered while parsing configuration file.')
 
     jplparams.update({
-        transform_key(k): v for k, v in vars(args).items() if is_jpl_param(k) and v
+        transform_key(k): v
+        for k, v in vars(args).items()
+        if is_jpl_param(k) and v
     })
 
     try:
