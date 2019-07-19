@@ -1,4 +1,3 @@
-import pkg_resources
 import os.path
 from shutil import copy2
 from six.moves import configparser
@@ -16,7 +15,7 @@ def get_config_file():
 
 
 def get_default_config_file():
-    return pkg_resources.resource_filename(__name__, 'eph.cfg')
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), 'eph.cfg'))
 
 
 def create_config_file(out_filename=get_config_file()):
