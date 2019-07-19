@@ -19,10 +19,13 @@ meta = dict(parser.items('metadata'))
 
 
 def install_config():
-    dst = os.path.abspath(os.path.expanduser('~/.ephrc'))
-    if not os.path.isfile(dst):
-        src = os.path.abspath(os.path.join(here, 'eph/eph.cfg'))
-        copy2(src, dst)
+    try:
+        dst = os.path.abspath(os.path.expanduser('~/.ephrc'))
+        if not os.path.isfile(dst):
+            src = os.path.abspath(os.path.join(here, 'eph/eph.cfg'))
+            copy2(src, dst)
+    except:
+        pass
 
 
 class CustomInstall(install):
