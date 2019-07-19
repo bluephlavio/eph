@@ -55,14 +55,13 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Scientific/Engineering :: Astronomy',
         'Topic :: Scientific/Engineering :: Physics',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
     ],
     packages=find_packages(),
     install_requires=[
-        'six>=1.0,<=2.0',
-        'requests>=2.0,<=3.0',
-        'astropy>=2.0,<=4.0',
+        'six>=1.0,<2.0',
+        'requests>=2.0,<3.0',
+        'astropy>=2.0,<4.0',
     ],
     include_package_data=True,
     entry_points={
@@ -80,4 +79,5 @@ setup(
     tests_require=[
         'pytest',
     ],
+    python_requires='>=3.5'
 )
