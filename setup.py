@@ -8,7 +8,6 @@ try:
 except ImportError:
     import ConfigParser as configparser
 
-
 here = os.path.abspath(os.path.dirname(__file__))
 
 with open(os.path.join(here, 'README.rst')) as f:
@@ -27,14 +26,12 @@ def install_config():
 
 
 class CustomInstall(install):
-
     def run(self):
         install_config()
         install.run(self)
 
 
 class CustomDevelop(develop):
-
     def run(self):
         install_config()
         develop.run(self)
@@ -63,9 +60,9 @@ setup(
     ],
     packages=find_packages(),
     install_requires=[
-        'six',
-        'requests',
-        'astropy',
+        'six>=1.0,<=2.0',
+        'requests>=2.0,<=3.0',
+        'astropy>=2.0,<=4.0',
     ],
     include_package_data=True,
     entry_points={
@@ -77,6 +74,10 @@ setup(
         'develop': CustomDevelop,
         'install': CustomInstall,
     },
-    setup_requires=['pytest-runner', ],
-    tests_require=['pytest', ],
+    setup_requires=[
+        'pytest-runner',
+    ],
+    tests_require=[
+        'pytest',
+    ],
 )
