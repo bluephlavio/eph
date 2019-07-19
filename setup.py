@@ -67,6 +67,7 @@ setup(
         'astropy>=2.0,<4.0',
     ],
     include_package_data=True,
+    zip_safe=False,
     entry_points={
         'console_scripts': [
             'eph=eph.cli:main',
