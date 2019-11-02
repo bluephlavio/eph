@@ -38,7 +38,7 @@ tqdm==4.32.1
 twine==1.13.0
 typed-ast==1.4.0
 untokenize==0.1.1
-urllib3==1.22
+urllib3==1.24.2
 wcwidth==0.1.7
 webencodings==0.5.1
 wrapt==1.11.2
